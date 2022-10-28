@@ -5,7 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "artists.h"
-#include "tracks.h"
+#include "playlists.h"
 #include "spotfes.h"
+#include "tracks.h"
 
 #endif

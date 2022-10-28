@@ -1,6 +1,7 @@
 #include "libraries.h"
 
 struct ttracks {
+    int index;
     char id[22];
     char* track_name;
     int popularity;
@@ -26,3 +27,11 @@ struct ttracks {
     int time_signature;
     tArtists** artists;
 };
+
+tTracks* AllocateTracks() {
+    return (tTracks*)malloc(sizeof(tTracks));
+}
+
+void FreeUpTracks(tTracks* tracks) {
+    free(tracks);
+}

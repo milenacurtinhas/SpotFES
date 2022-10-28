@@ -3,7 +3,10 @@
 
 typedef struct tspotfes tSpotfes;
 
-void PrintsMainMenu();
-int GetsUserInput(int input);
+void CheckDataFilesPath(int argc);
+tSpotfes* AllocateSpotfes();
+void ReadSpotifyData(tSpotfes* spotfes, char** argv);
+int SetUpMainMenu();
+void FreeUpSpotfes(tSpotfes* spotfes);
 
 #endif
