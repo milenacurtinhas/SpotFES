@@ -1,8 +1,8 @@
 #include "libraries.h"
 
 struct tartists {
-    char id[22];
-    float followers;
+    char id[23];
+    int followers;
     char** genres;
     int genres_qty;
     char* artist_name;

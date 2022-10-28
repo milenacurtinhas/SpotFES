@@ -2,13 +2,13 @@
 
 struct ttracks {
     int index;
-    char id[22];
+    char id[23];
     char* track_name;
     int popularity;
     int duration_ms;
     int explicit;
     char** track_artists;
-    char* artists_ids[22];
+    char* artists_ids[23];
     int artists_qty;
     int release_year;
     int release_month;

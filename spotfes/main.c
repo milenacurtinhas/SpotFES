@@ -1,7 +1,9 @@
 #include "libraries.h"
 
 int main(int argc, char** argv) {
-    CheckDataFilesPath(argc);
+    //CheckDataFilesPath(argc);
+    argv[1] = "artists_2.csv";
+    argv[2] = "tracks_2.csv";
     tSpotfes* spotfes = AllocateSpotfes();
     ReadSpotifyData(spotfes, argv);
 

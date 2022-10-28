@@ -10,9 +10,15 @@ struct tspotfes {
 };
 
 void CheckDataFilesPath(int argc) {
-    if (argc < 3) {
-        printf("ERRO: Não foi possível acessar os arquivos de dados do Spotify.\n");
-        exit(1);
+    switch (argc) {
+        case 1:
+            printf("ERRO: Nenhum arquivo de dados do Spotify foi declarado. Verifique se eles estão no mesmo diretório do executável desse programa.\n");
+            exit(1);
+            break;
+        case 2:
+            printf("ERRO: Um dos arquivos de dados do Spotify não foi declarado. Verifique se ele está no mesmo diretório do executável desse programa.\n");
+            exit(1);
+            break;
     }
 }
 
@@ -37,16 +43,35 @@ tSpotfes* AllocateSpotfes() {
     return spotfes;
 }
 
+void FreeUpSpotfes(tSpotfes* spotfes) {
+    for (int m = 0; m < 128; m++) {
+        FreeUpArtists(spotfes->artists[m]);
+    }
+
+    for (int m = 0; m < 128; m++) {
+        FreeUpTracks(spotfes->tracks[m]);
+    }
+
+    for (int m = 0; m < 16; m++) {
+        FreeUpPlaylists(spotfes->playlists[m]);
+    }
+
+    free(spotfes->artists);
+    free(spotfes->tracks);
+    free(spotfes->playlists);
+    free(spotfes);
+}
+
 void ReadSpotifyData(tSpotfes* spotfes, char** argv) {
     FILE* artists = fopen(argv[1], "r");
     if (!artists) {
-        printf("ERRO: Não foi possível acessar o arquivo de dados dos artistas.\n");
+        printf("ERRO: Não foi possível acessar o arquivo de dados dos artistas. Verifique se ele está no mesmo diretório do executável desse programa.\n");
         exit(1);
     }
 
     FILE* tracks = fopen(argv[2], "r");
     if (!tracks) {
-        printf("ERRO: Não foi possível acessar o arquivo de dados das músicas.\n");
+        printf("ERRO: Não foi possível acessar o arquivo de dados das músicas. Verifique se ele está no mesmo diretório do executável desse programa.\n");
         exit(1);
     }
 
@@ -70,23 +95,4 @@ int SetUpMainMenu() {
     scanf("%d%*c", &input);
 
     return input;
-}
-
-void FreeUpSpotfes(tSpotfes* spotfes) {
-    for (int m = 0; m < spotfes->artists_qty; m++) {
-        FreeUpArtists(spotfes->artists[m]);
-    }
-
-    for (int m = 0; m < spotfes->tracks_qty; m++) {
-        FreeUpTracks(spotfes->tracks[m]);
-    }
-
-    for (int m = 0; m < spotfes->playlists_qty; m++) {
-        FreeUpPlaylists(spotfes->playlists[m]);
-    }
-
-    free(spotfes->artists);
-    free(spotfes->tracks);
-    free(spotfes->playlists);
-    free(spotfes);
 }

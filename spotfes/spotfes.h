@@ -5,8 +5,8 @@ typedef struct tspotfes tSpotfes;
 
 void CheckDataFilesPath(int argc);
 tSpotfes* AllocateSpotfes();
+void FreeUpSpotfes(tSpotfes* spotfes);
 void ReadSpotifyData(tSpotfes* spotfes, char** argv);
 int SetUpMainMenu();
-void FreeUpSpotfes(tSpotfes* spotfes);
 
 #endif
