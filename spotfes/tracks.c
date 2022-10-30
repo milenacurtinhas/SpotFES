@@ -33,5 +33,13 @@ tTracks* AllocateTracks() {
 }
 
 void FreeUpTracks(tTracks* tracks) {
-    free(tracks);
+    for (int m = 0; m < tracks->artists_qty; m++) {
+        FreeAndNullPointer(tracks->track_artists[m]);
+        FreeAndNullPointer(tracks->artists_ids[m]);
+        FreeUpArtists(tracks->artists[m]);
+    }
+    FreeAndNullPointer(tracks->track_artists);
+    FreeAndNullPointer(tracks->track_name);
+    FreeAndNullPointer(tracks->artists);
+    FreeAndNullPointer(tracks);
 }

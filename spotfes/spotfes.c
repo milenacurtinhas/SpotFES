@@ -12,11 +12,12 @@ struct tspotfes {
 void CheckDataFilesPath(int argc) {
     switch (argc) {
         case 1:
-            printf("ERRO: Nenhum arquivo de dados do Spotify foi declarado. Verifique se eles estão no mesmo diretório do executável desse programa.\n");
+            printf("ERRO: Nenhum arquivo de dados do Spotify foi declarado. Verifique se eles estão contidos na pasta 'data', no mesmo diretório desse programa.\n");
             exit(1);
             break;
+
         case 2:
-            printf("ERRO: Um dos arquivos de dados do Spotify não foi declarado. Verifique se ele está no mesmo diretório do executável desse programa.\n");
+            printf("ERRO: Um dos arquivos de dados do Spotify não foi declarado. Verifique se ele está contido na pasta 'data', no mesmo diretório desse programa.\n");
             exit(1);
             break;
     }
@@ -47,36 +48,36 @@ void FreeUpSpotfes(tSpotfes* spotfes) {
     for (int m = 0; m < 128; m++) {
         FreeUpArtists(spotfes->artists[m]);
     }
-
     for (int m = 0; m < 128; m++) {
         FreeUpTracks(spotfes->tracks[m]);
     }
-
     for (int m = 0; m < 16; m++) {
         FreeUpPlaylists(spotfes->playlists[m]);
     }
-
-    free(spotfes->artists);
-    free(spotfes->tracks);
-    free(spotfes->playlists);
-    free(spotfes);
+    FreeAndNullPointer(spotfes->artists);
+    FreeAndNullPointer(spotfes->tracks);
+    FreeAndNullPointer(spotfes->playlists);
+    FreeAndNullPointer(spotfes);
 }
 
-void ReadSpotifyData(tSpotfes* spotfes, char** argv) {
-    FILE* artists = fopen(argv[1], "r");
-    if (!artists) {
+void ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
+    FILE* artists_data = fopen(argv[1], "r");
+    if (!artists_data) {
         printf("ERRO: Não foi possível acessar o arquivo de dados dos artistas. Verifique se ele está no mesmo diretório do executável desse programa.\n");
         exit(1);
     }
 
-    FILE* tracks = fopen(argv[2], "r");
-    if (!tracks) {
+    FILE* tracks_data = fopen(argv[2], "r");
+    if (!tracks_data) {
         printf("ERRO: Não foi possível acessar o arquivo de dados das músicas. Verifique se ele está no mesmo diretório do executável desse programa.\n");
         exit(1);
     }
 
-    fclose(artists);
-    fclose(tracks);
+    spotfes->artists_qty = ReadArtistsDataFiles(spotfes->artists, artists_data);
+    // spotfes->tracks_qty = ReadTracksDataFiles(spotfes->tracks, tracks_data);
+
+    fclose(artists_data);
+    fclose(tracks_data);
 }
 
 int SetUpMainMenu() {

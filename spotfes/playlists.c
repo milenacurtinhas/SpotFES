@@ -12,5 +12,7 @@ tPlaylists* AllocatePlaylists() {
 }
 
 void FreeUpPlaylists(tPlaylists* playlists) {
-    free(playlists);
+    FreeAndNullPointer(playlists->playlist_name);
+    FreeAndNullPointer(playlists->tracks_index);
+    FreeAndNullPointer(playlists);
 }
