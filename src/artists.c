@@ -62,16 +62,16 @@ int ReadArtistsDataFiles(tArtists** artists, FILE* artists_data) {
             strcpy(artists[m]->genres[mm], genres_line);
         }
     }
-
-    for (int m = 0; m < artists_qty; m++) {
-        printf("\nID: %s\n", artists[m]->id);
-        printf("Followers: %d\n", artists[m]->followers);
-        for (int mm = 0; mm < artists[m]->genres_qty; mm++) {
-            printf("Genre %d: %s\n", mm + 1, artists[m]->genres[mm]);
+    /*
+        for (int m = 0; m < artists_qty; m++) {
+            printf("\nID: %s\n", artists[m]->id);
+            printf("Followers: %d\n", artists[m]->followers);
+            for (int mm = 0; mm < artists[m]->genres_qty; mm++) {
+                printf("Genre %d: %s\n", mm + 1, artists[m]->genres[mm]);
+            }
+            printf("Name: %s\n", artists[m]->artist_name);
+            printf("Popularity: %d\n\n", artists[m]->popularity);
         }
-        printf("Name: %s\n", artists[m]->artist_name);
-        printf("Popularity: %d\n\n", artists[m]->popularity);
-    }
-
+    */
     return artists_qty;
 }

@@ -2,7 +2,7 @@
 
 int main(int argc, char** argv) {
     // CheckDataFilesPath(argc);
-    argv[1] = "data/artists_5.csv";
+    argv[1] = "data/artists_2.csv";
     argv[2] = "data/tracks_2.csv";
     tSpotfes* spotfes = AllocateSpotfes();
     ReadSpotifyDataFiles(spotfes, argv);
