@@ -3,6 +3,8 @@
 
 void FreeAndNullPointer(void* pointer);
 int EndOfFile(char character);
-int GetGenresQuantity(char* character, int genres_size);
+int GetValueQuantity(char* character, int value_size);
+int LessArtistsThanMallocs(int quantity, int mallocs);
+int SameID(char* source_id, char* target_id);
 
 #endif

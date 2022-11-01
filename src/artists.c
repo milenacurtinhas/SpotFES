@@ -46,7 +46,7 @@ int ReadArtistsDataFiles(tArtists** artists, FILE* artists_data) {
         artists[m]->popularity = atoi(strtok(NULL, "\n"));
 
         genres_line_size = strlen(genres_line);
-        artists[m]->genres_qty = GetGenresQuantity(genres_line, genres_line_size);
+        artists[m]->genres_qty = GetValueQuantity(genres_line, genres_line_size);
         artists[m]->genres = (char**)malloc(sizeof(char*) * artists[m]->genres_qty);
 
         for (int mm = 0; mm < artists[m]->genres_qty; mm++) {
@@ -62,16 +62,24 @@ int ReadArtistsDataFiles(tArtists** artists, FILE* artists_data) {
             strcpy(artists[m]->genres[mm], genres_line);
         }
     }
-    /*
-        for (int m = 0; m < artists_qty; m++) {
-            printf("\nID: %s\n", artists[m]->id);
-            printf("Followers: %d\n", artists[m]->followers);
-            for (int mm = 0; mm < artists[m]->genres_qty; mm++) {
-                printf("Genre %d: %s\n", mm + 1, artists[m]->genres[mm]);
-            }
-            printf("Name: %s\n", artists[m]->artist_name);
-            printf("Popularity: %d\n\n", artists[m]->popularity);
+
+    for (int m = 0; m < artists_qty; m++) {
+        printf("\nID: %s\n", artists[m]->id);
+        printf("Followers: %d\n", artists[m]->followers);
+        for (int mm = 0; mm < artists[m]->genres_qty; mm++) {
+            printf("Genre %d: %s\n", mm + 1, artists[m]->genres[mm]);
         }
-    */
+        printf("Name: %s\n", artists[m]->artist_name);
+        printf("Popularity: %d\n\n", artists[m]->popularity);
+    }
+
     return artists_qty;
+}
+
+tArtists* FindEquivalentArtistByID(tArtists** artists, int artists_qty, char* target_id) {
+    for (int m = 0; m < artists_qty; m++) {
+        if (SameID(artists[m]->id, target_id)) {
+            return (artists[m]);
+        }
+    }
 }

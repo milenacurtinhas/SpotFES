@@ -3,10 +3,13 @@
 struct tspotfes {
     tArtists** artists;
     int artists_qty;
+    int artists_mallocs;
     tTracks** tracks;
     int tracks_qty;
+    int tracks_mallocs;
     tPlaylists** playlists;
     int playlists_qty;
+    int playlists_mallocs;
 };
 
 void CheckDataFilesPath(int argc) {
@@ -19,6 +22,9 @@ void CheckDataFilesPath(int argc) {
         case 2:
             printf("ERRO: Um dos arquivos de dados do Spotify não foi declarado. Verifique se ele está contido na pasta 'data', no mesmo diretório desse programa.\n");
             exit(1);
+            break;
+
+        case 3:
             break;
     }
 }
@@ -38,20 +44,23 @@ tSpotfes* AllocateSpotfes() {
     }
 
     spotfes->artists_qty = 0;
+    spotfes->artists_mallocs = 128;
     spotfes->tracks_qty = 0;
+    spotfes->tracks_mallocs = 128;
     spotfes->playlists_qty = 0;
+    spotfes->playlists_mallocs = 128;
 
     return spotfes;
 }
 
 void FreeUpSpotfes(tSpotfes* spotfes) {
-    for (int m = 0; m < 128; m++) {
+    for (int m = 0; m < spotfes->artists_qty; m++) {
         FreeUpArtists(spotfes->artists[m]);
     }
-    for (int m = 0; m < 128; m++) {
+    for (int m = 0; m < spotfes->tracks_qty; m++) {
         FreeUpTracks(spotfes->tracks[m]);
     }
-    for (int m = 0; m < 16; m++) {
+    for (int m = 0; m < spotfes->playlists_qty; m++) {
         FreeUpPlaylists(spotfes->playlists[m]);
     }
     FreeAndNullPointer(spotfes->artists);
@@ -74,7 +83,14 @@ void ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
     }
 
     spotfes->artists_qty = ReadArtistsDataFiles(spotfes->artists, artists_data);
-    // spotfes->tracks_qty = ReadTracksDataFiles(spotfes->tracks, tracks_data);
+
+    if (LessArtistsThanMallocs(spotfes->artists_qty, spotfes->artists_mallocs)) {
+        spotfes->artists = realloc(spotfes->artists, spotfes->artists_qty);
+        spotfes->artists_mallocs = spotfes->artists_qty;
+    }
+
+    spotfes->tracks_qty = ReadTracksDataFiles(spotfes->tracks, tracks_data);
+    LinkArtistsToTracks(spotfes, spotfes->artists, spotfes->tracks);
 
     fclose(artists_data);
     fclose(tracks_data);
@@ -96,4 +112,12 @@ int SetUpMainMenu() {
     scanf("%d%*c", &input);
 
     return input;
+}
+
+int GetArtistsQuantity(tSpotfes* spotfes) {
+    return spotfes->artists_qty;
+}
+
+int GetTracksQuantity(tSpotfes* spotfes) {
+    return spotfes->tracks_qty;
 }

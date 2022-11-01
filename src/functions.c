@@ -13,14 +13,28 @@ int EndOfFile(char character) {
     }
 }
 
-int GetGenresQuantity(char* character, int genres_size) {
-    int genres_qty = 1;
+int GetValueQuantity(char* character, int value_size) {
+    int value_qty = 1;
 
-    for (int m = 0; m < genres_size; m++) {
+    for (int m = 0; m < value_size; m++) {
         if (character[m] == '|') {
-            genres_qty++;
+            value_qty++;
         }
     }
 
-    return genres_qty;
+    return value_qty;
+}
+
+int LessArtistsThanMallocs(int quantity, int mallocs) {
+    return quantity < mallocs;
+}
+
+int SameID(char* source_id, char* target_id) {
+    int result = strcmp(source_id, target_id);
+
+    if (result == 0) {
+        return 1;
+    } else {
+        return 0;
+    }
 }
