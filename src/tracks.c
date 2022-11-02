@@ -103,7 +103,7 @@ int ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data) {
                 strcpy(track_artists_line, (strtok(NULL, "|")));
             }
             artists_line_size = strlen(track_artists_line);
-            tracks[m]->track_artists[mm] = (char*)malloc(sizeof(artists_line_size));
+            tracks[m]->track_artists[mm] = (char*)malloc(sizeof(artists_line_size + 1));
             strcpy(tracks[m]->track_artists[mm], track_artists_line);
         }
 
