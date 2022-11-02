@@ -32,6 +32,30 @@ tTracks* AllocateTracks() {
     return (tTracks*)malloc(sizeof(tTracks));
 }
 
+tTracks** ReallocateMoreTracks(tTracks** tracks, int new_size) {
+    tTracks** new = NULL;
+    new = (tTracks**)realloc(tracks, sizeof(tTracks*) * new_size);
+    tracks = new;
+
+    for (int m = new_size / 2; m < new_size; m++) {
+        tracks[m] = AllocateTracks();
+    }
+
+    return tracks;
+}
+
+tTracks** ReallocateLessTracks(tTracks** tracks, int old_size, int* new_size) {
+    for (int m = (*new_size); m < old_size; m++) {
+        FreeUpTracks(tracks[m]);
+    }
+
+    tTracks** new = NULL;
+    new = (tTracks**)realloc(tracks, sizeof(tTracks*) * *new_size);
+    tracks = new;
+
+    return tracks;
+}
+
 void FreeUpTracks(tTracks* tracks) {
     for (int m = 0; m < tracks->artists_qty; m++) {
         FreeAndNullPointer(tracks->track_artists[m]);
@@ -46,17 +70,17 @@ void FreeUpTracks(tTracks* tracks) {
     FreeAndNullPointer(tracks);
 }
 
-int ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data) {
+tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_qty) {
     char* buffer = (char*)malloc(sizeof(char) * 2048);
-    int alloc_size = 128, tracks_qty = 1, line_size, artists_line_size;
+    int alloc_size = 128, line_size, artists_line_size;
 
     for (int m = 0; fgets(buffer, 2048, tracks_data) && !EndOfFile(buffer[0]); m++) {
         line_size = strlen(buffer);
-        tracks_qty = m + 1;
+        *tracks_qty = m + 1;
 
-        if (tracks_qty > alloc_size) {
+        if (*tracks_qty > alloc_size) {
             alloc_size *= 2;
-            // realloc;
+            tracks = ReallocateMoreTracks(tracks, alloc_size);
         }
 
         tracks[m]->index = m;
@@ -114,11 +138,11 @@ int ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data) {
         }
     }
 
-    if (tracks_qty < alloc_size) {
-        // realloc;
-    }
-
     FreeAndNullPointer(buffer);
 
-    return tracks_qty;
+    if (*tracks_qty < alloc_size) {
+        tracks = ReallocateLessTracks(tracks, alloc_size, tracks_qty);
+    }
+
+    return tracks;
 }

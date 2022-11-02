@@ -8,8 +8,8 @@ int main(int argc, char** argv) {
     tSpotfes* spotfes = AllocateSpotfes();
 
     ReadSpotifyDataFiles(spotfes, argv);  // acho que poderiamos modularizar essa função em duas separando o scan dos artistas e o scan das músicas
-
-    int input = SetUpMainMenu(input);
+    /*
+    int input = SetUpMainMenu(input); // ativar quando começarmos a fazer o menu
     switch (input) {
         case 1:
             // SearchTracks(spotfes);
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
         default:
             exit(1);
     }
-
+    */
     FreeUpSpotfes(spotfes);
 
     return 0;

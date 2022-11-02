@@ -2,11 +2,11 @@
 
 struct tspotfes {
     tArtists** artists;
-    int artists_qty;
+    int* artists_qty;
     tTracks** tracks;
-    int tracks_qty;
+    int* tracks_qty;
     tPlaylists** playlists;
-    int playlists_qty;
+    int* playlists_qty;
 };
 
 void CheckDataFilesPath(int argc) {
@@ -26,42 +26,52 @@ void CheckDataFilesPath(int argc) {
 
 tSpotfes* AllocateSpotfes() {
     tSpotfes* spotfes = (tSpotfes*)malloc(sizeof(tSpotfes));
+
     spotfes->artists = (tArtists**)malloc(sizeof(tArtists*) * 128);
+    spotfes->artists_qty = (int*)malloc(sizeof(int));
+
     spotfes->tracks = (tTracks**)malloc(sizeof(tTracks*) * 128);
+    spotfes->tracks_qty = (int*)malloc(sizeof(int));
+
     // spotfes->playlists = (tPlaylists**)malloc(sizeof(tPlaylists*) * 16); // ativar quando a função das playlists estiverem prontas
+    // spotfes->playlists_qty = (int*)malloc(sizeof(int)); // ativar quando a função das playlists estiverem prontas
 
     for (int m = 0; m < 128; m++) {
         spotfes->artists[m] = AllocateArtists();
         spotfes->tracks[m] = AllocateTracks();
-        /* if (m < 16) {
+        /*
+        if (m < 16) {
             spotfes->playlists[m] = AllocatePlaylists(); // ativar quando a função das playlists estiverem prontas
-        } */
+        }
+        */
     }
-
-    spotfes->artists_qty = 0;
-    spotfes->tracks_qty = 0;
-    spotfes->playlists_qty = 0;
 
     return spotfes;
 }
 
 void FreeUpSpotfes(tSpotfes* spotfes) {
-    for (int m = 0; m < spotfes->artists_qty; m++) {
+    for (int m = 0; m < *spotfes->artists_qty; m++) {
         FreeUpArtists(spotfes->artists[m]);
     }
 
-    for (int m = 0; m < spotfes->tracks_qty; m++) {
+    for (int m = 0; m < *spotfes->tracks_qty; m++) {
         FreeUpTracks(spotfes->tracks[m]);
     }
     /*
-        for (int m = 0; m < spotfes->playlists_qty; m++) { // // ativar quando a função das playlists estiverem prontas
-            FreeUpPlaylists(spotfes->playlists[m]);
-        }
+    for (int m = 0; m < *spotfes->playlists_qty; m++) { // ativar quando a função das playlists estiverem prontas
+        FreeUpPlaylists(spotfes->playlists[m]);
+    }
     */
 
     FreeAndNullPointer(spotfes->artists);
+    FreeAndNullPointer(spotfes->artists_qty);
+
     FreeAndNullPointer(spotfes->tracks);
+    FreeAndNullPointer(spotfes->tracks_qty);
+
     // FreeAndNullPointer(spotfes->playlists); // ativar quando a função das playlists estiverem prontas
+    // FreeAndNullPointer(spotfes->playlists_qty); // ativar quando a função das playlists estiverem prontas
+
     FreeAndNullPointer(spotfes);
 }
 
@@ -72,7 +82,7 @@ void ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
         exit(1);
     }
 
-    spotfes->artists_qty = ReadArtistsDataFiles(spotfes->artists, artists_data);
+    spotfes->artists = ReadArtistsDataFiles(spotfes->artists, artists_data, spotfes->artists_qty);
     fclose(artists_data);
 
     FILE* tracks_data = fopen(argv[2], "r");
@@ -81,7 +91,7 @@ void ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
         exit(1);
     }
 
-    spotfes->tracks_qty = ReadTracksDataFiles(spotfes->tracks, tracks_data);
+    spotfes->tracks = ReadTracksDataFiles(spotfes->tracks, tracks_data, spotfes->tracks_qty);
     fclose(tracks_data);
 }
 

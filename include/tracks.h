@@ -4,7 +4,9 @@
 typedef struct ttracks tTracks;
 
 tTracks* AllocateTracks();
+tTracks** ReallocateMoreTracks(tTracks** tracks, int new_size);
+tTracks** ReallocateLessTracks(tTracks** tracks, int old_size, int* new_size);
 void FreeUpTracks(tTracks* tracks);
-int ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data);
+tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_qty);
 
 #endif
