@@ -47,11 +47,17 @@ void FreeUpTracks(tTracks* tracks) {
 }
 
 int ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data) {
-    char buffer[2048];
-    int tracks_qty = 1, line_size, artists_line_size;
+    char* buffer = (char*)malloc(sizeof(char) * 2048);
+    int alloc_size = 128, tracks_qty = 1, line_size, artists_line_size;
 
     for (int m = 0; fgets(buffer, 2048, tracks_data) && !EndOfFile(buffer[0]); m++) {
         line_size = strlen(buffer);
+        tracks_qty = m + 1;
+
+        if (tracks_qty > alloc_size) {
+            alloc_size *= 2;
+            // realloc;
+        }
 
         tracks[m]->index = m;
         tracks[m]->id = strdup(strtok(buffer, ";"));
@@ -106,9 +112,13 @@ int ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data) {
                 tracks[m]->artists_ids[mm] = strdup(strtok(NULL, "|"));
             }
         }
-
-        tracks_qty = m + 1;
     }
-    
+
+    if (tracks_qty < alloc_size) {
+        // realloc;
+    }
+
+    FreeAndNullPointer(buffer);
+
     return tracks_qty;
 }

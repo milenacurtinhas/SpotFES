@@ -4,9 +4,10 @@ int main(int argc, char** argv) {
     // CheckDataFilesPath(argc); // adicionar ao terminar
     argv[1] = "data/artists_2.csv";  // remover ao terminar
     argv[2] = "data/tracks_2.csv";   // remover ao terminar
-    
+
     tSpotfes* spotfes = AllocateSpotfes();
-    ReadSpotifyDataFiles(spotfes, argv);
+
+    ReadSpotifyDataFiles(spotfes, argv);  // acho que poderiamos modularizar essa função em duas separando o scan dos artistas e o scan das músicas
 
     int input = SetUpMainMenu(input);
     switch (input) {

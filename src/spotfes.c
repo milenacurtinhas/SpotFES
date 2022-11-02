@@ -3,13 +3,10 @@
 struct tspotfes {
     tArtists** artists;
     int artists_qty;
-    int artists_mallocs;
     tTracks** tracks;
     int tracks_qty;
-    int tracks_mallocs;
     tPlaylists** playlists;
     int playlists_qty;
-    int playlists_mallocs;
 };
 
 void CheckDataFilesPath(int argc) {
@@ -31,42 +28,40 @@ tSpotfes* AllocateSpotfes() {
     tSpotfes* spotfes = (tSpotfes*)malloc(sizeof(tSpotfes));
     spotfes->artists = (tArtists**)malloc(sizeof(tArtists*) * 128);
     spotfes->tracks = (tTracks**)malloc(sizeof(tTracks*) * 128);
-    spotfes->playlists = (tPlaylists**)malloc(sizeof(tPlaylists*) * 16);
+    // spotfes->playlists = (tPlaylists**)malloc(sizeof(tPlaylists*) * 16); // ativar quando a função das playlists estiverem prontas
 
     for (int m = 0; m < 128; m++) {
         spotfes->artists[m] = AllocateArtists();
         spotfes->tracks[m] = AllocateTracks();
-        if (m < 16) {
-            spotfes->playlists[m] = AllocatePlaylists();
-        }
+        /* if (m < 16) {
+            spotfes->playlists[m] = AllocatePlaylists(); // ativar quando a função das playlists estiverem prontas
+        } */
     }
 
     spotfes->artists_qty = 0;
-    spotfes->artists_mallocs = 128;
     spotfes->tracks_qty = 0;
-    spotfes->tracks_mallocs = 128;
     spotfes->playlists_qty = 0;
-    spotfes->playlists_mallocs = 16;
 
     return spotfes;
 }
 
 void FreeUpSpotfes(tSpotfes* spotfes) {
-    for (int m = 0; m < spotfes->artists_mallocs; m++) {
+    for (int m = 0; m < spotfes->artists_qty; m++) {
         FreeUpArtists(spotfes->artists[m]);
     }
 
-    for (int m = 0; m < spotfes->tracks_mallocs; m++) {
+    for (int m = 0; m < spotfes->tracks_qty; m++) {
         FreeUpTracks(spotfes->tracks[m]);
     }
-
-    for (int m = 0; m < spotfes->playlists_mallocs; m++) {
-        FreeUpPlaylists(spotfes->playlists[m]);
-    }
+    /*
+        for (int m = 0; m < spotfes->playlists_qty; m++) { // // ativar quando a função das playlists estiverem prontas
+            FreeUpPlaylists(spotfes->playlists[m]);
+        }
+    */
 
     FreeAndNullPointer(spotfes->artists);
     FreeAndNullPointer(spotfes->tracks);
-    FreeAndNullPointer(spotfes->playlists);
+    // FreeAndNullPointer(spotfes->playlists); // ativar quando a função das playlists estiverem prontas
     FreeAndNullPointer(spotfes);
 }
 
@@ -102,6 +97,6 @@ int SetUpMainMenu(int input) {
     printf("8 - Gerar relatório\n\n");
     printf("Digite a opção desejada: ");
     scanf("%d%*c", &input);
-    
+
     return input;
 }

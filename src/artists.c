@@ -24,11 +24,17 @@ void FreeUpArtists(tArtists* artists) {
 }
 
 int ReadArtistsDataFiles(tArtists** artists, FILE* artists_data) {
-    char buffer[1024];
-    int artists_qty = 1, line_size, genres_line_size;
+    char* buffer = (char*)malloc(sizeof(char) * 1024);
+    int alloc_size = 128, artists_qty = 1, line_size, genres_line_size;
 
     for (int m = 0; fgets(buffer, 1024, artists_data) && !EndOfFile(buffer[0]); m++) {
         line_size = strlen(buffer);
+
+        artists_qty = m + 1;
+        if (artists_qty > alloc_size) {
+            alloc_size *= 2;
+            // realloc;
+        }
 
         artists[m]->id = strdup(strtok(buffer, ";"));
         artists[m]->followers = atoi(strtok(NULL, ";"));
@@ -52,9 +58,13 @@ int ReadArtistsDataFiles(tArtists** artists, FILE* artists_data) {
                 artists[m]->genres[mm] = strdup(strtok(NULL, "|"));
             }
         }
-
-        artists_qty = m + 1;
     }
-    
+
+    if (artists_qty < alloc_size) {
+        // realloc;
+    }
+
+    FreeAndNullPointer(buffer);
+
     return artists_qty;
 }
