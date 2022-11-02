@@ -90,25 +90,31 @@ int ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data) {
 
         artists_line_size = strlen(track_artists_line);
         tracks[m]->artists_qty = GetValueQuantity(track_artists_line, artists_line_size);
-        tracks[m]->track_artists = (char**)malloc(sizeof(char*) * tracks[m]->artists_qty);
+        tracks[m]->track_artists = (char**)malloc(sizeof(char*) * ((tracks[m]->artists_qty)));
 
         tracks[m]->artists_ids = (char**)malloc(sizeof(char*) * tracks[m]->artists_qty);
 
         for (int mm = 0; mm < tracks[m]->artists_qty; mm++) {
             if (!mm) {
                 strcpy(track_artists_line, (strtok(track_artists_line, "|")));
-                strcpy(artists_ids_line, (strtok(artists_ids_line, "|")));
             } else if (mm == tracks[m]->artists_qty - 1) {
                 strcpy(track_artists_line, (strtok(NULL, "\n")));
-                strcpy(artists_ids_line, (strtok(NULL, "\n")));
             } else {
                 strcpy(track_artists_line, (strtok(NULL, "|")));
-                strcpy(artists_ids_line, (strtok(NULL, "|")));
             }
             artists_line_size = strlen(track_artists_line);
-            tracks[m]->track_artists[mm] = (char*)malloc(sizeof(artists_line_size + 1));
+            tracks[m]->track_artists[mm] = (char*)malloc(sizeof(artists_line_size));
             strcpy(tracks[m]->track_artists[mm], track_artists_line);
+        }
 
+        for(int mm = 0; mm < tracks[m]->artists_qty; mm++){
+            if (!mm) {
+                strcpy(artists_ids_line, (strtok(artists_ids_line, "|")));
+            } else if (mm == tracks[m]->artists_qty - 1) {
+                strcpy(artists_ids_line, (strtok(NULL, "\n")));
+            } else {
+                strcpy(artists_ids_line, (strtok(NULL, "|")));
+            }
             tracks[m]->artists_ids[mm] = (char*)malloc(sizeof(char) * 23);
             strcpy(tracks[m]->artists_ids[mm], artists_ids_line);
         }
