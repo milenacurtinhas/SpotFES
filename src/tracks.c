@@ -60,6 +60,7 @@ int ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data) {
         strcpy(name, strtok(NULL, ";"));
         name_size = strlen(name);
         tracks[m]->track_name = (char*)malloc(sizeof(name_size + 1));
+        strcpy(tracks[m]->track_name, name);
 
         tracks[m]->popularity = atoi(strtok(NULL, ";"));
         tracks[m]->duration_ms = atoi(strtok(NULL, ";"));
@@ -111,7 +112,6 @@ int ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data) {
             tracks[m]->artists_ids[mm] = (char*)malloc(sizeof(char) * 23);
             strcpy(tracks[m]->artists_ids[mm], artists_ids_line);
         }
-        strcpy(tracks[m]->track_name, name);
     }
 
     return tracks_qty;
