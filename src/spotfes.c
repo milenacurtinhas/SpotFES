@@ -32,11 +32,13 @@ void CheckDataFilesPath(int argc) {
 tSpotfes* AllocateSpotfes() {
     tSpotfes* spotfes = (tSpotfes*)malloc(sizeof(tSpotfes));
     spotfes->artists = (tArtists**)malloc(sizeof(tArtists*) * 128);
-    spotfes->tracks = (tTracks**)malloc(sizeof(tTracks*) * 128);
+    spotfes->tracks = (tTracks**)malloc(sizeof(tTracks*) * 850);
     spotfes->playlists = (tPlaylists**)malloc(sizeof(tPlaylists*) * 16);
 
-    for (int m = 0; m < 128; m++) {
-        spotfes->artists[m] = AllocateArtists();
+    for (int m = 0; m < 850; m++) {
+        if (m < 128) {
+            spotfes->artists[m] = AllocateArtists();
+        }
         spotfes->tracks[m] = AllocateTracks();
         if (m < 16) {
             spotfes->playlists[m] = AllocatePlaylists();
@@ -46,7 +48,7 @@ tSpotfes* AllocateSpotfes() {
     spotfes->artists_qty = 0;
     spotfes->artists_mallocs = 128;
     spotfes->tracks_qty = 0;
-    spotfes->tracks_mallocs = 128;
+    spotfes->tracks_mallocs = 850;
     spotfes->playlists_qty = 0;
     spotfes->playlists_mallocs = 128;
 
@@ -54,13 +56,13 @@ tSpotfes* AllocateSpotfes() {
 }
 
 void FreeUpSpotfes(tSpotfes* spotfes) {
-    for (int m = 0; m < spotfes->artists_qty; m++) {
+    for (int m = 0; m < 128; m++) {
         FreeUpArtists(spotfes->artists[m]);
     }
-    for (int m = 0; m < spotfes->tracks_qty; m++) {
+    for (int m = 0; m < 850; m++) {
         FreeUpTracks(spotfes->tracks[m]);
     }
-    for (int m = 0; m < spotfes->playlists_qty; m++) {
+    for (int m = 0; m < 16; m++) {
         FreeUpPlaylists(spotfes->playlists[m]);
     }
     FreeAndNullPointer(spotfes->artists);
@@ -83,14 +85,15 @@ void ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
     }
 
     spotfes->artists_qty = ReadArtistsDataFiles(spotfes->artists, artists_data);
-
-    if (LessArtistsThanMallocs(spotfes->artists_qty, spotfes->artists_mallocs)) {
-        spotfes->artists = realloc(spotfes->artists, spotfes->artists_qty);
-        spotfes->artists_mallocs = spotfes->artists_qty;
-    }
+    /*
+        if (LessArtistsThanMallocs(spotfes->artists_qty, spotfes->artists_mallocs)) {
+            spotfes->artists = realloc(spotfes->artists, spotfes->artists_qty);
+            spotfes->artists_mallocs = spotfes->artists_qty;
+        }
+        */
 
     spotfes->tracks_qty = ReadTracksDataFiles(spotfes->tracks, tracks_data);
-    LinkArtistsToTracks(spotfes, spotfes->artists, spotfes->tracks);
+    // LinkArtistsToTracks(spotfes, spotfes->artists, spotfes->tracks);
 
     fclose(artists_data);
     fclose(tracks_data);
