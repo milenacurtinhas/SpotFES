@@ -1,48 +1,40 @@
 #include "libraries.h"
 
 int main(int argc, char** argv) {
-    // CheckDataFilesPath(argc);
-    argv[1] = "data/artists_2.csv";
-    argv[2] = "data/tracks_2.csv";
+    // CheckDataFilesPath(argc); // adicionar ao terminar
+    argv[1] = "data/artists_2.csv";  // remover ao terminar
+    argv[2] = "data/tracks_2.csv";   // remover ao terminar
+    
     tSpotfes* spotfes = AllocateSpotfes();
     ReadSpotifyDataFiles(spotfes, argv);
 
-    int input = SetUpMainMenu();
-
+    int input = SetUpMainMenu(input);
     switch (input) {
         case 1:
             // SearchTracks(spotfes);
             break;
-
         case 2:
             // ListTrack(spotfes);
             // PlayTrack(spotfes);
             break;
-
         case 3:
             // CreatePlaylist(spotfes);
             break;
-
         case 4:
             // ListPlaylists(spotfes);
             break;
-
         case 5:
             // ListPlaylist(spotfes);
             break;
-
         case 6:
             // AddTrackToPlaylist(spotfes);
             break;
-
         case 7:
             // RecommendSimilarTrack(spotfes);
             break;
-
         case 8:
             // GenerateReport(spotfes);
             break;
-
         default:
             exit(1);
     }

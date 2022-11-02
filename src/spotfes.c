@@ -18,12 +18,10 @@ void CheckDataFilesPath(int argc) {
             printf("ERRO: Nenhum arquivo de dados do Spotify foi declarado. Verifique se eles estão contidos na pasta 'data', no mesmo diretório desse programa.\n");
             exit(1);
             break;
-
         case 2:
             printf("ERRO: Um dos arquivos de dados do Spotify não foi declarado. Verifique se ele está contido na pasta 'data', no mesmo diretório desse programa.\n");
             exit(1);
             break;
-
         case 3:
             break;
     }
@@ -32,13 +30,11 @@ void CheckDataFilesPath(int argc) {
 tSpotfes* AllocateSpotfes() {
     tSpotfes* spotfes = (tSpotfes*)malloc(sizeof(tSpotfes));
     spotfes->artists = (tArtists**)malloc(sizeof(tArtists*) * 128);
-    spotfes->tracks = (tTracks**)malloc(sizeof(tTracks*) * 850);
+    spotfes->tracks = (tTracks**)malloc(sizeof(tTracks*) * 128);
     spotfes->playlists = (tPlaylists**)malloc(sizeof(tPlaylists*) * 16);
 
-    for (int m = 0; m < 850; m++) {
-        if (m < 128) {
-            spotfes->artists[m] = AllocateArtists();
-        }
+    for (int m = 0; m < 128; m++) {
+        spotfes->artists[m] = AllocateArtists();
         spotfes->tracks[m] = AllocateTracks();
         if (m < 16) {
             spotfes->playlists[m] = AllocatePlaylists();
@@ -48,23 +44,26 @@ tSpotfes* AllocateSpotfes() {
     spotfes->artists_qty = 0;
     spotfes->artists_mallocs = 128;
     spotfes->tracks_qty = 0;
-    spotfes->tracks_mallocs = 850;
+    spotfes->tracks_mallocs = 128;
     spotfes->playlists_qty = 0;
-    spotfes->playlists_mallocs = 128;
+    spotfes->playlists_mallocs = 16;
 
     return spotfes;
 }
 
 void FreeUpSpotfes(tSpotfes* spotfes) {
-    for (int m = 0; m < 128; m++) {
+    for (int m = 0; m < spotfes->artists_mallocs; m++) {
         FreeUpArtists(spotfes->artists[m]);
     }
-    for (int m = 0; m < 850; m++) {
+
+    for (int m = 0; m < spotfes->tracks_mallocs; m++) {
         FreeUpTracks(spotfes->tracks[m]);
     }
-    for (int m = 0; m < 16; m++) {
+
+    for (int m = 0; m < spotfes->playlists_mallocs; m++) {
         FreeUpPlaylists(spotfes->playlists[m]);
     }
+
     FreeAndNullPointer(spotfes->artists);
     FreeAndNullPointer(spotfes->tracks);
     FreeAndNullPointer(spotfes->playlists);
@@ -78,30 +77,20 @@ void ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
         exit(1);
     }
 
+    spotfes->artists_qty = ReadArtistsDataFiles(spotfes->artists, artists_data);
+    fclose(artists_data);
+
     FILE* tracks_data = fopen(argv[2], "r");
     if (!tracks_data) {
         printf("ERRO: Não foi possível acessar o arquivo de dados das músicas. Verifique se ele está no mesmo diretório do executável desse programa.\n");
         exit(1);
     }
 
-    spotfes->artists_qty = ReadArtistsDataFiles(spotfes->artists, artists_data);
-    /*
-        if (LessArtistsThanMallocs(spotfes->artists_qty, spotfes->artists_mallocs)) {
-            spotfes->artists = realloc(spotfes->artists, spotfes->artists_qty);
-            spotfes->artists_mallocs = spotfes->artists_qty;
-        }
-        */
-
     spotfes->tracks_qty = ReadTracksDataFiles(spotfes->tracks, tracks_data);
-    // LinkArtistsToTracks(spotfes, spotfes->artists, spotfes->tracks);
-
-    fclose(artists_data);
     fclose(tracks_data);
 }
 
-int SetUpMainMenu() {
-    int input;
-
+int SetUpMainMenu(int input) {
     printf("SPOTFES by M&M\n\n");
     printf("1 - Buscar músicas\n");
     printf("2 - Listar uma música\n");
@@ -113,14 +102,6 @@ int SetUpMainMenu() {
     printf("8 - Gerar relatório\n\n");
     printf("Digite a opção desejada: ");
     scanf("%d%*c", &input);
-
+    
     return input;
-}
-
-int GetArtistsQuantity(tSpotfes* spotfes) {
-    return spotfes->artists_qty;
-}
-
-int GetTracksQuantity(tSpotfes* spotfes) {
-    return spotfes->tracks_qty;
 }

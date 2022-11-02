@@ -7,8 +7,6 @@ void CheckDataFilesPath(int argc);
 tSpotfes* AllocateSpotfes();
 void FreeUpSpotfes(tSpotfes* spotfes);
 void ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv);
-int SetUpMainMenu();
-int GetArtistsQuantity(tSpotfes* spotfes);
-int GetTracksQuantity(tSpotfes* spotfes);
+int SetUpMainMenu(int input);
 
 #endif

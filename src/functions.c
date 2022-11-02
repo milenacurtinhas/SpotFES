@@ -24,17 +24,3 @@ int GetValueQuantity(char* character, int value_size) {
 
     return value_qty;
 }
-
-int LessArtistsThanMallocs(int quantity, int mallocs) {
-    return quantity < mallocs;
-}
-
-int SameID(char* source_id, char* target_id) {
-    int result = strcmp(source_id, target_id);
-
-    if (result == 0) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
