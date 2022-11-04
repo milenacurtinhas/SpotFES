@@ -93,3 +93,7 @@ tArtists** ReadArtistsDataFiles(tArtists** artists, FILE* artists_data, int* art
 
     return artists;
 }
+
+char* GetArtistID(tArtists* artist) {
+    return artist->id;
+}

@@ -92,7 +92,17 @@ void ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
     }
 
     spotfes->tracks = ReadTracksDataFiles(spotfes->tracks, tracks_data, spotfes->tracks_qty);
+    LinkArtistsToTracks(spotfes, spotfes->tracks, spotfes->artists);
+
     fclose(tracks_data);
+}
+
+int GetArtistsQuantity(tSpotfes* spotfes) {
+    return (*spotfes->artists_qty);
+}
+
+int GetTracksQuantity(tSpotfes* spotfes) {
+    return (*spotfes->tracks_qty);
 }
 
 int SetUpMainMenu(int input) {

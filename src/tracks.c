@@ -60,13 +60,13 @@ void FreeUpTracks(tTracks* tracks) {
     for (int m = 0; m < tracks->artists_qty; m++) {
         FreeAndNullPointer(tracks->track_artists[m]);
         FreeAndNullPointer(tracks->artists_ids[m]);
-        // FreeUpArtists(tracks->artists[m]); // ativar quando fizer a linkagem dos artistas das musicas para as musicas
     }
+
     FreeAndNullPointer(tracks->id);
     FreeAndNullPointer(tracks->track_name);
     FreeAndNullPointer(tracks->track_artists);
     FreeAndNullPointer(tracks->artists_ids);
-    // FreeAndNullPointer(tracks->artists); // ativar quando fizer a linkagem dos artistas das musicas para as musicas
+    FreeAndNullPointer(tracks->artists);
     FreeAndNullPointer(tracks);
 }
 
@@ -145,4 +145,24 @@ tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_q
     }
 
     return tracks;
+}
+
+void LinkArtistsToTracks(tSpotfes* spotfes, tTracks** tracks, tArtists** artists) {
+    int all_artists_qty = GetArtistsQuantity(spotfes);
+    int tracks_qty = GetTracksQuantity(spotfes);
+    char all_artists_ids[23];
+    // varre todas as tracks
+    for (int m = 0; m < tracks_qty; m++) {
+        tracks[m]->artists = (tArtists**)malloc(sizeof(tArtists*) * tracks[m]->artists_qty);
+        // varre todos os artistas da track
+        for (int mm = 0; mm < tracks[m]->artists_qty; mm++) {
+            // varre todos os artistas do spotfes
+            for (int mmm = 0; mmm < all_artists_qty; mmm++) {
+                strcpy(all_artists_ids, GetArtistID(artists[mmm]));
+                if (strcmp(all_artists_ids, tracks[m]->artists_ids[mm]) == 0) {
+                    tracks[m]->artists[mm] = artists[mmm];
+                }
+            }
+        }
+    }
 }
