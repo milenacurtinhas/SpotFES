@@ -10,5 +10,7 @@ void ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv);
 int GetArtistsQuantity(tSpotfes* spotfes);
 int GetTracksQuantity(tSpotfes* spotfes);
 int SetUpMainMenu(int input);
+void SearchTracks(tSpotfes* spotfes);
+void DetailTrack(tSpotfes* spotfes);
 
 #endif

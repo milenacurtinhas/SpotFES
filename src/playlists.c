@@ -3,7 +3,7 @@
 struct tplaylists {
     int index;
     char* playlist_name;
-    int tracks_number;
+    int tracks_qty;
     int* tracks_index;
 };
 

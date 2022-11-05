@@ -26,6 +26,7 @@ struct ttracks {
     float tempo;
     int time_signature;
     tArtists** artists;
+    int linked_artists_qty;
 };
 
 tTracks* AllocateTracks() {
@@ -154,6 +155,7 @@ void LinkArtistsToTracks(tSpotfes* spotfes, tTracks** tracks, tArtists** artists
     // varre todas as tracks
     for (int m = 0; m < tracks_qty; m++) {
         tracks[m]->artists = (tArtists**)malloc(sizeof(tArtists*) * tracks[m]->artists_qty);
+        tracks[m]->linked_artists_qty = 0;
         // varre todos os artistas da track
         for (int mm = 0; mm < tracks[m]->artists_qty; mm++) {
             // varre todos os artistas do spotfes
@@ -161,8 +163,95 @@ void LinkArtistsToTracks(tSpotfes* spotfes, tTracks** tracks, tArtists** artists
                 strcpy(all_artists_ids, GetArtistID(artists[mmm]));
                 if (strcmp(all_artists_ids, tracks[m]->artists_ids[mm]) == 0) {
                     tracks[m]->artists[mm] = artists[mmm];
+                    tracks[m]->linked_artists_qty++;
                 }
             }
         }
+    }
+}
+
+void SearchTracksByTitle(char* input, tTracks** tracks, int tracks_qty) {
+    int prints = 0;
+    char* track = NULL;
+    char* comparison = NULL;
+
+    input = GetLowcaseString(input);
+
+    for (int m = 0; m < tracks_qty; m++) {
+        track = strdup(tracks[m]->track_name);
+        track = GetLowcaseString(track);
+
+        comparison = strstr(track, input);
+
+        if (comparison != NULL) {
+            prints++;
+
+            printf("\nÍndice da música: %d\n", tracks[m]->index);
+            printf("ID da música: %s\n", tracks[m]->id);
+            printf("Título da música: %s\n", tracks[m]->track_name);
+
+            if (tracks[m]->artists_qty == 1) {
+                printf("Artista da música: %s\n\n", tracks[m]->track_artists[0]);
+            } else {
+                printf("Artistas da música: ");
+                for (int mm = 0; mm < tracks[m]->artists_qty; mm++) {
+                    if (mm == tracks[m]->artists_qty - 1) {
+                        printf("%s\n\n", tracks[m]->track_artists[mm]);
+                    } else {
+                        printf("%s, ", tracks[m]->track_artists[mm]);
+                    }
+                }
+            }
+        }
+
+        FreeAndNullPointer(track);
+    }
+
+    if (track == NULL && prints == 0) {
+        printf("\nNenhuma música foi encontrada!\n\n");
+    }
+}
+
+void SearchTracksByIndex(int input, tTracks** tracks, int tracks_qty) {
+    for (int m = 0; m < tracks_qty; m++) {
+        if (input == tracks[m]->index) {
+            printf("\n♪  Informações sobre a música  ♪\n");
+            printf("Título: %s\n", tracks[m]->track_name);
+            printf("Índice: %d\n", tracks[m]->index);
+            printf("ID: %s\n", tracks[m]->id);
+            printf("Popularidade: %d%%\n", tracks[m]->popularity);
+            PrintTrackLength(tracks[m]->duration_ms);
+            printf("Data de lançamento: %d/%d/%d\n", tracks[m]->release_day, tracks[m]->release_month, tracks[m]->release_year);
+            printf("Danceability: %f\n", tracks[m]->danceability);
+            printf("Energy: %f\n", tracks[m]->energy);
+            printf("Key: %d\n", tracks[m]->key);
+            printf("Loudness: %f\n", tracks[m]->loudness);
+            printf("Mode: %d\n", tracks[m]->mode);
+            printf("Speechiness: %f\n", tracks[m]->speechiness);
+            printf("Acousticness: %f\n", tracks[m]->acousticness);
+            printf("Instrumentalness: %f\n", tracks[m]->instrumentalness);
+            printf("Liveness: %f\n", tracks[m]->liveness);
+            printf("Valence: %f\n", tracks[m]->valence);
+            printf("Tempo: %f\n", tracks[m]->tempo);
+            printf("Time signature: %d\n", tracks[m]->time_signature);
+            PrintExplicitInfo(tracks[m]->explicit);
+            PrintArtistsDetails(tracks[m]->artists, tracks[m]->linked_artists_qty);
+            OpenTrack(tracks[m]);
+            break;
+        }
+    }
+}
+
+void OpenTrack(tTracks* track) {
+    char option;
+    char url[62] = "firefox https://open.spotify.com/track/";
+    strcat(url, track->id);
+
+    printf("\n♪  Deseja abrir a música no Firefox? (S/N): ");
+
+    scanf("%*c");
+    scanf("%c", &option);
+    if (option == 'S' || option == 's') {
+        system(url);
     }
 }

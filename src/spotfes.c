@@ -106,17 +106,32 @@ int GetTracksQuantity(tSpotfes* spotfes) {
 }
 
 int SetUpMainMenu(int input) {
-    printf("SPOTFES by M&M\n\n");
-    printf("1 - Buscar músicas\n");
-    printf("2 - Listar uma música\n");
+    printf("♬  SPOTFES by M&M  ♬\n\n");
+    printf("1 - Pesquisar músicas\n");
+    printf("2 - Detalhar uma música\n");
     printf("3 - Criar uma playlist\n");
-    printf("4 - Listar playlists\n");
-    printf("5 - Listar uma playlist\n");
+    printf("4 - Exibir playlists\n");
+    printf("5 - Detalhar uma playlist\n");
     printf("6 - Adicionar uma música na playlist\n");
     printf("7 - Recomendar músicas parecidas com uma playlist\n");
     printf("8 - Gerar relatório\n\n");
-    printf("Digite a opção desejada: ");
+    printf("♬  Digite a opção desejada: ");
     scanf("%d%*c", &input);
 
     return input;
+}
+
+void SearchTracks(tSpotfes* spotfes) {
+    char input[128];
+    printf("\n♬  Digite o título de uma música a ser pesquisada: ");
+    fgets(input, 128, stdin);
+    strcpy(input, strtok(input, "\n"));
+    SearchTracksByTitle(input, spotfes->tracks, (*spotfes->tracks_qty));
+}
+
+void DetailTrack(tSpotfes* spotfes) {
+    int input;
+    printf("\n♬  Digite o índice da música a ser detalhada: ");
+    scanf("%d", &input);
+    SearchTracksByIndex(input, spotfes->tracks, (*spotfes->tracks_qty));
 }
