@@ -12,5 +12,13 @@ int GetTracksQuantity(tSpotfes* spotfes);
 int SetUpMainMenu(int input);
 void SearchTracks(tSpotfes* spotfes);
 void DetailTrack(tSpotfes* spotfes);
+void CreatePlaylist(tSpotfes* spotfes);
+int GetPlaylistQty(tSpotfes* spotfes);
+void ListPlaylists(tSpotfes* spotfes);
+void ListPlaylist(tSpotfes* spotfes);
+void AddTrackToPlaylist(tSpotfes* spotfes);
+/* void RecommendSimilarTrack(tSpotfes* spotfes);
+float* GetTracksFeatures(tSpotfes* spotfes);
+*/
 
 #endif

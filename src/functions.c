@@ -76,3 +76,13 @@ void PrintExplicitInfo(int explicit) {
             break;
     }
 }
+
+/*float CalculateEuclideanDistance(float* features, float* averages) {
+    int euclideanDistance = 0;
+
+    for (int m = 0; m < 8; m++) {
+        euclideanDistance += pow((features[m] = averages[m]), 2);
+    }
+
+    return euclideanDistance;
+}*/

@@ -7,6 +7,7 @@ struct tspotfes {
     int* tracks_qty;
     tPlaylists** playlists;
     int* playlists_qty;
+    int* playlists_allocs;
 };
 
 void CheckDataFilesPath(int argc) {
@@ -29,21 +30,24 @@ tSpotfes* AllocateSpotfes() {
 
     spotfes->artists = (tArtists**)malloc(sizeof(tArtists*) * 128);
     spotfes->artists_qty = (int*)malloc(sizeof(int));
+    (*spotfes->artists_qty) = 0;
 
     spotfes->tracks = (tTracks**)malloc(sizeof(tTracks*) * 128);
     spotfes->tracks_qty = (int*)malloc(sizeof(int));
+    (*spotfes->tracks_qty) = 0;
 
-    // spotfes->playlists = (tPlaylists**)malloc(sizeof(tPlaylists*) * 16); // ativar quando a função das playlists estiverem prontas
-    // spotfes->playlists_qty = (int*)malloc(sizeof(int)); // ativar quando a função das playlists estiverem prontas
+    spotfes->playlists = (tPlaylists**)malloc(sizeof(tPlaylists*) * 16);
+    spotfes->playlists_qty = (int*)malloc(sizeof(int));
+    (*spotfes->playlists_qty) = 0;
+    (*spotfes->playlists_allocs) = 16;
 
     for (int m = 0; m < 128; m++) {
         spotfes->artists[m] = AllocateArtists();
         spotfes->tracks[m] = AllocateTracks();
-        /*
+
         if (m < 16) {
-            spotfes->playlists[m] = AllocatePlaylists(); // ativar quando a função das playlists estiverem prontas
+            spotfes->playlists[m] = AllocatePlaylists();
         }
-        */
     }
 
     return spotfes;
@@ -135,3 +139,52 @@ void DetailTrack(tSpotfes* spotfes) {
     scanf("%d", &input);
     SearchTracksByIndex(input, spotfes->tracks, (*spotfes->tracks_qty));
 }
+
+void CreatePlaylist(tSpotfes* spotfes) {
+    char input[128];
+    printf("\n♬  Digite o título de uma playlist a ser criada: ");
+    fgets(input, 128, stdin);
+    strcpy(input, strtok(input, "\n"));
+    spotfes->playlists = NewPlaylist(input, spotfes->playlists, (*spotfes->playlists_qty));
+
+    *spotfes->playlists_qty += 1;
+
+    if ((*spotfes->playlists_qty) > (*spotfes->playlists_allocs)) {
+        (*spotfes->playlists_allocs) *= 2;
+
+        spotfes->playlists = ReallocateMorePlaylists(spotfes->playlists, (*spotfes->playlists_allocs));
+    }
+}
+
+int GetPlaylistQty(tSpotfes* spotfes) {
+    return *(spotfes->playlists_qty);
+}
+
+void ListPlaylists(tSpotfes* spotfes) {
+    DisplayPlaylists(spotfes->playlists, (*spotfes->playlists_qty));
+}
+
+void ListPlaylist(tSpotfes* spotfes) {
+    int input;
+    printf("\n♬  Digite o índice da playlist a ser listada: ");
+    scanf("%d", &input);
+    SearchPlaylistsByIndex(input, spotfes->playlists, (*spotfes->playlists_qty));
+}
+
+void AddTrackToPlaylist(tSpotfes* spotfes) {
+    int tracks_index, playlist_index;
+    printf("\n♬  Digite o índice da música e da playlist a qual será adicionada: ");
+    scanf("%d %d", &tracks_index, &playlist_index);
+    LinkTrackToPlaylist(spotfes->playlists[playlist_index], spotfes->tracks[tracks_index]);
+}
+
+/*void RecommendSimilarTrack(tSpotfes* spotfes) {
+    int playlist_index, qty;
+    printf("\n♬  Digite o índice da playlist e a quantidade de músicas similares a serem recomendadas: ");
+    scanf("%d %d", &playlist_index, &qty);
+    ComparePlaylistToTracks(spotfes, spotfes->playlists[playlist_index], qty);
+}
+
+float* GetTracksFeatures(tSpotfes* spotfes, int m) {
+    return GetFeatures(spotfes->tracks[m]);
+}*/

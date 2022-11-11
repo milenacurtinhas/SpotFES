@@ -18,19 +18,19 @@ int main(int argc, char** argv) {
             DetailTrack(spotfes);
             break;
         case 3:
-            // CreatePlaylist(spotfes);
+            CreatePlaylist(spotfes);
             break;
         case 4:
-            // ListPlaylists(spotfes);
+            ListPlaylists(spotfes);
             break;
         case 5:
-            // ListPlaylist(spotfes);
+            ListPlaylist(spotfes);
             break;
         case 6:
-            // AddTrackToPlaylist(spotfes);
+            AddTrackToPlaylist(spotfes);
             break;
         case 7:
-            // RecommendSimilarTrack(spotfes);
+            //RecommendSimilarTrack(spotfes);
             break;
         case 8:
             // GenerateReport(spotfes);

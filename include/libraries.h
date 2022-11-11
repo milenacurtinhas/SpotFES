@@ -10,5 +10,6 @@
 #include "playlists.h"
 #include "spotfes.h"
 #include "tracks.h"
+#include "math.h"
 
 #endif
