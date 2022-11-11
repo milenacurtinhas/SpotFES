@@ -6,7 +6,7 @@ void FreeAndNullPointer(void* pointer) {
 }
 
 int EndOfFile(char character) {
-    if (character == 0 || character == 10 || character == 13) {
+    if (character == '\0' || character == '\n' || character == '\r') {
         return 1;
     } else {
         return 0;
@@ -34,45 +34,42 @@ char* GetLowcaseString(char* string) {
 }
 
 void PrintTrackLength(int duration_ms) {
-    int duration = duration_ms / 1000;
-    int minutes = duration / 60;
-    int seconds = duration % 60;
+    int duration_s = duration_ms / 1000;
+    int minutes = duration_s / 60;
+    int seconds = duration_s % 60;
 
-    printf("Duração: ");
-    if (!minutes) {
-        if (!seconds) {
-            printf("N/A\n");
-        } else if (seconds == 1) {
-            printf("1 segundo\n");
-        } else {
-            printf("%d segundos\n", seconds);
-        }
-    } else if (minutes == 1) {
-        if (!seconds) {
-            printf("1 minuto\n");
-        } else if (seconds == 1) {
-            printf("1 minuto e 1 segundo\n");
-        } else {
-            printf("1 minuto e %d segundos\n", seconds);
-        }
-    } else if (minutes > 1) {
-        if (!seconds) {
-            printf("%d minutos\n", minutes);
-        } else if (seconds == 1) {
-            printf("%d minutos e 1 segundo\n", minutes);
-        } else {
-            printf("%d minutos e %d segundos\n", minutes, seconds);
-        }
-    }
+    printf("Duração: %02d:%02d\n", minutes, seconds);
 }
 
-void PrintExplicitInfo(int explicit) {
+void PrintTrackReleaseDate(int day, int month, int year) {
+    printf("Data de lançamento: ");
+
+    if (day) {
+        printf("%02d/", day);
+    }
+
+    if (month) {
+        printf("%02d/", month);
+    }
+
+    if (year) {
+        printf("%04d", year);
+    }
+
+    if (!day && !month && !year) {
+        printf("não informada");
+    }
+
+    printf("\n");
+}
+
+void PrintTrackExplicitInfo(int explicit) {
     switch (explicit) {
         case 0:
-            printf("Não contém conteúdo inapropriado para menores de idade\n");
+            printf("Não possui conteúdo inapropriado para menores de idade\n");
             break;
         case 1:
-            printf("Contém conteúdo inapropriado para menores de idade\n");
+            printf("Possui conteúdo inapropriado para menores de idade\n");
             break;
     }
 }

@@ -27,50 +27,46 @@ tPlaylists** ReallocateMorePlaylists(tPlaylists** playlists, int new_size) {
 }
 
 void FreeUpPlaylists(tPlaylists* playlists) {
+    FreeAndNullPointer(playlists->tracks_alloc_size);
+    FreeAndNullPointer(playlists->tracks);
     FreeAndNullPointer(playlists->playlist_name);
     FreeAndNullPointer(playlists->averages);
-    // FreeAndNullPointer(playlists->tracks_index);
     FreeAndNullPointer(playlists);
 }
 
-tPlaylists** NewPlaylist(char* input, tPlaylists** playlists, int playlists_qty) {
+void NewPlaylist(char* input, tPlaylists** playlists, int playlists_qty) {
     playlists[playlists_qty]->index = playlists_qty;
-    playlists[playlists_qty]->playlist_name = input;
+    playlists[playlists_qty]->playlist_name = strdup(input);
     playlists[playlists_qty]->tracks = (tTracks**)malloc(sizeof(tTracks*) * 16);
-    *(playlists[playlists_qty]->tracks_alloc_size) = 16;
-
-    return playlists;
+    playlists[playlists_qty]->tracks_alloc_size = (int*)malloc(sizeof(int));
+    (*playlists[playlists_qty]->tracks_alloc_size) = 16;
 }
 
 void DisplayPlaylists(tPlaylists** playlists, int playlists_qty) {
+    printf("\n♪  Informações sobre as playlists  ♪\n");
     for (int m = 0; m < playlists_qty; m++) {
-        printf("\n♪  Informações sobre as playlists  ♪\n");
-        printf("Índice da playlist: %d, nome da playlist: %s, quantidade de músicas: %d\n", playlists[m]->index, playlists[m]->playlist_name, playlists[m]->tracks_qty);
+        printf("Nome: %s - Índice: %d - Quantidade de músicas: %d\n", playlists[m]->playlist_name, playlists[m]->index, playlists[m]->tracks_qty);
     }
+    printf("\n");
 }
-void SearchPlaylistsByIndex(int input, tPlaylists** playlists, int playlists_qty) {
-    for (int m = 0; m < playlists_qty; m++) {
-        if (input == playlists[m]->index) {
-            printf("\n♪  Informações sobre a playlist  ♪\n");
-            printf("Playlist: %s\n", playlists[m]->playlist_name);
-            printf("Músicas: ");
-            DisplayTracks(playlists[m]->tracks, playlists[m]->tracks_qty);
-            break;
-        }
-    }
+
+void SearchPlaylistsByIndex(int input, tPlaylists** playlists) {
+    printf("\n♪  Informações sobre a playlist  ♪\n");
+    printf("Nome: %s\n", playlists[input]->playlist_name);
+    DisplayTracks(playlists[input]->tracks, playlists[input]->tracks_qty);
 }
 
 void LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track) {
+    if (playlist->tracks_qty == (*playlist->tracks_alloc_size)) {  // ESSE TAMBEM TEM QUE SER IGUAL ASSIM COMO A LINHA 161 DA SPOTFES.C
+        (*playlist->tracks_alloc_size) *= 2;
+
+        // LEMBRAR DE FAZER REALLOC DAS TARCKS DAS PLAYLISTS
+        // ReallocateMorePlaylistsTracks(playlist->tracks, playlist->tracks_alloc_size);
+    }
+
     playlist->tracks[playlist->tracks_qty] = track;
 
     playlist->tracks_qty += 1;
-
-    if (playlist->tracks_qty > *(playlist->tracks_alloc_size)) {
-        *(playlist->tracks_alloc_size) *= 2;
-
-        //LEMBRAR DE FAZER REALLOC DAS TARCKS DAS PLAYLISTS
-        //ReallocateMorePlaylistsTracks(playlist->tracks, playlist->tracks_alloc_size);
-    }
 }
 
 /*void GetAverages(tPlaylists* playlist) {

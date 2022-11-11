@@ -10,11 +10,11 @@ void FreeUpTracks(tTracks* tracks);
 tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_qty);
 void LinkArtistsToTracks(tSpotfes* spotfes, tTracks** tracks, tArtists** artists);
 void SearchTracksByTitle(char* input, tTracks** tracks, int tracks_qty);
-void SearchTracksByIndex(int input, tTracks** tracks, int tracks_qty);
+void SearchTracksByIndex(int input, tTracks** tracks);
 void OpenTrack(tTracks* track);
-void DisplayTracks (tTracks** tracks_from_playlist, int tracks_qty);
+void DisplayTracks(tTracks** tracks_from_playlist, int tracks_qty);
 void PutFeaturesInArray(tTracks* track);
-/*float CalculateAverages (int feature, tTracks** tracks, int tracks_qty);
-float GetFeatureValue (tTracks* track, int feature);
-*/
+// float CalculateAverages (int feature, tTracks** tracks, int tracks_qty);
+// float GetFeatureValue (tTracks* track, int feature);
+
 #endif

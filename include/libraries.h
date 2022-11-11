@@ -6,9 +6,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "functions.h"
 #include "spotfes.h"
 #include "artists.h"
-#include "functions.h"
 #include "tracks.h"
 #include "playlists.h"
 

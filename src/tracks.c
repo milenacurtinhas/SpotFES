@@ -8,8 +8,9 @@ struct ttracks {
     int duration_ms;
     int explicit;
     char** track_artists;
-    char** artists_ids;
     int artists_qty;
+    char** artists_ids;
+    int artists_ids_qty;
     int release_year;
     int release_month;
     int release_day;
@@ -61,6 +62,9 @@ tTracks** ReallocateLessTracks(tTracks** tracks, int old_size, int* new_size) {
 void FreeUpTracks(tTracks* tracks) {
     for (int m = 0; m < tracks->artists_qty; m++) {
         FreeAndNullPointer(tracks->track_artists[m]);
+    }
+
+    for (int m = 0; m < tracks->artists_ids_qty; m++) {
         FreeAndNullPointer(tracks->artists_ids[m]);
     }
 
@@ -75,7 +79,7 @@ void FreeUpTracks(tTracks* tracks) {
 
 tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_qty) {
     char* buffer = (char*)malloc(sizeof(char) * 2048);
-    int alloc_size = 128, line_size, artists_line_size;
+    int alloc_size = 128, line_size, artists_line_size, artists_ids_line_size, release_date_line_size;
 
     for (int m = 0; fgets(buffer, 2048, tracks_data) && !EndOfFile(buffer[0]); m++) {
         line_size = strlen(buffer);
@@ -99,9 +103,9 @@ tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_q
         char artists_ids_line[line_size];
         strcpy(artists_ids_line, strtok(NULL, ";"));
 
-        tracks[m]->release_year = atoi(strtok(NULL, "-"));
-        tracks[m]->release_month = atoi(strtok(NULL, "-"));
-        tracks[m]->release_day = atoi(strtok(NULL, ";"));
+        char release_date_line[line_size];
+        strcpy(release_date_line, strtok(NULL, ";"));
+
         tracks[m]->danceability = atof(strtok(NULL, ";"));
         tracks[m]->energy = atof(strtok(NULL, ";"));
         tracks[m]->key = atoi(strtok(NULL, ";"));
@@ -118,7 +122,10 @@ tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_q
         artists_line_size = strlen(artists_line);
         tracks[m]->artists_qty = GetValueQuantity(artists_line, artists_line_size);
         tracks[m]->track_artists = (char**)malloc(sizeof(char*) * tracks[m]->artists_qty);
-        tracks[m]->artists_ids = (char**)malloc(sizeof(char*) * tracks[m]->artists_qty);
+
+        artists_ids_line_size = strlen(artists_ids_line);
+        tracks[m]->artists_ids_qty = GetValueQuantity(artists_ids_line, artists_ids_line_size);
+        tracks[m]->artists_ids = (char**)malloc(sizeof(char*) * tracks[m]->artists_ids_qty);
 
         for (int mm = 0; mm < tracks[m]->artists_qty; mm++) {
             if (!mm) {
@@ -130,7 +137,7 @@ tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_q
             }
         }
 
-        for (int mm = 0; mm < tracks[m]->artists_qty; mm++) {
+        for (int mm = 0; mm < tracks[m]->artists_ids_qty; mm++) {
             if (!mm) {
                 tracks[m]->artists_ids[mm] = strdup(strtok(artists_ids_line, "|"));
             } else if (mm == tracks[m]->artists_qty - 1) {
@@ -138,6 +145,24 @@ tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_q
             } else {
                 tracks[m]->artists_ids[mm] = strdup(strtok(NULL, "|"));
             }
+        }
+
+        tracks[m]->release_year = 0;
+        tracks[m]->release_month = 0;
+        tracks[m]->release_day = 0;
+
+        release_date_line_size = strlen(release_date_line);
+
+        if (release_date_line_size >= 4) {
+            tracks[m]->release_year = atoi(strtok(release_date_line, "-"));
+        }
+
+        if (release_date_line_size >= 7) {
+            tracks[m]->release_month = atoi(strtok(NULL, "-"));
+        }
+
+        if (release_date_line_size == 10) {
+            tracks[m]->release_day = atoi(strtok(NULL, "-"));
         }
 
         PutFeaturesInArray(tracks[m]);
@@ -156,18 +181,24 @@ void LinkArtistsToTracks(tSpotfes* spotfes, tTracks** tracks, tArtists** artists
     int all_artists_qty = GetArtistsQuantity(spotfes);
     int tracks_qty = GetTracksQuantity(spotfes);
     char all_artists_ids[23];
-    // varre todas as tracks
+    // varre todas as tracks do spotfes
     for (int m = 0; m < tracks_qty; m++) {
-        tracks[m]->artists = (tArtists**)malloc(sizeof(tArtists*) * tracks[m]->artists_qty);
+        tracks[m]->artists = (tArtists**)malloc(sizeof(tArtists*) * tracks[m]->artists_ids_qty);
         tracks[m]->linked_artists_qty = 0;
-        // varre todos os artistas da track
-        for (int mm = 0; mm < tracks[m]->artists_qty; mm++) {
+
+        // varre todos os ids de artistas da track
+        for (int mm = 0; mm < tracks[m]->artists_ids_qty; mm++) {
             // varre todos os artistas do spotfes
             for (int mmm = 0; mmm < all_artists_qty; mmm++) {
                 strcpy(all_artists_ids, GetArtistID(artists[mmm]));
+
                 if (strcmp(all_artists_ids, tracks[m]->artists_ids[mm]) == 0) {
                     tracks[m]->artists[mm] = artists[mmm];
                     tracks[m]->linked_artists_qty++;
+                }
+
+                if (mmm == all_artists_qty - 1 && tracks[m]->linked_artists_qty == 0) {
+                    tracks[m]->artists[mm] = NULL;
                 }
             }
         }
@@ -211,39 +242,34 @@ void SearchTracksByTitle(char* input, tTracks** tracks, int tracks_qty) {
         FreeAndNullPointer(track);
     }
 
-    if (track == NULL && prints == 0) {
+    if (prints == 0) {
         printf("\nNenhuma música foi encontrada!\n\n");
     }
 }
 
-void SearchTracksByIndex(int input, tTracks** tracks, int tracks_qty) {
-    for (int m = 0; m < tracks_qty; m++) {
-        if (input == tracks[m]->index) {
-            printf("\n♪  Informações sobre a música  ♪\n");
-            printf("Título: %s\n", tracks[m]->track_name);
-            printf("Índice: %d\n", tracks[m]->index);
-            printf("ID: %s\n", tracks[m]->id);
-            printf("Popularidade: %d%%\n", tracks[m]->popularity);
-            PrintTrackLength(tracks[m]->duration_ms);
-            printf("Data de lançamento: %d/%d/%d\n", tracks[m]->release_day, tracks[m]->release_month, tracks[m]->release_year);
-            printf("Danceability: %f\n", tracks[m]->danceability);
-            printf("Energy: %f\n", tracks[m]->energy);
-            printf("Key: %d\n", tracks[m]->key);
-            printf("Loudness: %f\n", tracks[m]->loudness);
-            printf("Mode: %d\n", tracks[m]->mode);
-            printf("Speechiness: %f\n", tracks[m]->speechiness);
-            printf("Acousticness: %f\n", tracks[m]->acousticness);
-            printf("Instrumentalness: %f\n", tracks[m]->instrumentalness);
-            printf("Liveness: %f\n", tracks[m]->liveness);
-            printf("Valence: %f\n", tracks[m]->valence);
-            printf("Tempo: %f\n", tracks[m]->tempo);
-            printf("Time signature: %d\n", tracks[m]->time_signature);
-            PrintExplicitInfo(tracks[m]->explicit);
-            PrintArtistsDetails(tracks[m]->artists, tracks[m]->linked_artists_qty);
-            OpenTrack(tracks[m]);
-            break;
-        }
-    }
+void SearchTracksByIndex(int input, tTracks** tracks) {
+    printf("\n♪  Informações sobre a música  ♪\n");
+    printf("Título: %s\n", tracks[input]->track_name);
+    printf("Índice: %d\n", tracks[input]->index);
+    printf("ID: %s\n", tracks[input]->id);
+    printf("Popularidade: %d%%\n", tracks[input]->popularity);
+    PrintTrackLength(tracks[input]->duration_ms);
+    PrintTrackReleaseDate(tracks[input]->release_day, tracks[input]->release_month, tracks[input]->release_year);
+    printf("Danceability: %g\n", tracks[input]->danceability);
+    printf("Energy: %g\n", tracks[input]->energy);
+    printf("Key: %d\n", tracks[input]->key);
+    printf("Loudness: %g\n", tracks[input]->loudness);
+    printf("Mode: %d\n", tracks[input]->mode);
+    printf("Speechiness: %g\n", tracks[input]->speechiness);
+    printf("Acousticness: %g\n", tracks[input]->acousticness);
+    printf("Instrumentalness: %g\n", tracks[input]->instrumentalness);
+    printf("Liveness: %g\n", tracks[input]->liveness);
+    printf("Valence: %g\n", tracks[input]->valence);
+    printf("Tempo: %g\n", tracks[input]->tempo);
+    printf("Time signature: %d\n", tracks[input]->time_signature);
+    PrintTrackExplicitInfo(tracks[input]->explicit);
+    PrintTrackArtistsDetails(tracks[input]->artists, tracks[input]->linked_artists_qty);
+    OpenTrack(tracks[input]);
 }
 
 void OpenTrack(tTracks* track) {
@@ -252,18 +278,27 @@ void OpenTrack(tTracks* track) {
     strcat(url, track->id);
 
     printf("\n♪  Deseja abrir a música no Firefox? (S/N): ");
+    scanf("%c%*c", &option);
 
-    scanf("%*c");
-    scanf("%c", &option);
     if (option == 'S' || option == 's') {
         system(url);
+    } else if (option != 'N' && option != 'n') {
+        printf("\nERRO: Opção inválida. Reinicie o programa.\n");
+        exit(1);
     }
+
+    printf("\n");
 }
 
 void DisplayTracks(tTracks** tracks_from_playlist, int tracks_qty) {
+    printf("Músicas: ");
     for (int m = 0; m < tracks_qty; m++) {
-        printf("%s\n", tracks_from_playlist[m]->track_name);
+        printf("%s", tracks_from_playlist[m]->track_name);
+        if (m != tracks_qty - 1) {
+            printf(" • ");
+        }
     }
+    printf("\n");
 }
 
 /*float CalculateAverages(int feature, tTracks** tracks, int tracks_qty) {

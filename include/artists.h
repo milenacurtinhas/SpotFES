@@ -9,6 +9,6 @@ tArtists** ReallocateLessArtists(tArtists** tracks, int old_size, int* new_size)
 void FreeUpArtists(tArtists* artists);
 tArtists** ReadArtistsDataFiles(tArtists** artists, FILE* artists_data, int* artists_qty);
 char* GetArtistID(tArtists* artist);
-void PrintArtistsDetails(tArtists** artists, int artists_qty);
+void PrintTrackArtistsDetails(tArtists** artists, int artists_qty);
 
 #endif

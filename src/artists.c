@@ -98,7 +98,7 @@ char* GetArtistID(tArtists* artist) {
     return artist->id;
 }
 
-void PrintArtistsDetails(tArtists** artists, int artists_qty) {
+void PrintTrackArtistsDetails(tArtists** artists, int artists_qty) {
     if (artists_qty == 1) {
         printf("\n♪  Informações sobre a/o artista da música  ♪\n");
     } else if (artists_qty > 1) {
@@ -106,27 +106,31 @@ void PrintArtistsDetails(tArtists** artists, int artists_qty) {
     }
 
     for (int m = 0; m < artists_qty; m++) {
-        printf("Nome: %s\n", artists[m]->artist_name);
-        printf("ID: %s\n", artists[m]->id);
-        printf("Seguidores: %d\n", artists[m]->followers);
-        printf("Popularidade: %d%%\n", artists[m]->popularity);
+        if (artists[m] != NULL) {
+            printf("Nome: %s\n", artists[m]->artist_name);
+            printf("ID: %s\n", artists[m]->id);
+            printf("Seguidores: %d\n", artists[m]->followers);
+            printf("Popularidade: %d%%\n", artists[m]->popularity);
 
-        if (artists[m]->genres_qty == 1) {
-            printf("Gênero musical: ");
-            if (artists[m]->genres[0][0] == '-') {
-                printf("não informado\n");
-            } else {
-                printf("%s\n", artists[m]->genres[0]);
-            }
-        } else if (artists[m]->genres_qty > 1) {
-            printf("Gêneros musicais: ");
-            for (int mm = 0; mm < artists[m]->genres_qty; mm++) {
-                if (mm == artists[m]->genres_qty - 1) {
-                    printf("%s\n", artists[m]->genres[mm]);
+            if (artists[m]->genres_qty == 1) {
+                printf("Gênero musical: ");
+                if (artists[m]->genres[0][0] == '-') {
+                    printf("não informado\n");
                 } else {
-                    printf("%s, ", artists[m]->genres[mm]);
+                    printf("%s\n", artists[m]->genres[0]);
+                }
+            } else if (artists[m]->genres_qty > 1) {
+                printf("Gêneros musicais: ");
+                for (int mm = 0; mm < artists[m]->genres_qty; mm++) {
+                    if (mm == artists[m]->genres_qty - 1) {
+                        printf("%s\n", artists[m]->genres[mm]);
+                    } else {
+                        printf("%s, ", artists[m]->genres[mm]);
+                    }
                 }
             }
+        } else {
+            artists_qty++;
         }
     }
 }
