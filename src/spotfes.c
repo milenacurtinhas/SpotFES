@@ -162,8 +162,7 @@ void CreatePlaylist(tSpotfes* spotfes) {
                                                                       // DAÍ QUANDO A QUANTIDADE FOR 16, SERÃO 17 PLAYLISTS, MAIOR QUE O NÚMERO DE MALLOCS
         (*spotfes->playlists_allocs) *= 2;
 
-        // LEMBRAR DE FAZER REALLOCS DAS PLAYLISTS
-        // spotfes->playlists = ReallocateMorePlaylists(spotfes->playlists, spotfes->playlists_allocs);
+        spotfes->playlists = ReallocateMorePlaylists(spotfes->playlists, *(spotfes->playlists_allocs));
     }
 
     char input[128];
@@ -215,4 +214,8 @@ void RecommendSimilarTrack(tSpotfes* spotfes) {
 
 float* GetTracksFeatures(tSpotfes* spotfes, int m) {
     return GetFeatures(spotfes->tracks[m]);
+}
+
+void GetTrack(tSpotfes* spotfes, int m, float euclidean_distance) {
+    //SaveEuclideanDistanceToTrack (spotfes->tracks[m], euclidean_distance);
 }

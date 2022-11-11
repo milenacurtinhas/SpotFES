@@ -29,6 +29,7 @@ struct ttracks {
     tArtists** artists;
     int linked_artists_qty;
     float* features;
+    float* euclidean_distance;
 };
 
 tTracks* AllocateTracks() {
@@ -59,6 +60,18 @@ tTracks** ReallocateLessTracks(tTracks** tracks, int old_size, int* new_size) {
     return tracks;
 }
 
+tTracks** ReallocateMorePlaylistsTracks (tTracks** tracks, int new_size) {
+    tTracks** new = NULL;
+    new = (tTracks**)realloc(tracks, sizeof(tTracks*) * new_size);
+    tracks = new;
+
+    for (int m = new_size / 2; m < new_size; m++) {
+        tracks[m] = AllocatePlaylists();
+    }
+
+    return tracks;
+}
+
 void FreeUpTracks(tTracks* tracks) {
     for (int m = 0; m < tracks->artists_qty; m++) {
         FreeAndNullPointer(tracks->track_artists[m]);
@@ -74,6 +87,7 @@ void FreeUpTracks(tTracks* tracks) {
     FreeAndNullPointer(tracks->artists_ids);
     FreeAndNullPointer(tracks->artists);
     FreeAndNullPointer(tracks->features);
+    FreeAndNullPointer(tracks->euclidean_distance);
     FreeAndNullPointer(tracks);
 }
 
@@ -349,3 +363,7 @@ float GetFeatureValue(tTracks* track, int feature) {
 float* GetFeatures (tTracks* tracks) {
     return tracks->features;
 }
+
+/*void SaveEuclideanDistanceToTrack (tTracks* track, float euclidean_distance) {
+    *(track->euclidean_distance) = euclidean_distance;
+}*/

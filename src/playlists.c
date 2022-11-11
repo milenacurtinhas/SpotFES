@@ -4,7 +4,6 @@ struct tplaylists {
     int index;
     char* playlist_name;
     int tracks_qty;
-    // int* tracks_index;
     tTracks** tracks;
     float* averages;
     int* tracks_alloc_size;
@@ -61,8 +60,7 @@ void LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track) {
     if (playlist->tracks_qty == (*playlist->tracks_alloc_size)) {  // ESSE TAMBEM TEM QUE SER IGUAL ASSIM COMO A LINHA 161 DA SPOTFES.C
         (*playlist->tracks_alloc_size) *= 2;
 
-        // LEMBRAR DE FAZER REALLOC DAS TARCKS DAS PLAYLISTS
-        // ReallocateMorePlaylistsTracks(playlist->tracks, playlist->tracks_alloc_size);
+        playlist->tracks =  ReallocateMorePlaylistsTracks(playlist->tracks, *(playlist->tracks_alloc_size));
     }
 
     playlist->tracks[playlist->tracks_qty] = track;
@@ -73,33 +71,27 @@ void LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track) {
 void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty) {
     GetAverages(playlist);
 
-    for (int i = 0; i < 8; i++) {
-        printf ("%.4f\n", playlist->averages[i]);
-    }
-
     int tracks_qty = GetTracksQuantity(spotfes);
     float EuclideanDistance[tracks_qty];
 
     for (int m = 0; m < tracks_qty; m++) {
         EuclideanDistance[m] = CalculateEuclideanDistance(GetTracksFeatures(spotfes, m), playlist->averages);
+        GetTrack(spotfes, m, EuclideanDistance[m]);
     }
 
-    for (int m = 0; m < 20; m++){
-        printf ("%.4f ", EuclideanDistance[m]);
-    }
-
-    /*int i, j, aux;
-    for (i = 1; i < tracks_qty; i++) {
-        for (j = 0; j < tracks_qty - 1; j++) {
-            if (EuclideanDistance[j] > EuclideanDistance[j + 1]) {
-                aux = EuclideanDistance[j];
-                EuclideanDistance[j] = EuclideanDistance[j + 1];
-                EuclideanDistance[j + 1] = aux;
+    int i, j;
+    float aux;
+    for (i = 0; i < tracks_qty; i++) {
+        for (j = i; j < tracks_qty; j++) {
+            if (EuclideanDistance[i] > EuclideanDistance[j]) {
+                aux = EuclideanDistance[i];
+                EuclideanDistance[i] = EuclideanDistance[j];
+                EuclideanDistance[j] = aux;
             }
         }
     }
 
-    printf("\n♪  Músicas similares a playlist  ♪\n");
+    /*printf("\n♪  Músicas similares a playlist  ♪\n");
 
     for (int mm = 0; mm < qty; mm++) {
         printf(EuclideanDistance[mm]);
