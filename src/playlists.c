@@ -37,7 +37,7 @@ tPlaylists** NewPlaylist(char* input, tPlaylists** playlists, int playlists_qty)
     playlists[playlists_qty]->index = playlists_qty;
     playlists[playlists_qty]->playlist_name = input;
     playlists[playlists_qty]->tracks = (tTracks**)malloc(sizeof(tTracks*) * 16);
-    playlists[playlists_qty]->tracks_alloc_size = 16;
+    *(playlists[playlists_qty]->tracks_alloc_size) = 16;
 
     return playlists;
 }
@@ -65,10 +65,11 @@ void LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track) {
 
     playlist->tracks_qty += 1;
 
-    if (playlist->tracks_qty > playlist->tracks_alloc_size) {
+    if (playlist->tracks_qty > *(playlist->tracks_alloc_size)) {
         *(playlist->tracks_alloc_size) *= 2;
 
-        ReallocateMorePlaylistsTracks(playlist->tracks, playlist->tracks_alloc_size);
+        //LEMBRAR DE FAZER REALLOC DAS TARCKS DAS PLAYLISTS
+        //ReallocateMorePlaylistsTracks(playlist->tracks, playlist->tracks_alloc_size);
     }
 }
 

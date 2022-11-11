@@ -152,7 +152,8 @@ void CreatePlaylist(tSpotfes* spotfes) {
     if ((*spotfes->playlists_qty) > (*spotfes->playlists_allocs)) {
         (*spotfes->playlists_allocs) *= 2;
 
-        spotfes->playlists = ReallocateMorePlaylists(spotfes->playlists, (*spotfes->playlists_allocs));
+        //LEMBRAR DE FAZER REALLOCS DAS PLAYLISTS
+        //spotfes->playlists = ReallocateMorePlaylists(spotfes->playlists, spotfes->playlists_allocs);
     }
 }
 

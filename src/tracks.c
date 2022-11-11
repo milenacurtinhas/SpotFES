@@ -296,7 +296,7 @@ float GetFeatureValue(tTracks* track, int feature) {
         default:
             exit(1);
     }
-}
+}*/
 
 void PutFeaturesInArray(tTracks* track) {
     track->features = (float*)malloc(sizeof(float) * 8);
@@ -309,4 +309,4 @@ void PutFeaturesInArray(tTracks* track) {
     track->features[5] = track->instrumentalness;
     track->features[6] = track->liveness;
     track->features[7] = track->valence;
-}*/
+}
