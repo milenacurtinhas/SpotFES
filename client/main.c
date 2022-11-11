@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
                 AddTrackToPlaylist(spotfes);
                 break;
             case 7:
-                // RecommendSimilarTrack(spotfes);
+                RecommendSimilarTrack(spotfes);
                 break;
             case 8:
                 // GenerateReport(spotfes);

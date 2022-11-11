@@ -18,7 +18,7 @@ int GetPlaylistQty(tSpotfes* spotfes);
 void ListPlaylists(tSpotfes* spotfes);
 void ListPlaylist(tSpotfes* spotfes);
 void AddTrackToPlaylist(tSpotfes* spotfes);
-// void RecommendSimilarTrack(tSpotfes* spotfes);
-// float* GetTracksFeatures(tSpotfes* spotfes);
+void RecommendSimilarTrack(tSpotfes* spotfes);
+float* GetTracksFeatures(tSpotfes* spotfes, int m);
 
 #endif

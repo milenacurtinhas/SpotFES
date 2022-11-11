@@ -206,7 +206,7 @@ void AddTrackToPlaylist(tSpotfes* spotfes) {
     }
 }
 
-/*void RecommendSimilarTrack(tSpotfes* spotfes) {
+void RecommendSimilarTrack(tSpotfes* spotfes) {
     int playlist_index, qty;
     printf("\n♬  Digite o índice da playlist e a quantidade de músicas similares a serem recomendadas: ");
     scanf("%d %d", &playlist_index, &qty);
@@ -215,4 +215,4 @@ void AddTrackToPlaylist(tSpotfes* spotfes) {
 
 float* GetTracksFeatures(tSpotfes* spotfes, int m) {
     return GetFeatures(spotfes->tracks[m]);
-}*/
+}

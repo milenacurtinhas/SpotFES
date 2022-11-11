@@ -74,7 +74,7 @@ void PrintTrackExplicitInfo(int explicit) {
     }
 }
 
-/*float CalculateEuclideanDistance(float* features, float* averages) {
+float CalculateEuclideanDistance(float* features, float* averages) {
     int euclideanDistance = 0;
 
     for (int m = 0; m < 8; m++) {
@@ -82,4 +82,4 @@ void PrintTrackExplicitInfo(int explicit) {
     }
 
     return euclideanDistance;
-}*/
+}

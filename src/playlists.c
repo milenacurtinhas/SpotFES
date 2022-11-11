@@ -38,6 +38,7 @@ void NewPlaylist(char* input, tPlaylists** playlists, int playlists_qty) {
     playlists[playlists_qty]->index = playlists_qty;
     playlists[playlists_qty]->playlist_name = strdup(input);
     playlists[playlists_qty]->tracks = (tTracks**)malloc(sizeof(tTracks*) * 16);
+    playlists[playlists_qty]->averages = (float*)malloc(sizeof(float) * 8);
     playlists[playlists_qty]->tracks_alloc_size = (int*)malloc(sizeof(int));
     (*playlists[playlists_qty]->tracks_alloc_size) = 16;
 }
@@ -69,16 +70,12 @@ void LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track) {
     playlist->tracks_qty += 1;
 }
 
-/*void GetAverages(tPlaylists* playlist) {
-    playlist->averages = (float*)malloc(sizeof(float) * 8);
-
-    for (int m = 0; m < 8; m++) {
-        playlist->averages[m] = CalculateAverages(m, playlist->tracks, playlist->tracks_qty);
-    }
-}
-
 void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty) {
     GetAverages(playlist);
+
+    for (int i = 0; i < 8; i++) {
+        printf ("%.4f\n", playlist->averages[i]);
+    }
 
     int tracks_qty = GetTracksQuantity(spotfes);
     float EuclideanDistance[tracks_qty];
@@ -87,7 +84,11 @@ void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty) {
         EuclideanDistance[m] = CalculateEuclideanDistance(GetTracksFeatures(spotfes, m), playlist->averages);
     }
 
-    int i, j, aux;
+    for (int m = 0; m < 20; m++){
+        printf ("%.4f ", EuclideanDistance[m]);
+    }
+
+    /*int i, j, aux;
     for (i = 1; i < tracks_qty; i++) {
         for (j = 0; j < tracks_qty - 1; j++) {
             if (EuclideanDistance[j] > EuclideanDistance[j + 1]) {
@@ -102,5 +103,11 @@ void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty) {
 
     for (int mm = 0; mm < qty; mm++) {
         printf(EuclideanDistance[mm]);
+    }*/
+}
+
+void GetAverages(tPlaylists* playlist) {
+    for (int m = 0; m < 8; m++) {
+        playlist->averages[m] = CalculateAverages(m, playlist->tracks, playlist->tracks_qty);
     }
-}*/
+}

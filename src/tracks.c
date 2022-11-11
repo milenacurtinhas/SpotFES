@@ -177,6 +177,19 @@ tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_q
     return tracks;
 }
 
+void PutFeaturesInArray(tTracks* track) {
+    track->features = (float*)malloc(sizeof(float) * 8);
+
+    track->features[0] = track->danceability;
+    track->features[1] = track->energy;
+    track->features[2] = track->mode;
+    track->features[3] = track->speechiness;
+    track->features[4] = track->acousticness;
+    track->features[5] = track->instrumentalness;
+    track->features[6] = track->liveness;
+    track->features[7] = track->valence;
+}
+
 void LinkArtistsToTracks(tSpotfes* spotfes, tTracks** tracks, tArtists** artists) {
     int all_artists_qty = GetArtistsQuantity(spotfes);
     int tracks_qty = GetTracksQuantity(spotfes);
@@ -301,7 +314,7 @@ void DisplayTracks(tTracks** tracks_from_playlist, int tracks_qty) {
     printf("\n");
 }
 
-/*float CalculateAverages(int feature, tTracks** tracks, int tracks_qty) {
+float CalculateAverages(int feature, tTracks** tracks, int tracks_qty) {
     float sum = 0;
     for (int m = 0; m < tracks_qty; m++) {
         sum += GetFeatureValue(tracks[m], feature);
@@ -331,17 +344,8 @@ float GetFeatureValue(tTracks* track, int feature) {
         default:
             exit(1);
     }
-}*/
+}
 
-void PutFeaturesInArray(tTracks* track) {
-    track->features = (float*)malloc(sizeof(float) * 8);
-
-    track->features[0] = track->danceability;
-    track->features[1] = track->energy;
-    track->features[2] = track->mode;
-    track->features[3] = track->speechiness;
-    track->features[4] = track->acousticness;
-    track->features[5] = track->instrumentalness;
-    track->features[6] = track->liveness;
-    track->features[7] = track->valence;
+float* GetFeatures (tTracks* tracks) {
+    return tracks->features;
 }
