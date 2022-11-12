@@ -14,15 +14,17 @@ void ReadTrackArtists(tTracks* track, char* line);
 void ReadTrackArtistsIDs(tTracks* track, char* line);
 void PutFeaturesInArray(tTracks* track);
 void LinkArtistsToTracks(tSpotfes* spotfes, tTracks** tracks, tArtists** artists);
+void PrintTrackArtists(tTracks* track, int quantity);
+void PrintShortTracksDetails(tTracks* track, int artists_qty);
 void SearchTracksByTitle(char* input, tTracks** tracks, int tracks_qty);
 void SearchTracksByIndex(int input, tTracks** tracks);
 void OpenTrack(tTracks* track);
 void ShowPlaylistTracks(tTracks** tracks_from_playlist, int tracks_qty);
 float CalculateAverages(int feature, tTracks** tracks, int tracks_qty);
 float GetFeatureValue(tTracks* track, int feature);
+int GetTrackArtistsQuantity(tTracks* track);
 float* GetFeatures(tTracks* tracks);
 void SaveEuclideanDistanceToTrack(tTracks* track, float euclidean_distance);
 float GetDistance(tTracks* tracks);
-void PrintSimilarTracksDetails(tTracks* tracks);
 
 #endif

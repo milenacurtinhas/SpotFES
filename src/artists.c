@@ -10,7 +10,7 @@ struct tartists {
 };
 
 tArtists* AllocateArtists() {
-    return (tArtists*)malloc(sizeof(tArtists));
+    return (tArtists*)calloc(sizeof(tArtists), 1);
 }
 
 tArtists** ReallocateMoreArtists(tArtists** artists, int new_size) {

@@ -33,7 +33,7 @@ struct ttracks {
 };
 
 tTracks* AllocateTracks() {
-    return (tTracks*)malloc(sizeof(tTracks));
+    return (tTracks*)calloc(sizeof(tTracks), 1);
 }
 
 tTracks** ReallocateMoreTracks(tTracks** tracks, int new_size) {
@@ -239,14 +239,38 @@ void LinkArtistsToTracks(tSpotfes* spotfes, tTracks** tracks, tArtists** artists
     }
 }
 
+void PrintTrackArtists(tTracks* track, int quantity) {
+    if (quantity == 1) {
+        printf("%s", track->track_artists[0]);
+    } else {
+        for (int m = 0; m < track->artists_qty; m++) {
+            if (m == track->artists_qty - 1) {
+                printf("%s", track->track_artists[m]);
+            } else {
+                printf("%s, ", track->track_artists[m]);
+            }
+        }
+    }
+}
+
+void PrintShortTracksDetails(tTracks* track, int artists_qty) {
+    if (track->artists_qty == 1) {
+        printf("Artista: ");
+    } else {
+        printf("Artistas: ");
+    }
+
+    PrintTrackArtists(track, track->artists_qty);
+    printf("\nTítulo: %s\n", track->track_name);
+    printf("Índice: %d\n", track->index);
+}
+
 void SearchTracksByTitle(char* input, tTracks** tracks, int tracks_qty) {
     int prints = 0;
     char* track = NULL;
     char* comparison = NULL;
 
     input = GetLowcaseString(input);
-
-    printf("• Resultados da busca:\n\n");
 
     for (int m = 0; m < tracks_qty; m++) {
         track = strdup(tracks[m]->track_name);
@@ -256,29 +280,16 @@ void SearchTracksByTitle(char* input, tTracks** tracks, int tracks_qty) {
 
         if (comparison != NULL) {
             prints++;
-            printf("Título: %s\n", tracks[m]->track_name);
-            printf("Índice: %d\n", tracks[m]->index);
-            printf("ID: %s\n", tracks[m]->id);
 
-            if (tracks[m]->artists_qty == 1) {
-                printf("Artista: %s\n\n", tracks[m]->track_artists[0]);
-            } else {
-                printf("Artistas: ");
-                for (int mm = 0; mm < tracks[m]->artists_qty; mm++) {
-                    if (mm == tracks[m]->artists_qty - 1) {
-                        printf("%s\n\n", tracks[m]->track_artists[mm]);
-                    } else {
-                        printf("%s, ", tracks[m]->track_artists[mm]);
-                    }
-                }
-            }
+            PrintShortTracksDetails(tracks[m], tracks[m]->artists_qty);
+            printf("ID: %s\n\n", tracks[m]->id);
         }
 
         FreeAndNullPointer(track);
     }
 
     if (prints == 0) {
-        printf("Nenhuma música foi encontrada!\n\n");
+        printf("• ERRO: Nenhuma música foi encontrada!\n\n");
     }
 }
 
@@ -327,15 +338,17 @@ void OpenTrack(tTracks* track) {
 
 void ShowPlaylistTracks(tTracks** tracks_from_playlist, int tracks_qty) {
     if (!tracks_qty) {
-        printf("Playlist vazia\n\n");
+        printf("Playlist vazia\n");
     } else {
         for (int m = 0; m < tracks_qty; m++) {
             if (!m) {
-                printf("Músicas: %d\n", tracks_qty);
+                printf("Músicas: %d\n\n", tracks_qty);
             }
-            printf("          • %s\n", tracks_from_playlist[m]->track_name);
+
+            PrintShortTracksDetails(tracks_from_playlist[m], tracks_from_playlist[m]->artists_qty);
         }
     }
+    printf("\n");
 }
 
 float CalculateAverages(int feature, tTracks** tracks, int tracks_qty) {
@@ -373,6 +386,10 @@ float GetFeatureValue(tTracks* track, int feature) {
     }
 }
 
+int GetTrackArtistsQuantity(tTracks* track) {
+    return track->artists_qty;
+}
+
 float* GetFeatures(tTracks* tracks) {
     return tracks->features;
 }
@@ -383,8 +400,4 @@ void SaveEuclideanDistanceToTrack(tTracks* track, float euclidean_distance) {
 
 float GetDistance(tTracks* tracks) {
     return *tracks->euclidean_distance;
-}
-
-void PrintSimilarTracksDetails(tTracks* tracks) {
-    printf("Música: %s | Índice: %d\n", tracks->track_name, tracks->index);
 }

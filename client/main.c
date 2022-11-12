@@ -8,9 +8,7 @@ int main(int argc, char** argv) {
     tSpotfes* spotfes = ReadSpotifyDataFiles(spotfes, argv);
 
     while (1) {
-        int input = SetUpMainMenu(input);
-        ClearTerminal();
-        switch (input) {
+        switch (SetUpMainMenu()) {
             case 1:
                 SearchTracks(spotfes);
                 break;
@@ -36,8 +34,7 @@ int main(int argc, char** argv) {
                 // GenerateReport(spotfes);
                 break;
             case 9:
-                FreeUpSpotfes(spotfes);
-                printf("Agradecemos por utilizar nosso programa!\n\n");
+                QuitProgram(spotfes);
                 return 0;
         }
     }

@@ -88,7 +88,7 @@ tSpotfes* ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
     return spotfes;
 }
 
-int SetUpMainMenu(int input) {
+int SetUpMainMenu() {
     printf("|---------------------------------------------------|\n");
     printf("| ♪ | SPOTFES by M&M                                |\n");
     printf("|---------------------------------------------------|\n");
@@ -104,19 +104,28 @@ int SetUpMainMenu(int input) {
     printf("|---------------------------------------------------|\n\n");
     printf("♪ Digite a opção desejada: ");
 
+    int input = 0;
+
     while (scanf("%d%*c", &input) == 0 || !(input >= 1 && input <= 9)) {
         printf("• ERRO: Opção inválida. Tente novamente: ");
     }
 
+    ClearTerminal();
+
     return input;
 }
 
+void QuitProgram(tSpotfes* spotfes) {
+    FreeUpSpotfes(spotfes);
+    printf("♪ SPOTFES by M&M ♪\n\n");
+}
+
 void SearchTracks(tSpotfes* spotfes) {
-    char input[128];
+    char buffer[128], input[128];
 
     printf("♪ Digite o título de uma música a ser pesquisada: ");
-    fgets(input, 128, stdin);
-    strcpy(input, strtok(input, "\n"));
+    fgets(buffer, 128, stdin);
+    strcpy(input, strtok(buffer, "\n"));
     printf("\n");
 
     SearchTracksByTitle(input, spotfes->tracks, *spotfes->tracks_qty);
@@ -139,11 +148,11 @@ void CreatePlaylist(tSpotfes* spotfes) {
         spotfes->playlists = ReallocateMorePlaylists(spotfes->playlists, *spotfes->playlists_allocs);
     }
 
-    char input[128];
+    char buffer[128], input[128];
 
     printf("♪ Digite o nome da playlist a ser criada: ");
-    fgets(input, 128, stdin) == NULL;
-    strcpy(input, strtok(input, "\n"));
+    fgets(buffer, 128, stdin) == NULL;
+    strcpy(input, strtok(buffer, "\n"));
     printf("\n");
 
     NewPlaylist(input, spotfes->playlists, *spotfes->playlists_qty);
@@ -159,7 +168,7 @@ void DetailPlaylist(tSpotfes* spotfes) {
     int playlists_qty = GetPlaylistsQuantity(spotfes);
 
     if (!playlists_qty) {
-        printf("Nenhuma playlist foi criada ainda.\n\n");
+        printf("• ERRO: Nenhuma playlist foi criada ainda.\n\n");
     } else {
         printf("♪ Digite o índice da playlist a ser listada: ");
         while (scanf("%d%*c", &input) == 0 || !(input >= 0 && input <= *spotfes->playlists_qty - 1)) {
@@ -175,7 +184,7 @@ void AddTrackToPlaylist(tSpotfes* spotfes) {
     int playlists_qty = GetPlaylistsQuantity(spotfes);
 
     if (!playlists_qty) {
-        printf("Nenhuma playlist foi criada ainda.\n\n");
+        printf("• ERRO: Nenhuma playlist foi criada ainda.\n\n");
     } else {
         printf("♪ Digite o índice da música a ser adicionada e o índice da playlist alvo: ");
         while (scanf("%d %d%*c", &track_index, &playlist_index) == 0 || !(track_index >= 0 && track_index <= *spotfes->tracks_qty) || !(playlist_index >= 0 && playlist_index <= *spotfes->playlists_qty - 1)) {
@@ -198,14 +207,14 @@ void RecommendSimilarTrack(tSpotfes* spotfes) {
     int playlist_index, qty;
 
     if (!playlists_qty) {
-        printf("Nenhuma playlist foi criada ainda.\n\n");
+        printf("• ERRO: Nenhuma playlist foi criada ainda.\n\n");
     } else {
         printf("♪ Digite o índice da playlist alvo e a quantidade de músicas similares a serem recomendadas: ");
         while (scanf("%d %d%*c", &playlist_index, &qty) != 2 || !(playlist_index >= 0 && playlist_index <= playlists_qty) || !(qty >= 1 && qty <= tracks_qty)) {
             int playlist_tracks_qty = GetPlaylistAddedTracksQuantity(spotfes, playlist_index);
 
             if (!playlist_tracks_qty) {
-                printf("\nA playlist está vazia.\n\n");
+                printf("\n• ERRO: A playlist está vazia.\n\n");
             } else {
                 if (!(playlist_index >= 0 && playlist_index <= playlists_qty)) {
                     printf("• ERRO: Índice de playlist inválido. Tente novamente: ");
@@ -220,7 +229,7 @@ void RecommendSimilarTrack(tSpotfes* spotfes) {
         int playlist_tracks_qty = GetPlaylistAddedTracksQuantity(spotfes, playlist_index);
 
         if (!playlist_tracks_qty) {
-            printf("\nA playlist está vazia.\n\n");
+            printf("\n• ERRO: A playlist está vazia.\n\n");
         } else {
             ComparePlaylistToTracks(spotfes, spotfes->playlists[playlist_index], qty);
         }
@@ -262,5 +271,8 @@ float GetTrackDistance(tSpotfes* spotfes, int index) {
 }
 
 void PrintSimilarTrack(tSpotfes* spotfes, int index) {
-    PrintSimilarTracksDetails(spotfes->tracks[index]);
+    int artists_qty = GetTrackArtistsQuantity(spotfes->tracks[index]);
+
+    PrintShortTracksDetails(spotfes->tracks[index], artists_qty);
+    printf("\n");
 }

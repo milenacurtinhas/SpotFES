@@ -9,6 +9,7 @@ void CheckDataFilesPath(int argc, char** argv) {
         exit(1);
     } else {
         // chama aqui a função de fazer o argv[1] e argv[2] terem o nome do caminho dos arquivos
+        // chama aqui a função de abrir os arquivos binários
     }
 }
 

@@ -10,7 +10,7 @@ struct tplaylists {
 };
 
 tPlaylists* AllocatePlaylists() {
-    return (tPlaylists*)malloc(sizeof(tPlaylists));
+    return (tPlaylists*)calloc(sizeof(tPlaylists), 1);
 }
 
 tPlaylists** ReallocateMorePlaylists(tPlaylists** playlists, int new_size) {
@@ -44,19 +44,20 @@ void NewPlaylist(char* input, tPlaylists** playlists, int playlists_qty) {
 
 void DisplayPlaylists(tPlaylists** playlists, int playlists_qty) {
     if (!playlists_qty) {
-        printf("Nenhuma playlist foi criada ainda.\n");
+        printf("• ERRO: Nenhuma playlist foi criada ainda.\n");
     } else {
         printf("• Informações sobre as playlists:\n\n");
         for (int m = 0; m < playlists_qty; m++) {
-            printf("Nome: %s | Índice: %d | Músicas: %d\n", playlists[m]->playlist_name, playlists[m]->index, playlists[m]->tracks_qty);
+            printf("Nome: %s\n", playlists[m]->playlist_name);
+            printf("Índice: %d\n", playlists[m]->index);
+            printf("Músicas: %d\n", playlists[m]->tracks_qty);
         }
     }
     printf("\n");
 }
 
 void SearchPlaylistByIndex(int input, tPlaylists** playlists) {
-    printf("\n• Informações sobre a playlist:\n\n");
-    printf("Nome: %s\n", playlists[input]->playlist_name);
+    printf("\nNome: %s\n", playlists[input]->playlist_name);
     ShowPlaylistTracks(playlists[input]->tracks, playlists[input]->tracks_qty);
 }
 
@@ -69,7 +70,7 @@ void LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track) {
 
     playlist->tracks[playlist->tracks_qty] = track;
 
-    playlist->tracks_qty += 1;
+    playlist->tracks_qty++;
 }
 
 void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty) {
@@ -94,20 +95,19 @@ void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty) {
         }
     }
 
-    printf("\n• Músicas similares a playlist:\n\n");
-
     for (int m = 0; m < qty; m++) {
         for (int mm = 0; mm < tracks_qty; mm++) {
             float distance = GetTrackDistance(spotfes, mm);
 
             if (distance == euclidean_distance[m]) {
+                if (!m) {
+                    printf("\n");
+                }
                 PrintSimilarTrack(spotfes, mm);
                 break;
             }
         }
     }
-
-    printf("\n");
 }
 
 void GetAverages(tPlaylists* playlist) {
