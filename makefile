@@ -1,4 +1,4 @@
-TARGET := spotfes
+TARGET := SpotFES
 LIBS := -lm
 CFLAGS := -g -O0
 OBJDIR := obj/

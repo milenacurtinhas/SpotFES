@@ -1,5 +1,17 @@
 #include "libraries.h"
 
+void CheckDataFilesPath(int argc, char** argv) {
+    ClearTerminal();
+
+    if (argc == 1 || argc == 2) {
+        printf("• ERRO: Os arquivos de dados devem estar contidos na pasta 'data' e o programa deverá ser executado da seguinte forma:\n\n");
+        printf("./SpotFES NomeDoArquivoDosArtistas.csv NomeDoArquivoDasMúsicas.csv\n\n");
+        exit(1);
+    } else {
+        // chama aqui a função de fazer o argv[1] e argv[2] terem o nome do caminho dos arquivos
+    }
+}
+
 void FreeAndNullPointer(void* pointer) {
     free(pointer);
     pointer = NULL;
@@ -46,17 +58,13 @@ void PrintTrackReleaseDate(int day, int month, int year) {
 
     if (day) {
         printf("%02d/", day);
-    }
-
-    if (month) {
-        printf("%02d/", month);
-    }
-
-    if (year) {
-        printf("%04d", year);
-    }
-
-    if (!day && !month && !year) {
+        if (month) {
+            printf("%02d/", month);
+            if (year) {
+                printf("%04d", year);
+            }
+        }
+    } else if (!day && !month && !year) {
         printf("não informada");
     }
 
@@ -81,7 +89,13 @@ float CalculateEuclideanDistance(float* features, float* averages) {
         sum += pow((features[m] - averages[m]), 2);
     }
 
-    euclideanDistance = sqrt (sum);
+    euclideanDistance = sqrt(sum);
 
     return euclideanDistance;
+}
+
+void ClearTerminal() {
+#ifdef __linux__
+    int terminal = system("clear");
+#endif
 }

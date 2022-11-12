@@ -1,17 +1,15 @@
 #include "libraries.h"
 
 int main(int argc, char** argv) {
-    // CheckDataFilesPath(argc); // adicionar ao terminar
+    // CheckDataFilesPath(argc, argv); // adicionar ao terminar
     argv[1] = "data/artists_mm.csv";  // remover ao terminar
     argv[2] = "data/tracks_mm.csv";   // remover ao terminar
 
-    tSpotfes* spotfes = AllocateSpotfes();
-
-    ReadSpotifyDataFiles(spotfes, argv);  // acho que poderiamos modularizar essa função em duas separando o scan dos artistas e o scan das músicas
+    tSpotfes* spotfes = ReadSpotifyDataFiles(spotfes, argv);
 
     while (1) {
         int input = SetUpMainMenu(input);
-
+        ClearTerminal();
         switch (input) {
             case 1:
                 SearchTracks(spotfes);
@@ -26,7 +24,7 @@ int main(int argc, char** argv) {
                 ListPlaylists(spotfes);
                 break;
             case 5:
-                ListPlaylist(spotfes);
+                DetailPlaylist(spotfes);
                 break;
             case 6:
                 AddTrackToPlaylist(spotfes);
@@ -39,11 +37,8 @@ int main(int argc, char** argv) {
                 break;
             case 9:
                 FreeUpSpotfes(spotfes);
-                printf("\nAgradecemos por utilizar nosso programa!\n\n");
+                printf("Agradecemos por utilizar nosso programa!\n\n");
                 return 0;
-            default:
-                printf("\nOpção inválida.\n\n");
-                break;
         }
     }
 }

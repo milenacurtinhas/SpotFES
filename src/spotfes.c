@@ -10,37 +10,22 @@ struct tspotfes {
     int* playlists_allocs;
 };
 
-void CheckDataFilesPath(int argc) {
-    switch (argc) {
-        case 1:
-            printf("ERRO: Nenhum arquivo de dados do Spotify foi declarado. Verifique se eles estão contidos na pasta 'data', no mesmo diretório desse programa.\n");
-            exit(1);
-            break;
-        case 2:
-            printf("ERRO: Um dos arquivos de dados do Spotify não foi declarado. Verifique se ele está contido na pasta 'data', no mesmo diretório desse programa.\n");
-            exit(1);
-            break;
-        case 3:
-            break;
-    }
-}
-
-tSpotfes* AllocateSpotfes() {
-    tSpotfes* spotfes = (tSpotfes*)malloc(sizeof(tSpotfes));
+tSpotfes* AllocateSpotfes(tSpotfes* spotfes) {
+    spotfes = (tSpotfes*)malloc(sizeof(tSpotfes));
 
     spotfes->artists = (tArtists**)malloc(sizeof(tArtists*) * 128);
     spotfes->artists_qty = (int*)malloc(sizeof(int));
-    (*spotfes->artists_qty) = 0;
+    *spotfes->artists_qty = 0;
 
     spotfes->tracks = (tTracks**)malloc(sizeof(tTracks*) * 128);
     spotfes->tracks_qty = (int*)malloc(sizeof(int));
-    (*spotfes->tracks_qty) = 0;
+    *spotfes->tracks_qty = 0;
 
     spotfes->playlists = (tPlaylists**)malloc(sizeof(tPlaylists*) * 16);
     spotfes->playlists_qty = (int*)malloc(sizeof(int));
     spotfes->playlists_allocs = (int*)malloc(sizeof(int));
-    (*spotfes->playlists_qty) = 0;
-    (*spotfes->playlists_allocs) = 16;
+    *spotfes->playlists_qty = 0;
+    *spotfes->playlists_allocs = 16;
 
     for (int m = 0; m < 128; m++) {
         spotfes->artists[m] = AllocateArtists();
@@ -69,69 +54,58 @@ void FreeUpSpotfes(tSpotfes* spotfes) {
 
     FreeAndNullPointer(spotfes->artists);
     FreeAndNullPointer(spotfes->artists_qty);
-
     FreeAndNullPointer(spotfes->tracks);
     FreeAndNullPointer(spotfes->tracks_qty);
-
     FreeAndNullPointer(spotfes->playlists);
     FreeAndNullPointer(spotfes->playlists_qty);
     FreeAndNullPointer(spotfes->playlists_allocs);
-
     FreeAndNullPointer(spotfes);
 }
 
-void ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
+tSpotfes* ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
     FILE* artists_data = fopen(argv[1], "r");
     if (!artists_data) {
-        printf("ERRO: Não foi possível acessar o arquivo de dados dos artistas. Verifique se ele está no mesmo diretório do executável desse programa.\n");
+        printf("• ERRO: Não foi possível acessar o arquivo de dados dos artistas. Verifique se ele está no mesmo diretório do executável desse programa.\n\n");
         exit(1);
     }
+
+    FILE* tracks_data = fopen(argv[2], "r");
+    if (!tracks_data) {
+        printf("• ERRO: Não foi possível acessar o arquivo de dados das músicas. Verifique se ele está no mesmo diretório do executável desse programa.\n\n");
+        exit(1);
+    }
+
+    spotfes = AllocateSpotfes(spotfes);
 
     spotfes->artists = ReadArtistsDataFiles(spotfes->artists, artists_data, spotfes->artists_qty);
     fclose(artists_data);
 
-    FILE* tracks_data = fopen(argv[2], "r");
-    if (!tracks_data) {
-        printf("ERRO: Não foi possível acessar o arquivo de dados das músicas. Verifique se ele está no mesmo diretório do executável desse programa.\n");
-        exit(1);
-    }
-
     spotfes->tracks = ReadTracksDataFiles(spotfes->tracks, tracks_data, spotfes->tracks_qty);
+    fclose(tracks_data);
+
     LinkArtistsToTracks(spotfes, spotfes->tracks, spotfes->artists);
 
-    fclose(tracks_data);
-}
-
-int GetArtistsQuantity(tSpotfes* spotfes) {
-    return (*spotfes->artists_qty);
-}
-
-int GetTracksQuantity(tSpotfes* spotfes) {
-    return (*spotfes->tracks_qty);
-}
-
-int GetPlaylistsQuantity(tSpotfes* spotfes) {
-    return (*spotfes->playlists_qty);
+    return spotfes;
 }
 
 int SetUpMainMenu(int input) {
-    printf("--------------------------------------------------\n");
-    printf("♬  SPOTFES by M&M  ♬\n\n");
-    printf("1 - Pesquisar músicas\n");
-    printf("2 - Detalhar uma música\n");
-    printf("3 - Criar uma playlist\n");
-    printf("4 - Exibir playlists\n");
-    printf("5 - Detalhar uma playlist\n");
-    printf("6 - Adicionar uma música na playlist\n");
-    printf("7 - Recomendar músicas parecidas com uma playlist\n");
-    printf("8 - Gerar relatório\n");
-    printf("9 - Sair do programa\n");
-    printf("--------------------------------------------------\n\n");
-    printf("♬  Digite a opção desejada: ");
+    printf("|---------------------------------------------------|\n");
+    printf("| ♪ | SPOTFES by M&M                                |\n");
+    printf("|---------------------------------------------------|\n");
+    printf("| 1 | Pesquisar músicas                             |\n");
+    printf("| 2 | Detalhar uma música                           |\n");
+    printf("| 3 | Criar uma playlist                            |\n");
+    printf("| 4 | Exibir playlists                              |\n");
+    printf("| 5 | Detalhar uma playlist                         |\n");
+    printf("| 6 | Adicionar uma música na playlist              |\n");
+    printf("| 7 | Recomendar músicas parecidas com uma playlist |\n");
+    printf("| 8 | Gerar relatório                               |\n");
+    printf("| 9 | Sair do programa                              |\n");
+    printf("|---------------------------------------------------|\n\n");
+    printf("♪ Digite a opção desejada: ");
 
-    if (scanf("%d%*c", &input) == 0 || !(input >= 1 && input <= 9)) {
-        printf("\nERRO: Opção inválida. Reinicie o programa.\n");
-        exit(1);
+    while (scanf("%d%*c", &input) == 0 || !(input >= 1 && input <= 9)) {
+        printf("• ERRO: Opção inválida. Tente novamente: ");
     }
 
     return input;
@@ -139,97 +113,154 @@ int SetUpMainMenu(int input) {
 
 void SearchTracks(tSpotfes* spotfes) {
     char input[128];
-    printf("\n♬  Digite o título de uma música a ser pesquisada: ");
+
+    printf("♪ Digite o título de uma música a ser pesquisada: ");
     fgets(input, 128, stdin);
     strcpy(input, strtok(input, "\n"));
-    SearchTracksByTitle(input, spotfes->tracks, (*spotfes->tracks_qty));
+    printf("\n");
+
+    SearchTracksByTitle(input, spotfes->tracks, *spotfes->tracks_qty);
 }
 
 void DetailTrack(tSpotfes* spotfes) {
     int input;
-    printf("\n♬  Digite o índice da música a ser detalhada: ");
 
-    if (scanf("%d%*c", &input) == 0 || !(input >= 0 && input <= (*spotfes->tracks_qty) - 1)) {
-        printf("\nERRO: Índice inválido. Reinicie o programa.\n");
-        exit(1);
+    printf("♪ Digite o índice da música a ser detalhada: ");
+    while (scanf("%d%*c", &input) == 0 || !(input >= 0 && input <= *spotfes->tracks_qty - 1)) {
+        printf("• ERRO: Índice inválido. Tente novamente: ");
     }
 
     SearchTracksByIndex(input, spotfes->tracks);
 }
 
 void CreatePlaylist(tSpotfes* spotfes) {
-    if ((*spotfes->playlists_qty) == (*spotfes->playlists_allocs)) {  // ESSE TEM QUE SER IGUAL PORQUE O INCREMENTO DE +1 CONTA PARA A PRÓXIMA PLAYLIST
-                                                                      // DAÍ QUANDO A QUANTIDADE FOR 16, SERÃO 17 PLAYLISTS, MAIOR QUE O NÚMERO DE MALLOCS
-        (*spotfes->playlists_allocs) *= 2;
-
-        spotfes->playlists = ReallocateMorePlaylists(spotfes->playlists, *(spotfes->playlists_allocs));
+    if (*spotfes->playlists_qty == *spotfes->playlists_allocs) {  // ESSE TEM QUE SER IGUAL PORQUE O INCREMENTO DE +1 CONTA PARA A PRÓXIMA PLAYLIST
+        *spotfes->playlists_allocs *= 2;                          // DAÍ QUANDO A QUANTIDADE FOR 16, SERÃO 17 PLAYLISTS, MAIOR QUE O NÚMERO DE MALLOCS
+        spotfes->playlists = ReallocateMorePlaylists(spotfes->playlists, *spotfes->playlists_allocs);
     }
 
     char input[128];
-    printf("\n♬  Digite o nome da playlist a ser criada: ");
-    fgets(input, 128, stdin);
-    printf("\n");
-    strcpy(input, strtok(input, "\n"));
-    NewPlaylist(input, spotfes->playlists, (*spotfes->playlists_qty));
 
+    printf("♪ Digite o nome da playlist a ser criada: ");
+    fgets(input, 128, stdin) == NULL;
+    strcpy(input, strtok(input, "\n"));
+    printf("\n");
+
+    NewPlaylist(input, spotfes->playlists, *spotfes->playlists_qty);
     *spotfes->playlists_qty += 1;
 }
 
 void ListPlaylists(tSpotfes* spotfes) {
-    DisplayPlaylists(spotfes->playlists, (*spotfes->playlists_qty));
+    DisplayPlaylists(spotfes->playlists, *spotfes->playlists_qty);
 }
 
-void ListPlaylist(tSpotfes* spotfes) {
+void DetailPlaylist(tSpotfes* spotfes) {
     int input;
-    printf("\n♬  Digite o índice da playlist a ser listada: ");
-    scanf("%d%*c", &input);
-    if (!(input >= 0 && input <= (*spotfes->playlists_qty) - 1)) {
-        printf("\nERRO: Índice inválido. Reinicie o programa.\n");
-        exit(1);
+    int playlists_qty = GetPlaylistsQuantity(spotfes);
+
+    if (!playlists_qty) {
+        printf("Nenhuma playlist foi criada ainda.\n\n");
+    } else {
+        printf("♪ Digite o índice da playlist a ser listada: ");
+        while (scanf("%d%*c", &input) == 0 || !(input >= 0 && input <= *spotfes->playlists_qty - 1)) {
+            printf("• ERRO: Índice inválido. Tente novamente: ");
+        }
+
+        SearchPlaylistByIndex(input, spotfes->playlists);
     }
-    SearchPlaylistsByIndex(input, spotfes->playlists);
 }
 
 void AddTrackToPlaylist(tSpotfes* spotfes) {
-    int tracks_index, playlist_index;
-    printf("\n♬  Digite o índice da música a ser adicionada e o índice da playlist alvo: ");
-    scanf("%d %d%*c", &tracks_index, &playlist_index);
-    if (!(tracks_index >= 0 && tracks_index <= (*spotfes->tracks_qty))) {
-        printf("\nERRO: Índice de música inválido. Reinicie o programa.\n");
-        exit(1);
-    } else if (!(playlist_index >= 0 && playlist_index <= (*spotfes->playlists_qty) - 1)) {
-        printf("\nERRO: Índice de playlist inválido. Reinicie o programa.\n");
-        exit(1);
+    int track_index, playlist_index;
+    int playlists_qty = GetPlaylistsQuantity(spotfes);
+
+    if (!playlists_qty) {
+        printf("Nenhuma playlist foi criada ainda.\n\n");
     } else {
-        LinkTrackToPlaylist(spotfes->playlists[playlist_index], spotfes->tracks[tracks_index]);
+        printf("♪ Digite o índice da música a ser adicionada e o índice da playlist alvo: ");
+        while (scanf("%d %d%*c", &track_index, &playlist_index) == 0 || !(track_index >= 0 && track_index <= *spotfes->tracks_qty) || !(playlist_index >= 0 && playlist_index <= *spotfes->playlists_qty - 1)) {
+            if (!(track_index >= 0 && track_index <= *spotfes->tracks_qty)) {
+                printf("• ERRO: Índice de música inválido. Tente novamente: ");
+            } else if (!(playlist_index >= 0 && playlist_index <= *spotfes->playlists_qty - 1)) {
+                printf("• ERRO: Índice de playlist inválido. Tente novamente: ");
+            } else {
+                printf("• ERRO: Tente novamente: ");
+            }
+        }
+
+        LinkTrackToPlaylist(spotfes->playlists[playlist_index], spotfes->tracks[track_index]);
     }
 }
 
 void RecommendSimilarTrack(tSpotfes* spotfes) {
+    int tracks_qty = GetTracksQuantity(spotfes);
+    int playlists_qty = GetPlaylistsQuantity(spotfes);
     int playlist_index, qty;
-    printf("\n♬  Digite o índice da playlist e a quantidade de músicas similares a serem recomendadas: ");
-    scanf("%d %d", &playlist_index, &qty);
-    ComparePlaylistToTracks(spotfes, spotfes->playlists[playlist_index], qty);
+
+    if (!playlists_qty) {
+        printf("Nenhuma playlist foi criada ainda.\n\n");
+    } else {
+        printf("♪ Digite o índice da playlist alvo e a quantidade de músicas similares a serem recomendadas: ");
+        while (scanf("%d %d%*c", &playlist_index, &qty) != 2 || !(playlist_index >= 0 && playlist_index <= playlists_qty) || !(qty >= 1 && qty <= tracks_qty)) {
+            int playlist_tracks_qty = GetPlaylistAddedTracksQuantity(spotfes, playlist_index);
+
+            if (!playlist_tracks_qty) {
+                printf("\nA playlist está vazia.\n\n");
+            } else {
+                if (!(playlist_index >= 0 && playlist_index <= playlists_qty)) {
+                    printf("• ERRO: Índice de playlist inválido. Tente novamente: ");
+                } else if (!(qty >= 1)) {
+                    printf("• ERRO: O número de recomendações deve ser de no mínimo 1. Tente novamente: ");
+                } else if (!(qty <= tracks_qty)) {
+                    printf("• ERRO: O número de recomendações foi maior do que o número de músicas do programa. Tente novamente: ");
+                }
+            }
+        }
+
+        int playlist_tracks_qty = GetPlaylistAddedTracksQuantity(spotfes, playlist_index);
+
+        if (!playlist_tracks_qty) {
+            printf("\nA playlist está vazia.\n\n");
+        } else {
+            ComparePlaylistToTracks(spotfes, spotfes->playlists[playlist_index], qty);
+        }
+    }
+}
+
+int GetArtistsQuantity(tSpotfes* spotfes) {
+    return *spotfes->artists_qty;
+}
+
+int GetTracksQuantity(tSpotfes* spotfes) {
+    return *spotfes->tracks_qty;
+}
+
+int GetPlaylistsQuantity(tSpotfes* spotfes) {
+    return *spotfes->playlists_qty;
+}
+
+int GetPlaylistAddedTracksQuantity(tSpotfes* spotfes, int index) {
+    int qty = GetPlaylistTracksQuantity(spotfes->playlists[index]);
+
+    return qty;
 }
 
 float* GetTracksFeatures(tSpotfes* spotfes, int m) {
     return GetFeatures(spotfes->tracks[m]);
 }
 
-void RelatesDistanceToTrack (tSpotfes* spotfes, float* euclidean_distance) {
-    for (int m = 0; m < *(spotfes->tracks_qty); m++){
+void RelatesDistanceToTrack(tSpotfes* spotfes, float* euclidean_distance) {
+    for (int m = 0; m < *spotfes->tracks_qty; m++) {
         SaveEuclideanDistanceToTrack(spotfes->tracks[m], euclidean_distance[m]);
     }
 }
 
-float GetTrackDistance (tSpotfes* spotfes, int mm) {
-    float distance;
-
-    distance = GetDistance(spotfes->tracks[mm]);
+float GetTrackDistance(tSpotfes* spotfes, int index) {
+    float distance = GetDistance(spotfes->tracks[index]);
 
     return distance;
 }
 
-void PrintTrack (tSpotfes* spotfes, int mm) {
-    PrintTracksDetails (spotfes->tracks[mm]);
+void PrintSimilarTrack(tSpotfes* spotfes, int index) {
+    PrintSimilarTracksDetails(spotfes->tracks[index]);
 }
