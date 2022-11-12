@@ -66,7 +66,7 @@ tTracks** ReallocateMorePlaylistsTracks (tTracks** tracks, int new_size) {
     tracks = new;
 
     for (int m = new_size / 2; m < new_size; m++) {
-        tracks[m] = AllocatePlaylists();
+        tracks[m] = AllocateTracks();
     }
 
     return tracks;
@@ -180,6 +180,8 @@ tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_q
         }
 
         PutFeaturesInArray(tracks[m]);
+        tracks[m]->euclidean_distance = (float*)malloc(sizeof(float));
+
     }
 
     FreeAndNullPointer(buffer);
@@ -364,6 +366,6 @@ float* GetFeatures (tTracks* tracks) {
     return tracks->features;
 }
 
-/*void SaveEuclideanDistanceToTrack (tTracks* track, float euclidean_distance) {
-    *(track->euclidean_distance) = euclidean_distance;
-}*/
+void SaveEuclideanDistanceToTrack (tTracks* track, float euclidean_distance) {    
+    (*track->euclidean_distance) = euclidean_distance;
+}

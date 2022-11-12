@@ -76,8 +76,9 @@ void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty) {
 
     for (int m = 0; m < tracks_qty; m++) {
         EuclideanDistance[m] = CalculateEuclideanDistance(GetTracksFeatures(spotfes, m), playlist->averages);
-        GetTrack(spotfes, m, EuclideanDistance[m]);
     }
+
+    RelatesDistanceToTrack (spotfes, EuclideanDistance);
 
     int i, j;
     float aux;
@@ -90,6 +91,8 @@ void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty) {
             }
         }
     }
+
+    RelatesDistanceToTrack (spotfes, EuclideanDistance);
 
     /*printf("\n♪  Músicas similares a playlist  ♪\n");
 
