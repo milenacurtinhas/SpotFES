@@ -2,8 +2,8 @@
 
 int main(int argc, char** argv) {
     // CheckDataFilesPath(argc); // adicionar ao terminar
-    argv[1] = "data/artists_5.csv";  // remover ao terminar
-    argv[2] = "data/tracks_5.csv";   // remover ao terminar
+    argv[1] = "data/artists_mm.csv";  // remover ao terminar
+    argv[2] = "data/tracks_mm.csv";   // remover ao terminar
 
     tSpotfes* spotfes = AllocateSpotfes();
 
