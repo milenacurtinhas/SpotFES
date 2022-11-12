@@ -369,3 +369,11 @@ float* GetFeatures (tTracks* tracks) {
 void SaveEuclideanDistanceToTrack (tTracks* track, float euclidean_distance) {    
     (*track->euclidean_distance) = euclidean_distance;
 }
+
+float GetDistance(tTracks* tracks) {
+    return (*tracks->euclidean_distance);
+}
+
+void PrintTracksDetails (tTracks* tracks) {
+    printf ("Índice: %d, Música: %s\n", tracks->index, tracks->track_name);
+}

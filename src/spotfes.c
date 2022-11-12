@@ -217,7 +217,19 @@ float* GetTracksFeatures(tSpotfes* spotfes, int m) {
 }
 
 void RelatesDistanceToTrack (tSpotfes* spotfes, float* euclidean_distance) {
-    for (int m = 0; m < spotfes->tracks_qty; m++){
+    for (int m = 0; m < *(spotfes->tracks_qty); m++){
         SaveEuclideanDistanceToTrack(spotfes->tracks[m], euclidean_distance[m]);
     }
+}
+
+float GetTrackDistance (tSpotfes* spotfes, int mm) {
+    float distance;
+
+    distance = GetDistance(spotfes->tracks[mm]);
+
+    return distance;
+}
+
+void PrintTrack (tSpotfes* spotfes, int mm) {
+    PrintTracksDetails (spotfes->tracks[mm]);
 }

@@ -21,5 +21,7 @@ void AddTrackToPlaylist(tSpotfes* spotfes);
 void RecommendSimilarTrack(tSpotfes* spotfes);
 float* GetTracksFeatures(tSpotfes* spotfes, int m);
 void RelatesDistanceToTrack (tSpotfes* spotfes, float* euclidean_distance);
+float GetTrackDistance (tSpotfes* spotfes, int mm);
+void PrintTrack (tSpotfes* spotfes, int mm);
 
 #endif

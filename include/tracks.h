@@ -19,5 +19,7 @@ float CalculateAverages(int feature, tTracks** tracks, int tracks_qty);
 float GetFeatureValue(tTracks* track, int feature);
 float* GetFeatures(tTracks* tracks);
 void SaveEuclideanDistanceToTrack(tTracks* track, float euclidean_distance);
+float GetDistance(tTracks* tracks);
+void PrintTracksDetails (tTracks* tracks);
 
 #endif
