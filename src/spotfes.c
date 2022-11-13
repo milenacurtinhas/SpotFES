@@ -65,14 +65,12 @@ void FreeUpSpotfes(tSpotfes* spotfes) {
 tSpotfes* ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
     FILE* artists_data = fopen(argv[1], "r");
     if (!artists_data) {
-        printf("• ERRO: Não foi possível acessar o arquivo de dados dos artistas. Verifique se ele está no mesmo diretório do executável desse programa.\n\n");
-        exit(1);
+        PrintMissingFilesErrorAndQuitProgram();
     }
 
     FILE* tracks_data = fopen(argv[2], "r");
     if (!tracks_data) {
-        printf("• ERRO: Não foi possível acessar o arquivo de dados das músicas. Verifique se ele está no mesmo diretório do executável desse programa.\n\n");
-        exit(1);
+        PrintMissingFilesErrorAndQuitProgram();
     }
 
     spotfes = AllocateSpotfes(spotfes);
@@ -106,25 +104,25 @@ int SetUpMainMenu() {
 
     int input = GetValidIntegerInput(1, 9);
     ClearTerminal();
+
     return input;
 }
 
 void QuitProgram(tSpotfes* spotfes) {
     FreeUpSpotfes(spotfes);
-    printf("|------------------------|\n");
-    printf("| ♪ | SPOTFES by M&M | ♪ |\n");
-    printf("|------------------------|\n");
+    printf("SpotFES by M&M: no warnings, no leaks, no errors ♪\n");
 }
 
 void SearchTracks(tSpotfes* spotfes) {
     char buffer[128], input[128];
 
     printf("♪ Digite o título de uma música a ser pesquisada: ");
-    fgets(buffer, 128, stdin);
-    strcpy(input, strtok(buffer, "\n"));
-    printf("\n");
+    if (fgets(buffer, 128, stdin) != NULL) {
+        strcpy(input, strtok(buffer, "\n"));
+        printf("\n");
 
-    SearchTracksByTitle(input, spotfes->tracks, *spotfes->tracks_qty);
+        SearchTracksByTitle(input, spotfes->tracks, *spotfes->tracks_qty);
+    }
 }
 
 void DetailTrack(tSpotfes* spotfes) {
@@ -143,12 +141,13 @@ void CreatePlaylist(tSpotfes* spotfes) {
     char buffer[128], input[128];
 
     printf("♪ Digite o nome da playlist a ser criada: ");
-    fgets(buffer, 128, stdin) == NULL;
-    strcpy(input, strtok(buffer, "\n"));
-    printf("\n");
+    if (fgets(buffer, 128, stdin)) {
+        strcpy(input, strtok(buffer, "\n"));
+        printf("\n");
 
-    NewPlaylist(input, spotfes->playlists, *spotfes->playlists_qty);
-    *spotfes->playlists_qty += 1;
+        NewPlaylist(input, spotfes->playlists, *spotfes->playlists_qty);
+        *spotfes->playlists_qty += 1;
+    }
 }
 
 void ListPlaylists(tSpotfes* spotfes) {
@@ -189,10 +188,7 @@ void AddTrackToPlaylist(tSpotfes* spotfes) {
 }
 
 void RecommendSimilarTrack(tSpotfes* spotfes) {
-    int tracks_qty = GetTracksQuantity(spotfes);
-    int playlists_qty = GetPlaylistsQuantity(spotfes);
-
-    if (!playlists_qty) {
+    if (!*spotfes->playlists_qty) {
         printf("• ERRO: Nenhuma playlist foi criada ainda.\n\n");
     } else {
         printf("♪ Digite o índice da playlist alvo: ");
@@ -215,10 +211,6 @@ int GetArtistsQuantity(tSpotfes* spotfes) {
 
 int GetTracksQuantity(tSpotfes* spotfes) {
     return *spotfes->tracks_qty;
-}
-
-int GetPlaylistsQuantity(tSpotfes* spotfes) {
-    return *spotfes->playlists_qty;
 }
 
 int GetPlaylistAddedTracksQuantity(tSpotfes* spotfes, int index) {
@@ -244,8 +236,6 @@ float GetTrackDistance(tSpotfes* spotfes, int index) {
 }
 
 void PrintSimilarTrack(tSpotfes* spotfes, int index) {
-    int artists_qty = GetTrackArtistsQuantity(spotfes->tracks[index]);
-
-    PrintShortTracksDetails(spotfes->tracks[index], artists_qty);
+    PrintShortTracksDetails(spotfes->tracks[index]);
     printf("\n");
 }

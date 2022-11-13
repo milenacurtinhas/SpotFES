@@ -15,7 +15,7 @@ void ReadTrackArtistsIDs(tTracks* track, char* line);
 void PutFeaturesInArray(tTracks* track);
 void LinkArtistsToTracks(tSpotfes* spotfes, tTracks** tracks, tArtists** artists);
 void PrintTrackArtists(tTracks* track, int quantity);
-void PrintShortTracksDetails(tTracks* track, int artists_qty);
+void PrintShortTracksDetails(tTracks* track);
 void SearchTracksByTitle(char* input, tTracks** tracks, int tracks_qty);
 void SearchTracksByIndex(int input, tTracks** tracks);
 void OpenTrack(tTracks* track);

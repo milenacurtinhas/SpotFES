@@ -1,12 +1,15 @@
 #include "libraries.h"
 
-void CheckDataFilesPath(int argc, char** argv) {
-    ClearTerminal();
+void PrintMissingFilesErrorAndQuitProgram() {
+    printf("• ERRO: Os arquivos de dados devem estar contidos na pasta 'data' e o programa deverá ser executado da seguinte forma:\n\n");
+    printf("./SpotFES NomeDoArquivoDosArtistas.csv NomeDoArquivoDasMúsicas.csv\n\n");
+    exit(1);
+}
+
+void CheckDataFilesPath(int argc, char** argv) {  // ESSE WARNING VAI SUMIR QUANDO FIZERMOS AS FUNÇÕES ABAIXO
 
     if (argc == 1 || argc == 2) {
-        printf("• ERRO: Os arquivos de dados devem estar contidos na pasta 'data' e o programa deverá ser executado da seguinte forma:\n\n");
-        printf("./SpotFES NomeDoArquivoDosArtistas.csv NomeDoArquivoDasMúsicas.csv\n\n");
-        exit(1);
+        PrintMissingFilesErrorAndQuitProgram();
     } else {
         // chama aqui a função de fazer o argv[1] e argv[2] terem o nome do caminho dos arquivos
         // chama aqui a função de abrir os arquivos binários
@@ -30,13 +33,13 @@ int GetValidIntegerInput(int min_range, int max_range) {
     while (1) {
         char buffer[16];
 
-        fgets(buffer, sizeof(buffer), stdin);
+        if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+            if (buffer[0] >= '0' && buffer[0] <= '9') {
+                int input = atoi(buffer);
 
-        if (buffer[0] >= '0' && buffer[0] <= '9') {
-            int input = atoi(buffer);
-
-            if (input >= min_range && input <= max_range) {
-                return input;
+                if (input >= min_range && input <= max_range) {
+                    return input;
+                }
             }
         }
 
@@ -48,15 +51,15 @@ char GetValidYesOrNoInput() {
     while (1) {
         char input[16];
 
-        fgets(input, sizeof(input), stdin);
-
-        if (input[0] == 'N' || input[0] == 'n') {
-            return 0;
-        } else if (input[0] == 'S' || input[0] == 's') {
-            return 1;
-        } else {
-            printf("• ERRO: Opção inválida. Tente novamente: ");
+        if (fgets(input, sizeof(input), stdin) != NULL) {
+            if (input[0] == 'N' || input[0] == 'n') {
+                return 0;
+            } else if (input[0] == 'S' || input[0] == 's') {
+                return 1;
+            }
         }
+
+        printf("• ERRO: Opção inválida. Tente novamente: ");
     }
 }
 
@@ -130,7 +133,7 @@ float CalculateEuclideanDistance(float* features, float* averages) {
 }
 
 void ClearTerminal() {
-#ifdef __linux__
-    int terminal = system("clear");
-#endif
+    while (system("clear") == 0) {
+        break;
+    }
 }

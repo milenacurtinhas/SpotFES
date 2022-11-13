@@ -17,7 +17,6 @@ void AddTrackToPlaylist(tSpotfes* spotfes);
 void RecommendSimilarTrack(tSpotfes* spotfes);
 int GetArtistsQuantity(tSpotfes* spotfes);
 int GetTracksQuantity(tSpotfes* spotfes);
-int GetPlaylistsQuantity(tSpotfes* spotfes);
 int GetPlaylistAddedTracksQuantity(tSpotfes* spotfes, int index);
 float* GetTracksFeatures(tSpotfes* spotfes, int m);
 void RelatesDistanceToTrack(tSpotfes* spotfes, float* euclidean_distance);

@@ -1,11 +1,12 @@
 #include "libraries.h"
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv) {      // ESSE WARNING VAI SAIR QUANDO ATIVARMOS A FUNÇÃO ABAIXO
     // CheckDataFilesPath(argc, argv); // adicionar ao terminar
-    argv[1] = "data/artists_mm.csv";  // remover ao terminar
-    argv[2] = "data/tracks_mm.csv";   // remover ao terminar
+    argv[1] = "data/artists_mm.csv";   // remover ao terminar
+    argv[2] = "data/tracks_mm.csv";    // remover ao terminar
 
-    tSpotfes* spotfes = ReadSpotifyDataFiles(spotfes, argv);
+    tSpotfes* spotfes = NULL;
+    spotfes = ReadSpotifyDataFiles(spotfes, argv);
 
     while (1) {
         switch (SetUpMainMenu()) {

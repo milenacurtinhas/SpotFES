@@ -1,6 +1,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
+void PrintMissingFilesErrorAndQuitProgram();
 void CheckDataFilesPath(int argc, char** argv);
 void FreeAndNullPointer(void* pointer);
 int EndOfFile(char character);

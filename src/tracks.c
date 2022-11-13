@@ -253,7 +253,7 @@ void PrintTrackArtists(tTracks* track, int quantity) {
     }
 }
 
-void PrintShortTracksDetails(tTracks* track, int artists_qty) {
+void PrintShortTracksDetails(tTracks* track) {
     if (track->artists_qty == 1) {
         printf("Artista: ");
     } else {
@@ -281,7 +281,7 @@ void SearchTracksByTitle(char* input, tTracks** tracks, int tracks_qty) {
         if (comparison != NULL) {
             prints++;
 
-            PrintShortTracksDetails(tracks[m], tracks[m]->artists_qty);
+            PrintShortTracksDetails(tracks[m]);
             printf("ID: %s\n\n", tracks[m]->id);
         }
 
@@ -325,7 +325,9 @@ void OpenTrack(tTracks* track) {
     printf("\n♪ Deseja abrir a música no Firefox? (sim/não): ");
 
     if (GetValidYesOrNoInput()) {
-        system(url);
+        while (system(url) == 0) {
+            break;
+        }
     }
 
     printf("\n");
@@ -344,7 +346,7 @@ void ShowPlaylistTracks(tTracks** tracks_from_playlist, int tracks_qty) {
                 printf("Músicas: %d\n\n", tracks_qty);
             }
 
-            PrintShortTracksDetails(tracks_from_playlist[m], tracks_from_playlist[m]->artists_qty);
+            PrintShortTracksDetails(tracks_from_playlist[m]);
         }
     }
     printf("\n");
