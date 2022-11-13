@@ -61,6 +61,10 @@ void SearchPlaylistByIndex(int input, tPlaylists** playlists) {
     ShowPlaylistTracks(playlists[input]->tracks, playlists[input]->tracks_qty);
 }
 
+char* GetPlaylistName(tPlaylists* playlist) {
+    return playlist->playlist_name;
+}
+
 void LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track) {
     if (playlist->tracks_qty == *playlist->tracks_alloc_size) {  // ESSE TAMBEM TEM QUE SER IGUAL ASSIM COMO A LINHA 161 DA SPOTFES.C
         *playlist->tracks_alloc_size *= 2;

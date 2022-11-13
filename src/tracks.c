@@ -319,21 +319,20 @@ void SearchTracksByIndex(int input, tTracks** tracks) {
 }
 
 void OpenTrack(tTracks* track) {
-    char option;
     char url[62] = "firefox https://open.spotify.com/track/";
     strcat(url, track->id);
 
-    printf("\n♪ Deseja abrir a música no Firefox? (S/N): ");
+    printf("\n♪ Deseja abrir a música no Firefox? (sim/não): ");
 
-    while (scanf("%c%*c", &option) == 0 || option != 'S' && option != 's' && option != 'N' && option != 'n') {
-        printf("• ERRO: Opção inválida. Tente novamente: ");
-    }
-
-    if (option == 'S' || option == 's') {
+    if (GetValidYesOrNoInput()) {
         system(url);
     }
 
     printf("\n");
+}
+
+char* GetTrackName(tTracks* track) {
+    return track->track_name;
 }
 
 void ShowPlaylistTracks(tTracks** tracks_from_playlist, int tracks_qty) {

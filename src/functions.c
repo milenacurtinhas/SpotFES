@@ -26,6 +26,40 @@ int EndOfFile(char character) {
     }
 }
 
+int GetValidIntegerInput(int min_range, int max_range) {
+    while (1) {
+        char buffer[16];
+
+        fgets(buffer, sizeof(buffer), stdin);
+
+        if (buffer[0] >= '0' && buffer[0] <= '9') {
+            int input = atoi(buffer);
+
+            if (input >= min_range && input <= max_range) {
+                return input;
+            }
+        }
+
+        printf("• ERRO: Opção inválida. Tente novamente: ");
+    }
+}
+
+char GetValidYesOrNoInput() {
+    while (1) {
+        char input[16];
+
+        fgets(input, sizeof(input), stdin);
+
+        if (input[0] == 'N' || input[0] == 'n') {
+            return 0;
+        } else if (input[0] == 'S' || input[0] == 's') {
+            return 1;
+        } else {
+            printf("• ERRO: Opção inválida. Tente novamente: ");
+        }
+    }
+}
+
 int GetValueQuantity(char* character, int value_size) {
     int value_qty = 1;
 

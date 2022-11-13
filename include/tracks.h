@@ -19,6 +19,7 @@ void PrintShortTracksDetails(tTracks* track, int artists_qty);
 void SearchTracksByTitle(char* input, tTracks** tracks, int tracks_qty);
 void SearchTracksByIndex(int input, tTracks** tracks);
 void OpenTrack(tTracks* track);
+char* GetTrackName(tTracks* track);
 void ShowPlaylistTracks(tTracks** tracks_from_playlist, int tracks_qty);
 float CalculateAverages(int feature, tTracks** tracks, int tracks_qty);
 float GetFeatureValue(tTracks* track, int feature);

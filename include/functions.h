@@ -4,6 +4,8 @@
 void CheckDataFilesPath(int argc, char** argv);
 void FreeAndNullPointer(void* pointer);
 int EndOfFile(char character);
+int GetValidIntegerInput(int min_range, int max_range);
+char GetValidYesOrNoInput();
 int GetValueQuantity(char* character, int value_size);
 char* GetLowcaseString(char* string);
 void PrintTrackLength(int duration_ms);
