@@ -243,31 +243,31 @@ void PrintSimilarTrack(tSpotfes* spotfes, int index) {
 }
 
 void GenerateReport(tSpotfes* spotfes) {
-    /*FILE * tracks_file;
+    FILE * tracks_file;
     FILE * artists_file;
 
-    tracks_file = fopen ("relatório/músicas.txt", "rw");
-    artists_file = fopen ("relatório/artistas.txt", "rw");*/
+    tracks_file = fopen ("relatório/músicas.txt", "w");
+    artists_file = fopen ("relatório/artistas.txt", "w");
 
     int most_added_tracks = GetAddMostAddedTrack (spotfes->tracks, *spotfes->tracks_qty);
-    int most_added_atists = GetAddMostAddedArtist (spotfes->artists, *spotfes->artists_qty);
+    int most_added_artists = GetAddMostAddedArtist (spotfes->artists, *spotfes->artists_qty);
 
     for (int m = most_added_tracks; m > 0; m--) {
         for (int mm = 0; mm < *spotfes->tracks_qty; mm++) {
             if (GetTracksAddedCounter (spotfes->tracks[mm]) == m) {
-                PrintTrackName (spotfes->tracks[mm]);
+                PrintTrackName (tracks_file, spotfes->tracks[mm]);
             }
         }
     }
 
-    for (int m = most_added_atists; m > 0; m--) {
+    for (int m = most_added_artists; m > 0; m--) {
         for (int mm = 0; mm < *spotfes->artists_qty; mm++) {
             if (GetArtistAddedCounter (spotfes->artists[mm]) == m) {
-                PrintArtistName (spotfes->artists[mm]);
+                PrintArtistName (artists_file, spotfes->artists[mm]);
             }
         }
     }
 
-    /*fclose (tracks_file);
-    fclose (artists_file);*/
+    fclose (tracks_file);
+    fclose (artists_file);
 }

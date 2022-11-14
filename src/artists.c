@@ -151,8 +151,8 @@ int GetArtistAddedCounter(tArtists* artist) {
     return *artist->times_added_to_playlist;
 }
 
-void PrintArtistName(tArtists* artist) {
-    printf ("%s\n", artist->artist_name);
+void PrintArtistName(FILE * artists_file, tArtists* artist) {
+    fprintf (artists_file, "%s\n", artist->artist_name);
 }
 
 int GetAddMostAddedArtist (tArtists** artists, int qty) {

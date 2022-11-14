@@ -420,8 +420,8 @@ int GetTracksAddedCounter(tTracks* track) {
     return *track->times_added_to_playlist;
 }
 
-void PrintTrackName(tTracks* track) {
-    printf ("%s\n", track->track_name);
+void PrintTrackName(FILE * tracks_file, tTracks* track) {
+    fprintf (tracks_file, "%s\n", track->track_name);
 }
 
 int GetAddMostAddedTrack (tTracks** tracks, int qty) {
