@@ -142,8 +142,8 @@ tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_q
         ReadTrackReleaseDate(tracks[m], release_date_line);
         PutFeaturesInArray(tracks[m]);
 
-        tracks[m]->times_added_to_playlist = (int*)malloc(sizeof(int));
-        tracks[m]->times_added_to_playlist = 0;
+        tracks[m]->times_added_to_playlist = (int*)calloc(sizeof(int), 1);
+        //tracks[m]->times_added_to_playlist = 0;
     }
 
     FreeAndNullPointer(buffer);
@@ -409,7 +409,7 @@ float GetDistance(tTracks* tracks) {
 }
 
 void TrackAddedToPlaylistCounter(tTracks* track) {
-    track->times_added_to_playlist = (*track->times_added_to_playlist) + 1;
+    (*track->times_added_to_playlist) += 1;
 
     for (int m = 0; m < track->artists_qty; m++) {
         ArtistsAddedToPlaylistCounter (track->artists[m]);
