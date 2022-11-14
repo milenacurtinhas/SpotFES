@@ -36,6 +36,8 @@ tSpotfes* AllocateSpotfes(tSpotfes* spotfes) {
         }
     }
 
+    *spotfes->playlists_qty = ReadBinaryFiles(spotfes->playlists);
+
     return spotfes;
 }
 
@@ -109,6 +111,7 @@ int SetUpMainMenu() {
 }
 
 void QuitProgram(tSpotfes* spotfes) {
+    WriteBinaryFiles(spotfes->playlists, spotfes->playlists_qty);
     FreeUpSpotfes(spotfes);
     printf("SpotFES by M&M: no warnings, no leaks, no errors ♪\n");
 }

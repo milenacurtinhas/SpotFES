@@ -125,3 +125,50 @@ void GetAverages(tPlaylists* playlist) {
 int GetPlaylistTracksQuantity(tPlaylists* playlist) {
     return playlist->tracks_qty;
 }
+
+int ReadBinaryFiles(tPlaylists** playlists) {
+    FILE* playlists_file = fopen("playlists.bin", "rb");
+    int quantity = 0;
+
+    if (playlists_file != NULL) {
+        fread(&quantity, sizeof(int), 1, playlists_file);
+
+        for (int m = 0; m < quantity; m++) {
+            fwrite(&playlists[m]->index, sizeof(int), 1, playlists_file);
+            fwrite(&playlists[m]->playlist_name, sizeof(char), 1, playlists_file);
+            fwrite(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
+
+            for (int mm = 0; mm < playlists[m]->tracks_qty; mm++) {
+                fwrite(&playlists[m]->tracks[mm], sizeof(tTracks*), 1, playlists_file);
+            }
+
+            fwrite(&playlists[m]->averages, sizeof(playlists[m]->averages), 8, playlists_file);
+            fwrite(&playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
+        }
+
+        fclose(playlists_file);
+    }
+
+    return quantity;
+}
+
+void WriteBinaryFiles(tPlaylists** playlists, int* quantity) {
+    FILE* playlists_file = fopen("playlists.bin", "wb");
+
+    fwrite(&*quantity, sizeof(int), 1, playlists_file);
+
+    for (int m = 0; m < *quantity; m++) {
+        fwrite(&playlists[m]->index, sizeof(int), 1, playlists_file);
+        fwrite(&playlists[m]->playlist_name, sizeof(playlists[m]->playlist_name), 1, playlists_file);
+        fwrite(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
+
+        for (int mm = 0; mm < playlists[m]->tracks_qty; mm++) {
+            fwrite(&playlists[m]->tracks[mm], sizeof(tTracks*), 1, playlists_file);
+        }
+
+        fwrite(&playlists[m]->averages, sizeof(playlists[m]->averages), 8, playlists_file);
+        fwrite(&playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
+    }
+
+    fclose(playlists_file);
+}
