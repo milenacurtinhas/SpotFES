@@ -65,12 +65,14 @@ void FreeUpSpotfes(tSpotfes* spotfes) {
 tSpotfes* ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
     FILE* artists_data = fopen(argv[1], "r");
     if (!artists_data) {
-        PrintMissingFilesErrorAndQuitProgram();
+        printf("artists\n");
+        // PrintMissingFilesErrorAndQuitProgram();
     }
 
     FILE* tracks_data = fopen(argv[2], "r");
     if (!tracks_data) {
-        PrintMissingFilesErrorAndQuitProgram();
+        printf("tracks\n");
+        // PrintMissingFilesErrorAndQuitProgram();
     }
 
     spotfes = AllocateSpotfes(spotfes);
@@ -110,7 +112,7 @@ int SetUpMainMenu() {
 
 void QuitProgram(tSpotfes* spotfes) {
     FreeUpSpotfes(spotfes);
-    printf("SpotFES by M&M: no warnings, no leaks, no errors ♪\n");
+    printf("SpotFES by M&M: no warnings, no leaks, no errors ♪\n\n");
 }
 
 void SearchTracks(tSpotfes* spotfes) {
@@ -147,6 +149,7 @@ void CreatePlaylist(tSpotfes* spotfes) {
 
         NewPlaylist(input, spotfes->playlists, *spotfes->playlists_qty);
         *spotfes->playlists_qty += 1;
+        printf("A playlist '%s' foi criada com sucesso.\n\n", input);
     }
 }
 
@@ -176,6 +179,8 @@ void AddTrackToPlaylist(tSpotfes* spotfes) {
         int playlist_index = GetValidIntegerInput(0, *spotfes->playlists_qty - 1);
 
         LinkTrackToPlaylist(spotfes->playlists[playlist_index], spotfes->tracks[track_index]);
+
+        TrackAddedToPlaylistCounter (spotfes->tracks[track_index]);
 
         char* track_name = strdup(GetTrackName(spotfes->tracks[track_index]));
         char* playlist_name = strdup(GetPlaylistName(spotfes->playlists[playlist_index]));

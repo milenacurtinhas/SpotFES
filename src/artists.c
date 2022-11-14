@@ -7,6 +7,7 @@ struct tartists {
     int genres_qty;
     char* artist_name;
     int popularity;
+    int* times_added_to_playlist;
 };
 
 tArtists* AllocateArtists() {
@@ -45,6 +46,7 @@ void FreeUpArtists(tArtists* artists) {
     FreeAndNullPointer(artists->id);
     FreeAndNullPointer(artists->genres);
     FreeAndNullPointer(artists->artist_name);
+    FreeAndNullPointer(artists->times_added_to_playlist);
     FreeAndNullPointer(artists);
 }
 
@@ -71,6 +73,9 @@ tArtists** ReadArtistsDataFiles(tArtists** artists, FILE* artists_data, int* art
         artists[m]->popularity = atoi(strtok(NULL, "\n"));
 
         ReadArtistsGenres(artists[m], genres_line);
+
+        artists[m]->times_added_to_playlist = (int*)calloc(sizeof(int), 1);
+        *artists[m]->times_added_to_playlist = 0;
     }
 
     FreeAndNullPointer(buffer);
@@ -136,4 +141,8 @@ void PrintTrackArtistsDetails(tArtists** artists, int artists_qty) {
 
 char* GetArtistID(tArtists* artist) {
     return artist->id;
+}
+
+void ArtistsAddedToPlaylistCounter (tArtists* artist) {
+    (*artist->times_added_to_playlist)++;
 }

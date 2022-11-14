@@ -30,6 +30,7 @@ struct ttracks {
     int linked_artists_qty;
     float* features;
     float* euclidean_distance;
+    int* times_added_to_playlist;
 };
 
 tTracks* AllocateTracks() {
@@ -89,6 +90,7 @@ void FreeUpTracks(tTracks* tracks) {
     FreeAndNullPointer(tracks->artists);
     FreeAndNullPointer(tracks->features);
     FreeAndNullPointer(tracks->euclidean_distance);
+    FreeAndNullPointer(tracks->times_added_to_playlist);
     FreeAndNullPointer(tracks);
 }
 
@@ -139,6 +141,9 @@ tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_q
         ReadTrackArtistsIDs(tracks[m], artists_ids_line);
         ReadTrackReleaseDate(tracks[m], release_date_line);
         PutFeaturesInArray(tracks[m]);
+
+        tracks[m]->times_added_to_playlist = (int*)malloc(sizeof(int));
+        tracks[m]->times_added_to_playlist = 0;
     }
 
     FreeAndNullPointer(buffer);
@@ -401,4 +406,12 @@ void SaveEuclideanDistanceToTrack(tTracks* track, float euclidean_distance) {
 
 float GetDistance(tTracks* tracks) {
     return *tracks->euclidean_distance;
+}
+
+void TrackAddedToPlaylistCounter (tTracks* track) {
+    (*track->times_added_to_playlist)++;
+
+    for (int m = 0; m < track->artists_qty; m++) {
+        ArtistsAddedToPlaylistCounter (track->artists[m]);
+    }
 }

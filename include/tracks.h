@@ -27,5 +27,6 @@ int GetTrackArtistsQuantity(tTracks* track);
 float* GetFeatures(tTracks* tracks);
 void SaveEuclideanDistanceToTrack(tTracks* track, float euclidean_distance);
 float GetDistance(tTracks* tracks);
+void TrackAddedToPlaylistCounter (tTracks* track);
 
 #endif
