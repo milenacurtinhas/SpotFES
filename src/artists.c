@@ -154,3 +154,15 @@ int GetArtistAddedCounter(tArtists* artist) {
 void PrintArtistName(tArtists* artist) {
     printf ("%s\n", artist->artist_name);
 }
+
+int GetAddMostAddedArtist (tArtists** artists, int qty) {
+    int time = 0;
+
+    for (int m = 0; m < qty; m++) {
+        if (time < (*artists[m]->times_added_to_playlist)){
+            time = (*artists[m]->times_added_to_playlist);
+        }
+    }
+
+    return time;
+}

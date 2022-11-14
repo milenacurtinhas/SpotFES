@@ -249,7 +249,10 @@ void GenerateReport(tSpotfes* spotfes) {
     tracks_file = fopen ("relatório/músicas.txt", "rw");
     artists_file = fopen ("relatório/artistas.txt", "rw");*/
 
-    for (int m = *spotfes->playlists_qty; m > 0; m--) {
+    int most_added_tracks = GetAddMostAddedTrack (spotfes->tracks, *spotfes->tracks_qty);
+    int most_added_atists = GetAddMostAddedArtist (spotfes->artists, *spotfes->artists_qty);
+
+    for (int m = most_added_tracks; m > 0; m--) {
         for (int mm = 0; mm < *spotfes->tracks_qty; mm++) {
             if (GetTracksAddedCounter (spotfes->tracks[mm]) == m) {
                 PrintTrackName (spotfes->tracks[mm]);
@@ -257,7 +260,7 @@ void GenerateReport(tSpotfes* spotfes) {
         }
     }
 
-    for (int m = *spotfes->playlists_qty; m > 0; m--) {
+    for (int m = most_added_atists; m > 0; m--) {
         for (int mm = 0; mm < *spotfes->artists_qty; mm++) {
             if (GetArtistAddedCounter (spotfes->artists[mm]) == m) {
                 PrintArtistName (spotfes->artists[mm]);

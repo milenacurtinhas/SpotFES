@@ -30,5 +30,6 @@ float GetDistance(tTracks* tracks);
 void TrackAddedToPlaylistCounter(tTracks* track);
 int GetTracksAddedCounter(tTracks* track);
 void PrintTrackName(tTracks* track);
+int GetAddMostAddedTrack (tTracks** tracks, int qty);
 
 #endif
