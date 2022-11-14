@@ -421,5 +421,5 @@ int GetTracksAddedCounter(tTracks* track) {
 }
 
 void PrintTrackName(tTracks* track) {
-    printf ("%s", track->track_name);
+    printf ("%s\n", track->track_name);
 }

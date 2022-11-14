@@ -152,5 +152,5 @@ int GetArtistAddedCounter(tArtists* artist) {
 }
 
 void PrintArtistName(tArtists* artist) {
-    printf ("%s", artist->artist_name);
+    printf ("%s\n", artist->artist_name);
 }

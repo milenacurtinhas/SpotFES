@@ -32,7 +32,7 @@ int main(int argc, char** argv) {     // ESSE WARNING VAI SAIR QUANDO ATIVARMOS 
                 RecommendSimilarTrack(spotfes);
                 break;
             case 8:
-                //GenerateReport(spotfes);
+                GenerateReport(spotfes);
                 break;
             case 9:
                 QuitProgram(spotfes);

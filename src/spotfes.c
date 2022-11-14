@@ -242,12 +242,12 @@ void PrintSimilarTrack(tSpotfes* spotfes, int index) {
     printf("\n");
 }
 
-/*void GenerateReport(tSpotfes* spotfes) {
-    FILE * tracks_file;
+void GenerateReport(tSpotfes* spotfes) {
+    /*FILE * tracks_file;
     FILE * artists_file;
 
     tracks_file = fopen ("relatório/músicas.txt", "rw");
-    artists_file = fopen ("relatório/artistas.txt", "rw");
+    artists_file = fopen ("relatório/artistas.txt", "rw");*/
 
     for (int m = *spotfes->playlists_qty; m > 0; m--) {
         for (int mm = 0; mm < *spotfes->tracks_qty; mm++) {
@@ -265,6 +265,6 @@ void PrintSimilarTrack(tSpotfes* spotfes, int index) {
         }
     }
 
-    fclose (tracks_file);
-    fclose (artists_file);
-}*/
+    /*fclose (tracks_file);
+    fclose (artists_file);*/
+}
