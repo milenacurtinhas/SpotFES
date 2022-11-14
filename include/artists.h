@@ -11,6 +11,5 @@ tArtists** ReadArtistsDataFiles(tArtists** artists, FILE* artists_data, int* art
 void ReadArtistsGenres(tArtists* artist, char* line);
 void PrintTrackArtistsDetails(tArtists** artists, int artists_qty);
 char* GetArtistID(tArtists* artist);
-void ArtistsAddedToPlaylistCounter (tArtists* artist);
 
 #endif

@@ -9,23 +9,13 @@ void PrintMissingFilesErrorAndQuitProgram() {
 void CheckDataFilesPath(int argc, char** argv) {  // ESSE WARNING VAI SUMIR QUANDO FIZERMOS AS FUNÇÕES ABAIXO
     ClearTerminal();
     if (argc == 1 || argc == 2) {
-        // PrintMissingFilesErrorAndQuitProgram();
+        PrintMissingFilesErrorAndQuitProgram();
     } else {
-        char artists[512];
-        char tracks[512];
+        char artists[512], tracks[512];
 
         sprintf(artists, "data/%s", argv[1]);
         sprintf(tracks, "data/%s", argv[2]);
-
-        printf("arg1: %s\n", artists);
-        printf("arg2: %s\n", tracks);
-
-        strcpy(argv[1], artists);
-        strcpy(argv[2], tracks);
-
-        printf("arg1: %s\n", argv[1]);
-        printf("arg2: %s\n", argv[2]);
-
+        // chama aqui a função de fazer o argv[1] e argv[2] terem o nome do caminho dos arquivos
         // chama aqui a função de abrir os arquivos binários
     }
 }

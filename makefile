@@ -1,6 +1,6 @@
 TARGET := SpotFES
 LIBS := -lm
-CFLAGS := -O0 -Wall -Wextra
+CFLAGS := -g -O -Wall -Wextra
 OBJDIR := obj/
 SRCDIR := src/
 INCLUDEDIR := include/
