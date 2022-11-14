@@ -75,6 +75,8 @@ void LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track) {
     playlist->tracks[playlist->tracks_qty] = track;
 
     playlist->tracks_qty++;
+
+    TrackAddedToPlaylistCounter (track);
 }
 
 void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty) {

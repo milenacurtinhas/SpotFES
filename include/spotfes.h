@@ -22,5 +22,6 @@ float* GetTracksFeatures(tSpotfes* spotfes, int m);
 void RelatesDistanceToTrack(tSpotfes* spotfes, float* euclidean_distance);
 float GetTrackDistance(tSpotfes* spotfes, int index);
 void PrintSimilarTrack(tSpotfes* spotfes, int index);
+void GenerateReport(tSpotfes* spotfes);
 
 #endif

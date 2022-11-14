@@ -147,6 +147,8 @@ void CreatePlaylist(tSpotfes* spotfes) {
 
         NewPlaylist(input, spotfes->playlists, *spotfes->playlists_qty);
         *spotfes->playlists_qty += 1;
+        printf("A playlist '%s' foi criada com sucesso.\n\n", input);
+
     }
 }
 
@@ -239,3 +241,30 @@ void PrintSimilarTrack(tSpotfes* spotfes, int index) {
     PrintShortTracksDetails(spotfes->tracks[index]);
     printf("\n");
 }
+
+/*void GenerateReport(tSpotfes* spotfes) {
+    FILE * tracks_file;
+    FILE * artists_file;
+
+    tracks_file = fopen ("relatório/músicas.txt", "rw");
+    artists_file = fopen ("relatório/artistas.txt", "rw");
+
+    for (int m = *spotfes->playlists_qty; m > 0; m--) {
+        for (int mm = 0; mm < *spotfes->tracks_qty; mm++) {
+            if (GetTracksAddedCounter (spotfes->tracks[mm]) == m) {
+                PrintTrackName (spotfes->tracks[mm]);
+            }
+        }
+    }
+
+    for (int m = *spotfes->playlists_qty; m > 0; m--) {
+        for (int mm = 0; mm < *spotfes->artists_qty; mm++) {
+            if (GetArtistAddedCounter (spotfes->artists[mm]) == m) {
+                PrintArtistName (spotfes->artists[mm]);
+            }
+        }
+    }
+
+    fclose (tracks_file);
+    fclose (artists_file);
+}*/
