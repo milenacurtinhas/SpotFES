@@ -151,15 +151,15 @@ int GetArtistAddedCounter(tArtists* artist) {
     return *artist->times_added_to_playlist;
 }
 
-void PrintArtistName(FILE * artists_file, tArtists* artist) {
-    fprintf (artists_file, "%s\n", artist->artist_name);
+void PrintArtistName(FILE* artists_file, tArtists* artist) {
+    fprintf(artists_file, "%s\n", artist->artist_name);
 }
 
-int GetAddMostAddedArtist (tArtists** artists, int qty) {
+int GetAddMostAddedArtist(tArtists** artists, int qty) {
     int time = 0;
 
     for (int m = 0; m < qty; m++) {
-        if (time < (*artists[m]->times_added_to_playlist)){
+        if (time < (*artists[m]->times_added_to_playlist)) {
             time = (*artists[m]->times_added_to_playlist);
         }
     }

@@ -143,7 +143,7 @@ tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_q
         PutFeaturesInArray(tracks[m]);
 
         tracks[m]->times_added_to_playlist = (int*)calloc(sizeof(int), 1);
-        //tracks[m]->times_added_to_playlist = 0;
+        // tracks[m]->times_added_to_playlist = 0;
     }
 
     FreeAndNullPointer(buffer);
@@ -354,7 +354,7 @@ void ShowPlaylistTracks(tTracks** tracks_from_playlist, int tracks_qty) {
             PrintShortTracksDetails(tracks_from_playlist[m]);
         }
     }
-    printf("\n");
+    printf("\n\n");
 }
 
 float CalculateAverages(int feature, tTracks** tracks, int tracks_qty) {
@@ -412,7 +412,7 @@ void TrackAddedToPlaylistCounter(tTracks* track) {
     (*track->times_added_to_playlist) += 1;
 
     for (int m = 0; m < track->artists_qty; m++) {
-        ArtistsAddedToPlaylistCounter (track->artists[m]);
+        ArtistsAddedToPlaylistCounter(track->artists[m]);
     }
 }
 
@@ -420,15 +420,15 @@ int GetTracksAddedCounter(tTracks* track) {
     return *track->times_added_to_playlist;
 }
 
-void PrintTrackName(FILE * tracks_file, tTracks* track) {
-    fprintf (tracks_file, "%s\n", track->track_name);
+void PrintTrackName(FILE* tracks_file, tTracks* track) {
+    fprintf(tracks_file, "%s\n", track->track_name);
 }
 
-int GetAddMostAddedTrack (tTracks** tracks, int qty) {
+int GetAddMostAddedTrack(tTracks** tracks, int qty) {
     int time = 0;
 
     for (int m = 0; m < qty; m++) {
-        if (time < (*tracks[m]->times_added_to_playlist)){
+        if (time < (*tracks[m]->times_added_to_playlist)) {
             time = (*tracks[m]->times_added_to_playlist);
         }
     }

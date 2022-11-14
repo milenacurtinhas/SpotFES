@@ -97,7 +97,7 @@ int SetUpMainMenu() {
     printf("| 5 | Detalhar uma playlist                         |\n");
     printf("| 6 | Adicionar uma música na playlist              |\n");
     printf("| 7 | Recomendar músicas parecidas com uma playlist |\n");
-    printf("| 8 | Gerar relatório                               |\n");
+    printf("| 8 | Gerar relatórios sobre as playlists           |\n");
     printf("| 9 | Sair do programa                              |\n");
     printf("|---------------------------------------------------|\n\n");
     printf("♪ Digite a opção desejada: ");
@@ -148,7 +148,6 @@ void CreatePlaylist(tSpotfes* spotfes) {
         NewPlaylist(input, spotfes->playlists, *spotfes->playlists_qty);
         *spotfes->playlists_qty += 1;
         printf("A playlist '%s' foi criada com sucesso.\n\n", input);
-
     }
 }
 
@@ -207,6 +206,42 @@ void RecommendSimilarTrack(tSpotfes* spotfes) {
     }
 }
 
+void GenerateReport(tSpotfes* spotfes) {
+    if (!*spotfes->playlists_qty) {
+        printf("• ERRO: Nenhuma playlist foi criada ainda.\n\n");
+    } else {
+        FILE* tracks_file = fopen("relatório/músicas.txt", "w");
+        FILE* artists_file = fopen("relatório/artistas.txt", "w");
+
+        int most_added_tracks = GetAddMostAddedTrack(spotfes->tracks, *spotfes->tracks_qty);
+        int most_added_artists = GetAddMostAddedArtist(spotfes->artists, *spotfes->artists_qty);
+
+        if (!most_added_tracks && !most_added_artists) {
+            printf("• ERRO: Todas as playlists estão vazias.\n\n");
+        } else {
+            for (int m = most_added_tracks; m > 0; m--) {
+                for (int mm = 0; mm < *spotfes->tracks_qty; mm++) {
+                    if (GetTracksAddedCounter(spotfes->tracks[mm]) == m) {
+                        PrintTrackName(tracks_file, spotfes->tracks[mm]);
+                    }
+                }
+            }
+
+            for (int m = most_added_artists; m > 0; m--) {
+                for (int mm = 0; mm < *spotfes->artists_qty; mm++) {
+                    if (GetArtistAddedCounter(spotfes->artists[mm]) == m) {
+                        PrintArtistName(artists_file, spotfes->artists[mm]);
+                    }
+                }
+            }
+        }
+
+        printf("Relatórios gerados com sucesso na pasta 'relatório'.\n\n");
+        fclose(tracks_file);
+        fclose(artists_file);
+    }
+}
+
 int GetArtistsQuantity(tSpotfes* spotfes) {
     return *spotfes->artists_qty;
 }
@@ -240,34 +275,4 @@ float GetTrackDistance(tSpotfes* spotfes, int index) {
 void PrintSimilarTrack(tSpotfes* spotfes, int index) {
     PrintShortTracksDetails(spotfes->tracks[index]);
     printf("\n");
-}
-
-void GenerateReport(tSpotfes* spotfes) {
-    FILE * tracks_file;
-    FILE * artists_file;
-
-    tracks_file = fopen ("relatório/músicas.txt", "w");
-    artists_file = fopen ("relatório/artistas.txt", "w");
-
-    int most_added_tracks = GetAddMostAddedTrack (spotfes->tracks, *spotfes->tracks_qty);
-    int most_added_artists = GetAddMostAddedArtist (spotfes->artists, *spotfes->artists_qty);
-
-    for (int m = most_added_tracks; m > 0; m--) {
-        for (int mm = 0; mm < *spotfes->tracks_qty; mm++) {
-            if (GetTracksAddedCounter (spotfes->tracks[mm]) == m) {
-                PrintTrackName (tracks_file, spotfes->tracks[mm]);
-            }
-        }
-    }
-
-    for (int m = most_added_artists; m > 0; m--) {
-        for (int mm = 0; mm < *spotfes->artists_qty; mm++) {
-            if (GetArtistAddedCounter (spotfes->artists[mm]) == m) {
-                PrintArtistName (artists_file, spotfes->artists[mm]);
-            }
-        }
-    }
-
-    fclose (tracks_file);
-    fclose (artists_file);
 }

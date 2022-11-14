@@ -29,7 +29,7 @@ void SaveEuclideanDistanceToTrack(tTracks* track, float euclidean_distance);
 float GetDistance(tTracks* tracks);
 void TrackAddedToPlaylistCounter(tTracks* track);
 int GetTracksAddedCounter(tTracks* track);
-void PrintTrackName(FILE * tracks_file, tTracks* track);
-int GetAddMostAddedTrack (tTracks** tracks, int qty);
+void PrintTrackName(FILE* tracks_file, tTracks* track);
+int GetAddMostAddedTrack(tTracks** tracks, int qty);
 
 #endif

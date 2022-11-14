@@ -15,8 +15,9 @@ void CheckDataFilesPath(int argc, char** argv) {  // ESSE WARNING VAI SUMIR QUAN
 
         sprintf(artists, "data/%s", argv[1]);
         sprintf(tracks, "data/%s", argv[2]);
-        // chama aqui a função de fazer o argv[1] e argv[2] terem o nome do caminho dos arquivos
-        // chama aqui a função de abrir os arquivos binários
+
+        argv[1] = strdup(artists);
+        argv[2] = strdup(tracks);
     }
 }
 
