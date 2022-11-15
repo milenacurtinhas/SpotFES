@@ -3,6 +3,7 @@
 
 typedef struct tplaylists tPlaylists;
 
+tPlaylists** AllocatePlaylists(int* playlists_qty, int* playlists_allocs);
 tPlaylists* AllocatePlaylist();
 tPlaylists** ReallocateMorePlaylists(tPlaylists** playlists, int new_size);
 void FreeUpPlaylists(tPlaylists* playlists);

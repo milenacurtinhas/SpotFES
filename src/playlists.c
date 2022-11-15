@@ -10,8 +10,26 @@ struct tplaylists {
     int* tracks_alloc_size;
 };
 
+tPlaylists** AllocatePlaylists(int* playlists_qty, int* playlists_allocs) {
+    tPlaylists** playlists = (tPlaylists**)malloc(sizeof(tPlaylists*) * 16);
+
+    for (int m = 0; m < 16; m++) {
+        playlists[m] = AllocatePlaylist();
+    }
+
+    return playlists;
+}
+
 tPlaylists* AllocatePlaylist() {
-    return (tPlaylists*)calloc(sizeof(tPlaylists), 1);
+    tPlaylists* playlist = (tPlaylists*)calloc(sizeof(tPlaylists), 1);
+
+    playlist->playlist_name = (char*)malloc(sizeof(char) * 64);
+    playlist->tracks = (tTracks**)malloc(sizeof(tTracks*) * 16);
+    playlist->averages = (float*)malloc(sizeof(float) * 8);
+    playlist->tracks_alloc_size = (int*)malloc(sizeof(int));
+    *playlist->tracks_alloc_size = 16;
+
+    return playlist;
 }
 
 tPlaylists** ReallocateMorePlaylists(tPlaylists** playlists, int new_size) {
@@ -36,25 +54,20 @@ void FreeUpPlaylists(tPlaylists* playlists) {
 
 void NewPlaylist(char* input, tPlaylists** playlists, int playlists_qty) {
     playlists[playlists_qty]->index = playlists_qty;
-    playlists[playlists_qty]->playlist_name = strdup(input);
-    playlists[playlists_qty]->tracks = (tTracks**)malloc(sizeof(tTracks*) * 16);
-    playlists[playlists_qty]->averages = (float*)malloc(sizeof(float) * 8);
-    playlists[playlists_qty]->tracks_alloc_size = (int*)malloc(sizeof(int));
-    *playlists[playlists_qty]->tracks_alloc_size = 16;
+    strcpy(playlists[playlists_qty]->playlist_name, input);
 }
 
 void DisplayPlaylists(tPlaylists** playlists, int playlists_qty) {
     if (!playlists_qty) {
-        printf("• ERRO: Nenhuma playlist foi criada ainda.\n");
+        printf("• ERRO: Nenhuma playlist foi criada ainda.\n\n");
     } else {
         printf("• Informações sobre as playlists:\n\n");
         for (int m = 0; m < playlists_qty; m++) {
             printf("Nome: %s\n", playlists[m]->playlist_name);
             printf("Índice: %d\n", playlists[m]->index);
-            printf("Músicas: %d\n", playlists[m]->tracks_qty);
+            printf("Músicas: %d\n\n", playlists[m]->tracks_qty);
         }
     }
-    printf("\n");
 }
 
 void SearchPlaylistByIndex(int input, tPlaylists** playlists) {

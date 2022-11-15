@@ -344,7 +344,7 @@ char* GetTrackName(tTracks* track) {
 
 void ShowPlaylistTracks(tTracks** tracks_from_playlist, int tracks_qty) {
     if (!tracks_qty) {
-        printf("Playlist vazia\n");
+        printf("Playlist vazia\n\n");
     } else {
         for (int m = 0; m < tracks_qty; m++) {
             if (!m) {
@@ -352,9 +352,9 @@ void ShowPlaylistTracks(tTracks** tracks_from_playlist, int tracks_qty) {
             }
 
             PrintShortTracksDetails(tracks_from_playlist[m]);
+            printf("\n");
         }
     }
-    printf("\n\n");
 }
 
 float CalculateAverages(int feature, tTracks** tracks, int tracks_qty) {

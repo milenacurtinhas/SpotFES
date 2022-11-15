@@ -21,19 +21,15 @@ tSpotfes* AllocateSpotfes(tSpotfes* spotfes) {
     spotfes->tracks_qty = (int*)malloc(sizeof(int));
     *spotfes->tracks_qty = 0;
 
-    spotfes->playlists = (tPlaylists**)malloc(sizeof(tPlaylists*) * 16);
     spotfes->playlists_qty = (int*)malloc(sizeof(int));
     spotfes->playlists_allocs = (int*)malloc(sizeof(int));
     *spotfes->playlists_qty = 0;
     *spotfes->playlists_allocs = 16;
+    spotfes->playlists = AllocatePlaylists(spotfes->playlists_qty, spotfes->playlists_allocs);
 
     for (int m = 0; m < 128; m++) {
         spotfes->artists[m] = AllocateArtists();
         spotfes->tracks[m] = AllocateTracks();
-
-        if (m < 16) {
-            spotfes->playlists[m] = AllocatePlaylist();
-        }
     }
 
     return spotfes;
