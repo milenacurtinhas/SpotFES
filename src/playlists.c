@@ -150,15 +150,15 @@ int ReadBinaryFiles(tPlaylists** playlists) {
         for (int m = 0; m < quantity; m++) {
             fread(&playlists[m]->index, sizeof(int), 1, playlists_file);
             fread(&playlists[m]->name_size, sizeof(int), 1, playlists_file);
-            fread(playlists[m]->playlist_name, sizeof(playlists[m]->name_size), 1, playlists_file);
+            fread(playlists[m]->playlist_name, sizeof(char), playlists[m]->name_size, playlists_file);
             fread(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
-
-            for (int mm = 0; mm < playlists[m]->tracks_qty; mm++) {
-                fread(&playlists[m]->tracks[mm], sizeof(tTracks*), 1, playlists_file);
-            }
-
+            /*
+                        for (int mm = 0; mm < playlists[m]->tracks_qty; mm++) {
+                            fread(&playlists[m]->tracks[mm], sizeof(tTracks*), 1, playlists_file);
+                        }
+            */
             fread(playlists[m]->averages, sizeof(float), 8, playlists_file);
-            fread(&playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
+            fread(playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
         }
 
         fclose(playlists_file);
@@ -175,15 +175,15 @@ void WriteBinaryFiles(tPlaylists** playlists, int quantity) {
     for (int m = 0; m < quantity; m++) {
         fwrite(&playlists[m]->index, sizeof(int), 1, playlists_file);
         fwrite(&playlists[m]->name_size, sizeof(int), 1, playlists_file);
-        fwrite(playlists[m]->playlist_name, sizeof(playlists[m]->name_size), 1, playlists_file);
+        fwrite(playlists[m]->playlist_name, sizeof(char), playlists[m]->name_size, playlists_file);
         fwrite(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
-
-        for (int mm = 0; mm < playlists[m]->tracks_qty; mm++) {
-            fwrite(&playlists[m]->tracks[mm], sizeof(tTracks*), 1, playlists_file);
-        }
-
+        /*
+                for (int mm = 0; mm < playlists[m]->tracks_qty; mm++) {
+                    fwrite(&playlists[m]->tracks[mm], sizeof(tTracks*), 1, playlists_file);
+                }
+        */
         fwrite(playlists[m]->averages, sizeof(float), 8, playlists_file);
-        fwrite(&playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
+        fwrite(playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
     }
 
     fclose(playlists_file);
