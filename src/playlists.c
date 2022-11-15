@@ -139,3 +139,25 @@ void GetAverages(tPlaylists* playlist) {
 int GetPlaylistTracksQuantity(tPlaylists* playlist) {
     return playlist->tracks_qty;
 }
+
+void WriteBinaryPlaylists(tPlaylists** playlists, int quantity) {
+    if (quantity) {
+        FILE* playlists_file = fopen("bin/playlists.bin", "wb");
+        if (playlists_file == NULL) {
+            printf("• ERRO: Não foi possível gerar os arquivos binários.\n\n");
+        } else {
+            fwrite(&quantity, sizeof(int), 1, playlists_file);
+            for (int m = 0; m < quantity; m++) {
+                fwrite(&playlists[m]->index, sizeof(int), 1, playlists_file);
+                fwrite(&playlists[m]->name_size, sizeof(int), 1, playlists_file);
+                fwrite(playlists[m]->playlist_name, sizeof(char), playlists[m]->name_size, playlists_file);
+                fwrite(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
+                WriteBinaryIndex(playlists_file, playlists[m]->tracks, playlists[m]->tracks_qty);
+                fwrite(playlists[m]->averages, sizeof(float), 8, playlists_file);
+                fwrite(playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
+            }
+
+            fclose(playlists_file);
+        }
+    }
+}

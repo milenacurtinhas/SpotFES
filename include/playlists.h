@@ -15,5 +15,6 @@ void LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track);
 void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty);
 void GetAverages(tPlaylists* playlists);
 int GetPlaylistTracksQuantity(tPlaylists* playlist);
+void WriteBinaryPlaylists(tPlaylists** playlists, int quantity);
 
 #endif

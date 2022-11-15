@@ -409,7 +409,7 @@ float GetDistance(tTracks* tracks) {
 }
 
 void TrackAddedToPlaylistCounter(tTracks* track) {
-    (*track->times_added_to_playlist) += 1;
+    *track->times_added_to_playlist += 1;
 
     for (int m = 0; m < track->artists_qty; m++) {
         ArtistsAddedToPlaylistCounter(track->artists[m]);
@@ -434,4 +434,10 @@ int GetAddMostAddedTrack(tTracks** tracks, int qty) {
     }
 
     return time;
+}
+
+void WriteBinaryIndex(FILE* file, tTracks** tracks, int quantity) {
+    for (int m = 0; m < quantity; m++) {
+        fwrite(&tracks[m]->index, sizeof(int), 1, file);
+    }
 }

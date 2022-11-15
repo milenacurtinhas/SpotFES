@@ -236,6 +236,7 @@ void GenerateReport(tSpotfes* spotfes) {
 }
 
 void QuitProgram(tSpotfes* spotfes) {
+    WriteBinaryPlaylists(spotfes->playlists, *spotfes->playlists_qty);
     FreeUpSpotfes(spotfes);
     printf("SpotFES by M&M: no warnings, no leaks, no errors ♪\n");
 }
