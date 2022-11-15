@@ -36,25 +36,25 @@ tSpotfes* AllocateSpotfes(tSpotfes* spotfes) {
 }
 
 void FreeUpSpotfes(tSpotfes* spotfes) {
-    for (int m = 0; m < *spotfes->artists_qty; m++) {
-        FreeUpArtists(spotfes->artists[m]);
+    for (int m = 0; m < *spotfes->playlists_allocs; m++) {
+        FreeUpPlaylists(spotfes->playlists[m]);
     }
 
     for (int m = 0; m < *spotfes->tracks_qty; m++) {
         FreeUpTracks(spotfes->tracks[m]);
     }
 
-    for (int m = 0; m < *spotfes->playlists_allocs; m++) {
-        FreeUpPlaylists(spotfes->playlists[m]);
+    for (int m = 0; m < *spotfes->artists_qty; m++) {
+        FreeUpArtists(spotfes->artists[m]);
     }
 
-    FreeAndNullPointer(spotfes->artists);
-    FreeAndNullPointer(spotfes->artists_qty);
-    FreeAndNullPointer(spotfes->tracks);
-    FreeAndNullPointer(spotfes->tracks_qty);
-    FreeAndNullPointer(spotfes->playlists);
-    FreeAndNullPointer(spotfes->playlists_qty);
     FreeAndNullPointer(spotfes->playlists_allocs);
+    FreeAndNullPointer(spotfes->playlists_qty);
+    FreeAndNullPointer(spotfes->playlists);
+    FreeAndNullPointer(spotfes->tracks_qty);
+    FreeAndNullPointer(spotfes->tracks);
+    FreeAndNullPointer(spotfes->artists_qty);
+    FreeAndNullPointer(spotfes->artists);
     FreeAndNullPointer(spotfes);
 }
 
@@ -63,11 +63,13 @@ tSpotfes* ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
     if (!artists_data) {
         PrintMissingFilesErrorAndQuitProgram();
     }
+    // FreeAndNullPointer(argv[1]);
 
     FILE* tracks_data = fopen(argv[2], "r");
     if (!tracks_data) {
         PrintMissingFilesErrorAndQuitProgram();
     }
+    // FreeAndNullPointer(argv[2]);
 
     spotfes = AllocateSpotfes(spotfes);
 
@@ -102,11 +104,6 @@ int SetUpMainMenu() {
     ClearTerminal();
 
     return input;
-}
-
-void QuitProgram(tSpotfes* spotfes) {
-    FreeUpSpotfes(spotfes);
-    printf("SpotFES by M&M: no warnings, no leaks, no errors ♪\n");
 }
 
 void SearchTracks(tSpotfes* spotfes) {
@@ -236,6 +233,11 @@ void GenerateReport(tSpotfes* spotfes) {
         fclose(tracks_file);
         fclose(artists_file);
     }
+}
+
+void QuitProgram(tSpotfes* spotfes) {
+    FreeUpSpotfes(spotfes);
+    printf("SpotFES by M&M: no warnings, no leaks, no errors ♪\n");
 }
 
 int GetArtistsQuantity(tSpotfes* spotfes) {
