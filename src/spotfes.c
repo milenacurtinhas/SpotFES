@@ -24,7 +24,6 @@ tSpotfes* AllocateSpotfes(tSpotfes* spotfes) {
     spotfes->playlists = (tPlaylists**)malloc(sizeof(tPlaylists*) * 16);
     spotfes->playlists_qty = (int*)malloc(sizeof(int));
     spotfes->playlists_allocs = (int*)malloc(sizeof(int));
-    *spotfes->playlists_qty = 0;
     *spotfes->playlists_allocs = 16;
 
     for (int m = 0; m < 128; m++) {
@@ -111,7 +110,7 @@ int SetUpMainMenu() {
 }
 
 void QuitProgram(tSpotfes* spotfes) {
-    WriteBinaryFiles(spotfes->playlists, spotfes->playlists_qty);
+    WriteBinaryFiles(spotfes->playlists, *spotfes->playlists_qty);
     FreeUpSpotfes(spotfes);
     printf("SpotFES by M&M: no warnings, no leaks, no errors ♪\n");
 }
