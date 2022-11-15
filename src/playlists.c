@@ -23,10 +23,10 @@ tPlaylists** AllocatePlaylists(int* playlists_qty, int* playlists_allocs) {
 tPlaylists* AllocatePlaylist() {
     tPlaylists* playlist = (tPlaylists*)calloc(sizeof(tPlaylists), 1);
 
-    playlist->playlist_name = (char*)malloc(sizeof(char) * 64);
-    playlist->tracks = (tTracks**)malloc(sizeof(tTracks*) * 16);
-    playlist->averages = (float*)malloc(sizeof(float) * 8);
-    playlist->tracks_alloc_size = (int*)malloc(sizeof(int));
+    playlist->playlist_name = (char*)calloc(sizeof(char), 64);
+    playlist->tracks = (tTracks**)calloc(sizeof(tTracks*), 16);
+    playlist->averages = (float*)calloc(sizeof(float), 8);
+    playlist->tracks_alloc_size = (int*)calloc(sizeof(int), 1);
     *playlist->tracks_alloc_size = 16;
 
     return playlist;
@@ -55,6 +55,7 @@ void FreeUpPlaylists(tPlaylists* playlists) {
 void NewPlaylist(char* input, tPlaylists** playlists, int playlists_qty) {
     playlists[playlists_qty]->index = playlists_qty;
     strcpy(playlists[playlists_qty]->playlist_name, input);
+    playlists[playlists_qty]->name_size = strlen(input);
 }
 
 void DisplayPlaylists(tPlaylists** playlists, int playlists_qty) {
@@ -150,7 +151,7 @@ void WriteBinaryPlaylists(tPlaylists** playlists, int quantity) {
             for (int m = 0; m < quantity; m++) {
                 fwrite(&playlists[m]->index, sizeof(int), 1, playlists_file);
                 fwrite(&playlists[m]->name_size, sizeof(int), 1, playlists_file);
-                fwrite(playlists[m]->playlist_name, sizeof(char), playlists[m]->name_size, playlists_file);
+                fwrite(playlists[m]->playlist_name, sizeof(char), playlists[m]->name_size + 1, playlists_file);
                 fwrite(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
                 WriteBinaryIndex(playlists_file, playlists[m]->tracks, playlists[m]->tracks_qty);
                 fwrite(playlists[m]->averages, sizeof(float), 8, playlists_file);
