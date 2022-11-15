@@ -10,20 +10,8 @@ struct tplaylists {
     int* tracks_alloc_size;
 };
 
-tPlaylists* AllocatePlaylists() {
-    tPlaylists* playlist = (tPlaylists*)calloc(sizeof(tPlaylists), 1);
-
-    playlist->playlist_name = (char*)malloc(sizeof(char) * 64);
-    playlist->tracks = (tTracks**)malloc(sizeof(tTracks*) * 16);
-
-    for (int m = 0; m < 16; m++) {
-        playlist->tracks[m] = (tTracks*)malloc(sizeof(tTracks*) * 16);
-    }
-
-    playlist->averages = (float*)malloc(sizeof(float) * 8);
-    playlist->tracks_alloc_size = (int*)calloc(sizeof(int), 1);
-
-    return playlist;
+tPlaylists* AllocatePlaylist() {
+    return (tPlaylists*)calloc(sizeof(tPlaylists), 1);
 }
 
 tPlaylists** ReallocateMorePlaylists(tPlaylists** playlists, int new_size) {
@@ -32,7 +20,7 @@ tPlaylists** ReallocateMorePlaylists(tPlaylists** playlists, int new_size) {
     playlists = new;
 
     for (int m = new_size / 2; m < new_size; m++) {
-        playlists[m] = AllocatePlaylists();
+        playlists[m] = AllocatePlaylist();
     }
 
     return playlists;
@@ -49,10 +37,9 @@ void FreeUpPlaylists(tPlaylists* playlists) {
 void NewPlaylist(char* input, tPlaylists** playlists, int playlists_qty) {
     playlists[playlists_qty]->index = playlists_qty;
     playlists[playlists_qty]->playlist_name = strdup(input);
-    playlists[playlists_qty]->name_size = strlen(input);
-    // playlists[playlists_qty]->tracks = (tTracks**)malloc(sizeof(tTracks*) * 16);
-    // playlists[playlists_qty]->averages = (float*)malloc(sizeof(float) * 8);
-    // playlists[playlists_qty]->tracks_alloc_size = (int*)malloc(sizeof(int));
+    playlists[playlists_qty]->tracks = (tTracks**)malloc(sizeof(tTracks*) * 16);
+    playlists[playlists_qty]->averages = (float*)malloc(sizeof(float) * 8);
+    playlists[playlists_qty]->tracks_alloc_size = (int*)malloc(sizeof(int));
     *playlists[playlists_qty]->tracks_alloc_size = 16;
 }
 
@@ -138,53 +125,4 @@ void GetAverages(tPlaylists* playlist) {
 
 int GetPlaylistTracksQuantity(tPlaylists* playlist) {
     return playlist->tracks_qty;
-}
-
-int ReadBinaryFiles(tPlaylists** playlists) {
-    FILE* playlists_file = fopen("playlists.bin", "rb");
-    int quantity = 0;
-
-    if (playlists_file != NULL) {
-        fread(&quantity, sizeof(int), 1, playlists_file);
-
-        for (int m = 0; m < quantity; m++) {
-            fread(&playlists[m]->index, sizeof(int), 1, playlists_file);
-            fread(&playlists[m]->name_size, sizeof(int), 1, playlists_file);
-            fread(playlists[m]->playlist_name, sizeof(char), playlists[m]->name_size, playlists_file);
-            fread(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
-            /*
-                        for (int mm = 0; mm < playlists[m]->tracks_qty; mm++) {
-                            fread(&playlists[m]->tracks[mm], sizeof(tTracks*), 1, playlists_file);
-                        }
-            */
-            fread(playlists[m]->averages, sizeof(float), 8, playlists_file);
-            fread(playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
-        }
-
-        fclose(playlists_file);
-    }
-
-    return quantity;
-}
-
-void WriteBinaryFiles(tPlaylists** playlists, int quantity) {
-    FILE* playlists_file = fopen("playlists.bin", "wb");
-
-    fwrite(&quantity, sizeof(int), 1, playlists_file);
-
-    for (int m = 0; m < quantity; m++) {
-        fwrite(&playlists[m]->index, sizeof(int), 1, playlists_file);
-        fwrite(&playlists[m]->name_size, sizeof(int), 1, playlists_file);
-        fwrite(playlists[m]->playlist_name, sizeof(char), playlists[m]->name_size, playlists_file);
-        fwrite(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
-        /*
-                for (int mm = 0; mm < playlists[m]->tracks_qty; mm++) {
-                    fwrite(&playlists[m]->tracks[mm], sizeof(tTracks*), 1, playlists_file);
-                }
-        */
-        fwrite(playlists[m]->averages, sizeof(float), 8, playlists_file);
-        fwrite(playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
-    }
-
-    fclose(playlists_file);
 }

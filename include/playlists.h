@@ -3,7 +3,7 @@
 
 typedef struct tplaylists tPlaylists;
 
-tPlaylists* AllocatePlaylists();
+tPlaylists* AllocatePlaylist();
 tPlaylists** ReallocateMorePlaylists(tPlaylists** playlists, int new_size);
 void FreeUpPlaylists(tPlaylists* playlists);
 void NewPlaylist(char* input, tPlaylists** playlists, int playlists_qty);
@@ -14,7 +14,5 @@ void LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track);
 void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty);
 void GetAverages(tPlaylists* playlists);
 int GetPlaylistTracksQuantity(tPlaylists* playlist);
-void WriteBinaryFiles(tPlaylists** playlists, int quantity);
-int ReadBinaryFiles(tPlaylists** playlists);
 
 #endif

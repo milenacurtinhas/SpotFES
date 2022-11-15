@@ -428,8 +428,8 @@ int GetAddMostAddedTrack(tTracks** tracks, int qty) {
     int time = 0;
 
     for (int m = 0; m < qty; m++) {
-        if (time < (*tracks[m]->times_added_to_playlist)) {
-            time = (*tracks[m]->times_added_to_playlist);
+        if (time < *tracks[m]->times_added_to_playlist) {
+            time = *tracks[m]->times_added_to_playlist;
         }
     }
 

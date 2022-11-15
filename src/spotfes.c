@@ -24,6 +24,7 @@ tSpotfes* AllocateSpotfes(tSpotfes* spotfes) {
     spotfes->playlists = (tPlaylists**)malloc(sizeof(tPlaylists*) * 16);
     spotfes->playlists_qty = (int*)malloc(sizeof(int));
     spotfes->playlists_allocs = (int*)malloc(sizeof(int));
+    *spotfes->playlists_qty = 0;
     *spotfes->playlists_allocs = 16;
 
     for (int m = 0; m < 128; m++) {
@@ -31,11 +32,9 @@ tSpotfes* AllocateSpotfes(tSpotfes* spotfes) {
         spotfes->tracks[m] = AllocateTracks();
 
         if (m < 16) {
-            spotfes->playlists[m] = AllocatePlaylists();
+            spotfes->playlists[m] = AllocatePlaylist();
         }
     }
-
-    *spotfes->playlists_qty = ReadBinaryFiles(spotfes->playlists);
 
     return spotfes;
 }
@@ -110,7 +109,6 @@ int SetUpMainMenu() {
 }
 
 void QuitProgram(tSpotfes* spotfes) {
-    WriteBinaryFiles(spotfes->playlists, *spotfes->playlists_qty);
     FreeUpSpotfes(spotfes);
     printf("SpotFES by M&M: no warnings, no leaks, no errors ♪\n");
 }
@@ -212,8 +210,8 @@ void GenerateReport(tSpotfes* spotfes) {
     if (!*spotfes->playlists_qty) {
         printf("• ERRO: Nenhuma playlist foi criada ainda.\n\n");
     } else {
-        FILE* tracks_file = fopen("relatório/músicas.txt", "w");
-        FILE* artists_file = fopen("relatório/artistas.txt", "w");
+        FILE* tracks_file = fopen("reports/tracks.txt", "w");
+        FILE* artists_file = fopen("reports/artists.txt", "w");
 
         int most_added_tracks = GetAddMostAddedTrack(spotfes->tracks, *spotfes->tracks_qty);
         int most_added_artists = GetAddMostAddedArtist(spotfes->artists, *spotfes->artists_qty);
@@ -238,7 +236,7 @@ void GenerateReport(tSpotfes* spotfes) {
             }
         }
 
-        printf("Relatórios gerados com sucesso na pasta 'relatório'.\n\n");
+        printf("Relatórios gerados com sucesso na pasta 'reports'.\n\n");
         fclose(tracks_file);
         fclose(artists_file);
     }
