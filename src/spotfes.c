@@ -249,9 +249,7 @@ int GetTracksQuantity(tSpotfes* spotfes) {
 }
 
 int GetPlaylistAddedTracksQuantity(tSpotfes* spotfes, int index) {
-    int qty = GetPlaylistTracksQuantity(spotfes->playlists[index]);
-
-    return qty;
+    return GetPlaylistTracksQuantity(spotfes->playlists[index]);
 }
 
 float* GetTracksFeatures(tSpotfes* spotfes, int m) {
@@ -265,9 +263,7 @@ void RelatesDistanceToTrack(tSpotfes* spotfes, float* euclidean_distance) {
 }
 
 float GetTrackDistance(tSpotfes* spotfes, int index) {
-    float distance = GetDistance(spotfes->tracks[index]);
-
-    return distance;
+    return GetDistance(spotfes->tracks[index]);
 }
 
 void PrintSimilarTrack(tSpotfes* spotfes, int index) {
