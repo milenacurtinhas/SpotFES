@@ -81,6 +81,8 @@ tSpotfes* ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
 
     LinkArtistsToTracks(spotfes, spotfes->tracks, spotfes->artists);
 
+    LinkBinaryTracksToPlaylists(spotfes->playlists, *spotfes->playlists_qty, spotfes->tracks);
+
     return spotfes;
 }
 
@@ -169,7 +171,7 @@ void AddTrackToPlaylist(tSpotfes* spotfes) {
         printf("♪ Digite o índice da playlist alvo: ");
         int playlist_index = GetValidIntegerInput(0, *spotfes->playlists_qty - 1);
 
-        LinkTrackToPlaylist(spotfes->playlists[playlist_index], spotfes->tracks[track_index]);
+        spotfes->playlists[playlist_index] = LinkTrackToPlaylist(spotfes->playlists[playlist_index], spotfes->tracks[track_index]);
 
         char* track_name = strdup(GetTrackName(spotfes->tracks[track_index]));
         char* playlist_name = strdup(GetPlaylistName(spotfes->playlists[playlist_index]));

@@ -20,6 +20,7 @@ void SearchTracksByTitle(char* input, tTracks** tracks, int tracks_qty);
 void SearchTracksByIndex(int input, tTracks** tracks);
 void OpenTrack(tTracks* track);
 char* GetTrackName(tTracks* track);
+int GetTrackIndex(tTracks* track);
 void ShowPlaylistTracks(tTracks** tracks_from_playlist, int tracks_qty);
 float CalculateAverages(int feature, tTracks** tracks, int tracks_qty);
 float GetFeatureValue(tTracks* track, int feature);
@@ -31,7 +32,5 @@ void TrackAddedToPlaylistCounter(tTracks* track);
 int GetTracksAddedCounter(tTracks* track);
 void PrintTrackName(FILE* tracks_file, tTracks* track);
 int GetAddMostAddedTrack(tTracks** tracks, int qty);
-void WriteBinaryIndex(FILE* file, tTracks** tracks, int quantity);
-void ReadBinaryIndex(FILE* playlists_file, tTracks** tracks, int quantity);
 
 #endif

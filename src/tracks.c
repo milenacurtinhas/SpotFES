@@ -65,11 +65,6 @@ tTracks** ReallocateMorePlaylistsTracks(tTracks** tracks, int new_size) {
     tTracks** new = NULL;
     new = (tTracks**)realloc(tracks, sizeof(tTracks*) * new_size);
     tracks = new;
-    /*
-        for (int m = new_size / 2; m < new_size; m++) { // NOS NAO PRECISAMOS ALOCAR ISSO POIS NAO ESTAMOS ALOCANDO TMUSICAS, ESTAMOS ALOCANDO PONTEIROS DE TMUSICAS
-            tracks[m] = AllocateTracks();
-        }
-    */
 
     return tracks;
 }
@@ -143,7 +138,6 @@ tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_q
         PutFeaturesInArray(tracks[m]);
 
         tracks[m]->times_added_to_playlist = (int*)calloc(sizeof(int), 1);
-        // tracks[m]->times_added_to_playlist = 0;
     }
 
     FreeAndNullPointer(buffer);
@@ -342,6 +336,10 @@ char* GetTrackName(tTracks* track) {
     return track->track_name;
 }
 
+int GetTrackIndex(tTracks* track) {
+    return track->index;
+}
+
 void ShowPlaylistTracks(tTracks** tracks_from_playlist, int tracks_qty) {
     if (!tracks_qty) {
         printf("Playlist vazia\n\n");
@@ -434,16 +432,4 @@ int GetAddMostAddedTrack(tTracks** tracks, int qty) {
     }
 
     return time;
-}
-
-void WriteBinaryIndex(FILE* playlists_file, tTracks** tracks, int quantity) {
-    for (int m = 0; m < quantity; m++) {
-        fwrite(&tracks[m]->index, sizeof(int), 1, playlists_file);
-    }
-}
-
-void ReadBinaryIndex(FILE* playlists_file, tTracks** tracks, int quantity) {
-    for (int m = 0; m < quantity; m++) {
-        fread(&tracks[m]->index, sizeof(int), 1, playlists_file);
-    }
 }
