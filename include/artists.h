@@ -15,5 +15,7 @@ void ArtistsAddedToPlaylistCounter(tArtists* artist);
 int GetArtistAddedCounter(tArtists* artist);
 void PrintArtistName(FILE* artists_file, tArtists* artist);
 int GetAddMostAddedArtist(tArtists** artists, int qty);
+void WriteBinaryArtists(tArtists** artists, int quantity);
+void ReadBinaryArtists(tArtists** artists, int quantity);
 
 #endif

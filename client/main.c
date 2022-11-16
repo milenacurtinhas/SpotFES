@@ -1,14 +1,12 @@
 #include "libraries.h"
 
-int main(int argc, char** argv) {     // ESSE WARNING VAI SAIR QUANDO ATIVARMOS A FUNÇÃO ABAIXO
-    argv[1] = "data/artists_mm.csv";  // ADICIONAR PARA DEBUGAR
-    argv[2] = "data/tracks_mm.csv";   // ADICIONAR PARA DEBUGAR
-    // CheckDataFilesPath(argc, argv);
+int main(int argc, char** argv) {
+    CheckDataFilesPath(argc, argv);
 
     tSpotfes* spotfes = NULL;
     spotfes = ReadSpotifyDataFiles(spotfes, argv);
 
-    while (1) {
+    while (ONLINE) {
         switch (SetUpMainMenu()) {
             case 1:
                 SearchTracks(spotfes);

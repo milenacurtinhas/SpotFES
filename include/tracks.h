@@ -32,5 +32,7 @@ void TrackAddedToPlaylistCounter(tTracks* track);
 int GetTracksAddedCounter(tTracks* track);
 void PrintTrackName(FILE* tracks_file, tTracks* track);
 int GetAddMostAddedTrack(tTracks** tracks, int qty);
+void WriteBinaryTracks(tTracks** tracks, int quantity);
+void ReadBinaryTracks(tTracks** tracks, int quantity);
 
 #endif

@@ -1,17 +1,19 @@
 #include "libraries.h"
 
 void PrintMissingFilesErrorAndQuitProgram() {
+    RED_COLOUR;
     printf("• ERRO: Os arquivos de dados devem estar contidos na pasta 'data' e o programa deverá ser executado da seguinte forma:\n\n");
     printf("./SpotFES NomeDoArquivoDosArtistas.csv NomeDoArquivoDasMúsicas.csv\n\n");
+    NORMAL_COLOUR;
     exit(1);
 }
 
-void CheckDataFilesPath(int argc, char** argv) {  // ESSE WARNING VAI SUMIR QUANDO FIZERMOS AS FUNÇÕES ABAIXO
+void CheckDataFilesPath(int argc, char** argv) {
     ClearTerminal();
     if (argc == 1 || argc == 2) {
         PrintMissingFilesErrorAndQuitProgram();
     } else {
-        char artists[512], tracks[512];
+        char artists[STRING_BUFFER_SIZE], tracks[STRING_BUFFER_SIZE];
 
         sprintf(artists, "data/%s", argv[1]);
         sprintf(tracks, "data/%s", argv[2]);
@@ -36,9 +38,9 @@ int EndOfFile(char character) {
 
 int GetValidIntegerInput(int min_range, int max_range) {
     while (1) {
-        char buffer[16];
+        char buffer[STRING_BUFFER_SIZE];
 
-        if (fgets(buffer, sizeof(buffer), stdin) != NULL) {
+        if (fgets(buffer, STRING_BUFFER_SIZE, stdin) != NULL) {
             if (buffer[0] >= '0' && buffer[0] <= '9') {
                 int input = atoi(buffer);
 
@@ -48,15 +50,16 @@ int GetValidIntegerInput(int min_range, int max_range) {
             }
         }
 
+        RED_COLOUR;
         printf("• ERRO: Opção inválida. Tente novamente: ");
     }
 }
 
 char GetValidYesOrNoInput() {
     while (1) {
-        char input[16];
+        char input[STRING_BUFFER_SIZE];
 
-        if (fgets(input, sizeof(input), stdin) != NULL) {
+        if (fgets(input, STRING_BUFFER_SIZE, stdin) != NULL) {
             if (input[0] == 'N' || input[0] == 'n') {
                 return 0;
             } else if (input[0] == 'S' || input[0] == 's') {
@@ -64,7 +67,9 @@ char GetValidYesOrNoInput() {
             }
         }
 
+        RED_COLOUR;
         printf("• ERRO: Opção inválida. Tente novamente: ");
+        NORMAL_COLOUR;
     }
 }
 
@@ -126,19 +131,37 @@ void PrintTrackExplicitInfo(int explicit) {
 }
 
 float CalculateEuclideanDistance(float* features, float* averages) {
-    float euclideanDistance = 0, sum = 0;
+    float sum = 0;
 
     for (int m = 0; m < 8; m++) {
         sum += pow((features[m] - averages[m]), 2);
     }
 
-    euclideanDistance = sqrt(sum);
-
-    return euclideanDistance;
+    return sqrt(sum);
 }
 
 void ClearTerminal() {
     while (system("clear") == 0) {
         break;
     }
+}
+
+void PrintLogoArt() {
+    GREEN_COLOUR;
+    printf("███████████████████████████████████████████████████████████████████████████████████████\n\n");
+    printf("   ▄████████    ▄███████▄  ▄██████▄      ███        ▄████████    ▄████████    ▄████████\n");
+    printf("  ███    ███   ███    ███ ███    ███ ▀█████████▄   ███    ███   ███    ███   ███    ███\n");
+    printf("  ███    █▀    ███    ███ ███    ███    ▀███▀▀██   ███    █▀    ███    █▀    ███    █▀ \n");
+    printf("  ███          ███    ███ ███    ███     ███   ▀  ▄███▄▄▄      ▄███▄▄▄       ███       \n");
+    printf("▀███████████ ▀█████████▀  ███    ███     ███     ▀▀███▀▀▀     ▀▀███▀▀▀     ▀███████████\n");
+    printf("         ███   ███        ███    ███     ███       ███          ███    █▄           ███\n");
+    printf("   ▄█    ███   ███        ███    ███     ███       ███          ███    ███    ▄█    ███\n");
+    printf(" ▄████████▀   ▄████▀       ▀██████▀     ▄████▀     ███          ██████████  ▄████████▀ \n\n");
+    printf("████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗█████╗████╗\n");
+    printf("╚═══╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚════╝╚═══╝\n\n");
+    NORMAL_COLOUR;
+    printf("┌┬┐┬┬  ┌─┐┌┐┌┌─┐ ┌─┐┬ ┬┬─┐┌┬┐┬┌┐┌┬ ┬┌─┐┌─┐ | ┌┬┐┬┌─┐┌─┐┌─┐┬   ┌─┐┬  ┌─┐┬─┐┌─┐┌┐┌┌─┐┬┌─┐┌┐┌┌─┐\n");
+    printf("│││││  ├┤ │││├─┤ │  │ │├┬┘ │ ││││├─┤├─┤└─┐ | ││││└─┐├─┤├┤ │   ├┤ │  │ │├┬┘├┤ ││││  │├─┤││││ │\n");
+    printf("┴ ┴┴┴─┘└─┘┘└┘┴ ┴ └─┘└─┘┴└─ ┴ ┴┘└┘┴ ┴┴ ┴└─┘ | ┴ ┴┴└─┘┴ ┴└─┘┴─┘ └  ┴─┘└─┘┴└─└─┘┘└┘└─┘┴┴ ┴┘└┘└─┘\n\n");
+    BLACK_COLOUR;
 }

@@ -90,10 +90,10 @@ void FreeUpTracks(tTracks* tracks) {
 }
 
 tTracks** ReadTracksDataFiles(tTracks** tracks, FILE* tracks_data, int* tracks_qty) {
-    char* buffer = (char*)malloc(sizeof(char) * 2048);
-    int alloc_size = 128;
+    char* buffer = (char*)malloc(sizeof(char) * DATA_BUFFER_SIZE);
+    int alloc_size = STARTER_DATA_SIZE;
 
-    for (int m = 0; fgets(buffer, 2048, tracks_data) && !EndOfFile(buffer[0]); m++) {
+    for (int m = 0; fgets(buffer, DATA_BUFFER_SIZE, tracks_data) && !EndOfFile(buffer[0]); m++) {
         int line_size = strlen(buffer);
         *tracks_qty = m + 1;
 
@@ -156,11 +156,11 @@ void ReadTrackReleaseDate(tTracks* track, char* line) {
 
     int size = strlen(line);
 
-    if (size >= 4) {
+    if (size >= YEAR) {
         track->release_year = atoi(strtok(line, "-"));
-        if (size >= 7) {
+        if (size >= MONTH) {
             track->release_month = atoi(strtok(NULL, "-"));
-            if (size == 10) {
+            if (size == DAY) {
                 track->release_day = atoi(strtok(NULL, "-"));
             }
         }
@@ -198,7 +198,7 @@ void ReadTrackArtistsIDs(tTracks* track, char* line) {
 }
 
 void PutFeaturesInArray(tTracks* track) {
-    track->features = (float*)malloc(sizeof(float) * 8);
+    track->features = (float*)malloc(sizeof(float) * TRACK_STATS_QUANTITY);
 
     track->features[0] = track->danceability;
     track->features[1] = track->energy;
@@ -213,7 +213,7 @@ void PutFeaturesInArray(tTracks* track) {
 void LinkArtistsToTracks(tSpotfes* spotfes, tTracks** tracks, tArtists** artists) {
     int all_artists_qty = GetArtistsQuantity(spotfes);
     int tracks_qty = GetTracksQuantity(spotfes);
-    char all_artists_ids[24];
+    char all_artists_ids[ID_BUFFER];
     // varre todas as tracks do spotfes
     for (int m = 0; m < tracks_qty; m++) {
         tracks[m]->artists = (tArtists**)malloc(sizeof(tArtists*) * tracks[m]->artists_ids_qty);
@@ -288,12 +288,16 @@ void SearchTracksByTitle(char* input, tTracks** tracks, int tracks_qty) {
     }
 
     if (prints == 0) {
+        RED_COLOUR;
         printf("• ERRO: Nenhuma música foi encontrada!\n\n");
+        NORMAL_COLOUR;
     }
 }
 
 void SearchTracksByIndex(int input, tTracks** tracks) {
+    BLACK_COLOUR;
     printf("\n• Informações sobre a música:\n\n");
+    NORMAL_COLOUR;
     printf("Título: %s\n", tracks[input]->track_name);
     printf("Índice: %d\n", tracks[input]->index);
     printf("ID: %s\n", tracks[input]->id);
@@ -318,9 +322,10 @@ void SearchTracksByIndex(int input, tTracks** tracks) {
 }
 
 void OpenTrack(tTracks* track) {
-    char url[62] = "firefox https://open.spotify.com/track/";
+    char url[URL_BUFFER] = "firefox https://open.spotify.com/track/";
     strcat(url, track->id);
 
+    BLACK_COLOUR;
     printf("\n♪ Deseja abrir a música no Firefox? (sim/não): ");
 
     if (GetValidYesOrNoInput()) {
@@ -329,6 +334,7 @@ void OpenTrack(tTracks* track) {
         }
     }
 
+    NORMAL_COLOUR;
     printf("\n");
 }
 
@@ -362,9 +368,7 @@ float CalculateAverages(int feature, tTracks** tracks, int tracks_qty) {
         sum += GetFeatureValue(tracks[m], feature);
     }
 
-    float average = sum / tracks_qty;
-
-    return average;
+    return sum / tracks_qty;
 }
 
 float GetFeatureValue(tTracks* track, int feature) {
@@ -432,4 +436,34 @@ int GetAddMostAddedTrack(tTracks** tracks, int qty) {
     }
 
     return time;
+}
+
+void WriteBinaryTracks(tTracks** tracks, int quantity) {
+    FILE* playlists_file = fopen("bin/tracks.bin", "wb");
+
+    for (int m = 0; m < quantity; m++) {
+        fwrite(tracks[m]->times_added_to_playlist, sizeof(int), 1, playlists_file);
+    }
+
+    fclose(playlists_file);
+}
+
+void ReadBinaryTracks(tTracks** tracks, int quantity) {
+    FILE* playlists_file = fopen("bin/tracks.bin", "rb");
+    size_t read = 0;
+
+    if (playlists_file != NULL) {
+        for (int m = 0; m < quantity; m++) {
+            read = fread(tracks[m]->times_added_to_playlist, sizeof(int), 1, playlists_file);
+        }
+
+        if (read) {
+            fclose(playlists_file);
+        } else {
+            RED_COLOUR;
+            printf("• ERRO: Leitura incompleta dos arquivos binários das músicas.\n\n");
+            NORMAL_COLOUR;
+            exit(1);
+        }
+    }
 }

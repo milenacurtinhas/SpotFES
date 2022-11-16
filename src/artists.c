@@ -51,10 +51,10 @@ void FreeUpArtists(tArtists* artists) {
 }
 
 tArtists** ReadArtistsDataFiles(tArtists** artists, FILE* artists_data, int* artists_qty) {
-    char* buffer = (char*)malloc(sizeof(char) * 1024);
-    int alloc_size = 128;
+    char* buffer = (char*)malloc(sizeof(char) * DATA_BUFFER_SIZE);
+    int alloc_size = STARTER_DATA_SIZE;
 
-    for (int m = 0; fgets(buffer, 1024, artists_data) && !EndOfFile(buffer[0]); m++) {
+    for (int m = 0; fgets(buffer, DATA_BUFFER_SIZE, artists_data) && !EndOfFile(buffer[0]); m++) {
         int line_size = strlen(buffer);
 
         *artists_qty = m + 1;
@@ -103,12 +103,14 @@ void ReadArtistsGenres(tArtists* artist, char* line) {
 }
 
 void PrintTrackArtistsDetails(tArtists** artists, int artists_qty) {
+    BLACK_COLOUR;
     if (artists_qty == 1) {
         printf("\n• Informações sobre a/o artista:\n\n");
     } else if (artists_qty > 1) {
         printf("\n• Informações sobre as/os artistas:\n\n");
     }
 
+    NORMAL_COLOUR;
     for (int m = 0; m < artists_qty; m++) {
         if (artists[m] != NULL) {
             printf("Nome: %s\n", artists[m]->artist_name);
@@ -159,10 +161,40 @@ int GetAddMostAddedArtist(tArtists** artists, int qty) {
     int time = 0;
 
     for (int m = 0; m < qty; m++) {
-        if (time < (*artists[m]->times_added_to_playlist)) {
-            time = (*artists[m]->times_added_to_playlist);
+        if (time < *artists[m]->times_added_to_playlist) {
+            time = *artists[m]->times_added_to_playlist;
         }
     }
 
     return time;
+}
+
+void WriteBinaryArtists(tArtists** artists, int quantity) {
+    FILE* playlists_file = fopen("bin/artists.bin", "wb");
+
+    for (int m = 0; m < quantity; m++) {
+        fwrite(artists[m]->times_added_to_playlist, sizeof(int), 1, playlists_file);
+    }
+
+    fclose(playlists_file);
+}
+
+void ReadBinaryArtists(tArtists** artists, int quantity) {
+    FILE* playlists_file = fopen("bin/artists.bin", "rb");
+    size_t read = 0;
+
+    if (playlists_file != NULL) {
+        for (int m = 0; m < quantity; m++) {
+            read = fread(artists[m]->times_added_to_playlist, sizeof(int), 1, playlists_file);
+        }
+
+        if (read) {
+            fclose(playlists_file);
+        } else {
+            RED_COLOUR;
+            printf("• ERRO: Leitura incompleta dos arquivos binários dos artistas.\n\n");
+            NORMAL_COLOUR;
+            exit(1);
+        }
+    }
 }

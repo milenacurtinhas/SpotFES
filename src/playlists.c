@@ -15,12 +15,10 @@ tPlaylists** AllocatePlaylists(int* playlists_qty, int* playlists_allocs) {
     FILE* playlists_file = fopen("bin/playlists.bin", "rb");
 
     if (playlists_file == NULL) {
-        tPlaylists** playlists = (tPlaylists**)calloc(sizeof(tPlaylists*), 16);
+        tPlaylists** playlists = (tPlaylists**)calloc(sizeof(tPlaylists*), STARTER_PLAYLISTS_SIZE);
 
-        for (int m = 0; m < 16; m++) {
+        for (int m = 0; m < STARTER_PLAYLISTS_SIZE; m++) {
             playlists[m] = AllocatePlaylist();
-            playlists[m]->tracks_index = (int*)calloc(sizeof(int), 16);
-            playlists[m]->tracks = (tTracks**)calloc(sizeof(tTracks*), 16);
         }
 
         return playlists;
@@ -31,10 +29,12 @@ tPlaylists** AllocatePlaylists(int* playlists_qty, int* playlists_allocs) {
 
 tPlaylists* AllocatePlaylist() {
     tPlaylists* playlist = (tPlaylists*)calloc(sizeof(tPlaylists), 1);
-    playlist->playlist_name = (char*)calloc(sizeof(char), 64);
-    playlist->averages = (float*)calloc(sizeof(float), 8);
+    playlist->playlist_name = (char*)calloc(sizeof(char), STRING_BUFFER_SIZE);
+    playlist->tracks_index = (int*)calloc(sizeof(int), STARTER_PLAYLISTS_SIZE);
+    playlist->tracks = (tTracks**)calloc(sizeof(tTracks*), STARTER_PLAYLISTS_SIZE);
+    playlist->averages = (float*)calloc(sizeof(float), TRACK_STATS_QUANTITY);
     playlist->tracks_alloc_size = (int*)calloc(sizeof(int), 1);
-    *playlist->tracks_alloc_size = 16;
+    *playlist->tracks_alloc_size = STARTER_PLAYLISTS_SIZE;
 
     return playlist;
 }
@@ -68,9 +68,12 @@ void NewPlaylist(char* input, tPlaylists** playlists, int playlists_qty) {
 
 void DisplayPlaylists(tPlaylists** playlists, int playlists_qty) {
     if (!playlists_qty) {
+        RED_COLOUR;
         printf("• ERRO: Nenhuma playlist foi criada ainda.\n\n");
+        NORMAL_COLOUR;
     } else {
         printf("• Informações sobre as playlists:\n\n");
+        NORMAL_COLOUR;
         for (int m = 0; m < playlists_qty; m++) {
             printf("Nome: %s\n", playlists[m]->playlist_name);
             printf("Índice: %d\n", playlists[m]->index);
@@ -89,7 +92,7 @@ char* GetPlaylistName(tPlaylists* playlist) {
 }
 
 tPlaylists* LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track) {
-    if (playlist->tracks_qty == *playlist->tracks_alloc_size) {  // ESSE TAMBEM TEM QUE SER IGUAL ASSIM COMO A LINHA 161 DA SPOTFES.C
+    if (playlist->tracks_qty == *playlist->tracks_alloc_size) {
         *playlist->tracks_alloc_size *= 2;
 
         int* new_index = NULL;
@@ -146,7 +149,7 @@ void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty) {
 }
 
 void GetAverages(tPlaylists* playlist) {
-    for (int m = 0; m < 8; m++) {
+    for (int m = 0; m < TRACK_STATS_QUANTITY; m++) {
         playlist->averages[m] = CalculateAverages(m, playlist->tracks, playlist->tracks_qty);
     }
 }
@@ -166,7 +169,7 @@ void WriteBinaryPlaylists(tPlaylists** playlists, int quantity) {
         fwrite(playlists[m]->playlist_name, sizeof(char), playlists[m]->name_size, playlists_file);
         fwrite(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
         fwrite(playlists[m]->tracks_index, sizeof(int), playlists[m]->tracks_qty, playlists_file);
-        fwrite(playlists[m]->averages, sizeof(float), 8, playlists_file);
+        fwrite(playlists[m]->averages, sizeof(float), TRACK_STATS_QUANTITY, playlists_file);
         fwrite(playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
     }
 
@@ -174,7 +177,7 @@ void WriteBinaryPlaylists(tPlaylists** playlists, int quantity) {
 }
 
 tPlaylists** ReadBinaryPlaylists(FILE* playlists_file, int* playlists_qty, int* playlists_allocs) {
-    fread(playlists_qty, sizeof(int), 1, playlists_file);
+    size_t read = fread(playlists_qty, sizeof(int), 1, playlists_file);
 
     if (*playlists_qty > *playlists_allocs) {
         while (*playlists_qty > *playlists_allocs) {
@@ -189,28 +192,40 @@ tPlaylists** ReadBinaryPlaylists(FILE* playlists_file, int* playlists_qty, int* 
     }
 
     for (int m = 0; m < *playlists_qty; m++) {
-        fread(&playlists[m]->index, sizeof(int), 1, playlists_file);
-        fread(&playlists[m]->name_size, sizeof(int), 1, playlists_file);
-        fread(playlists[m]->playlist_name, sizeof(char), playlists[m]->name_size, playlists_file);
-        fread(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
+        read += fread(&playlists[m]->index, sizeof(int), 1, playlists_file);
+        read += fread(&playlists[m]->name_size, sizeof(int), 1, playlists_file);
+        read += fread(playlists[m]->playlist_name, sizeof(char), playlists[m]->name_size, playlists_file);
+        read += fread(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
 
         if (playlists[m]->tracks_qty > *playlists[m]->tracks_alloc_size) {
             while (playlists[m]->tracks_qty > *playlists[m]->tracks_alloc_size) {
                 *playlists[m]->tracks_alloc_size *= 2;
             }
+
+            tTracks** new_tracks = NULL;
+            int* new_index = NULL;
+
+            new_index = (int*)realloc(playlists[m]->tracks_index, sizeof(int) * *playlists[m]->tracks_alloc_size);
+            new_tracks = (tTracks**)realloc(playlists[m]->tracks, sizeof(tTracks*) * *playlists[m]->tracks_alloc_size);
+
+            playlists[m]->tracks_index = new_index;
+            playlists[m]->tracks = new_tracks;
         }
 
-        playlists[m]->tracks_index = (int*)calloc(sizeof(int), *playlists[m]->tracks_alloc_size);
-        playlists[m]->tracks = (tTracks**)calloc(sizeof(tTracks*), *playlists[m]->tracks_alloc_size);
-
-        fread(playlists[m]->tracks_index, sizeof(int), playlists[m]->tracks_qty, playlists_file);
-        fread(playlists[m]->averages, sizeof(float), 8, playlists_file);
-        fread(playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
+        read += fread(playlists[m]->tracks_index, sizeof(int), playlists[m]->tracks_qty, playlists_file);
+        read += fread(playlists[m]->averages, sizeof(float), TRACK_STATS_QUANTITY, playlists_file);
+        read += fread(playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
     }
 
-    fclose(playlists_file);
-
-    return playlists;
+    if (read) {
+        fclose(playlists_file);
+        return playlists;
+    } else {
+        RED_COLOUR;
+        printf("• ERRO: Leitura incompleta dos arquivos binários das playlists.\n\n");
+        NORMAL_COLOUR;
+        exit(1);
+    }
 }
 
 void LinkBinaryTracksToPlaylists(tPlaylists** playlists, int playlists_qty, tTracks** tracks) {

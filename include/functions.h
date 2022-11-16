@@ -14,5 +14,6 @@ void PrintTrackReleaseDate(int day, int month, int year);
 void PrintTrackExplicitInfo(int explicit);
 float CalculateEuclideanDistance(float* features, float* averages);
 void ClearTerminal();
+void PrintLogoArt();
 
 #endif
