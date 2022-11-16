@@ -436,8 +436,14 @@ int GetAddMostAddedTrack(tTracks** tracks, int qty) {
     return time;
 }
 
-void WriteBinaryIndex(FILE* file, tTracks** tracks, int quantity) {
+void WriteBinaryIndex(FILE* playlists_file, tTracks** tracks, int quantity) {
     for (int m = 0; m < quantity; m++) {
-        fwrite(&tracks[m]->index, sizeof(int), 1, file);
+        fwrite(&tracks[m]->index, sizeof(int), 1, playlists_file);
+    }
+}
+
+void ReadBinaryIndex(FILE* playlists_file, tTracks** tracks, int quantity) {
+    for (int m = 0; m < quantity; m++) {
+        fread(&tracks[m]->index, sizeof(int), 1, playlists_file);
     }
 }

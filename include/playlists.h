@@ -16,5 +16,6 @@ void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty);
 void GetAverages(tPlaylists* playlists);
 int GetPlaylistTracksQuantity(tPlaylists* playlist);
 void WriteBinaryPlaylists(tPlaylists** playlists, int quantity);
+tPlaylists** ReadBinaryPlaylists(FILE* playlists_file, int* playlists_qty, int* playlists_allocs);
 
 #endif

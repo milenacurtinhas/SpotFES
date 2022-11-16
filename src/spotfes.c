@@ -227,11 +227,10 @@ void GenerateReport(tSpotfes* spotfes) {
                     }
                 }
             }
+            fclose(tracks_file);
+            fclose(artists_file);
+            printf("Relatórios gerados com sucesso na pasta 'reports'.\n\n");
         }
-
-        printf("Relatórios gerados com sucesso na pasta 'reports'.\n\n");
-        fclose(tracks_file);
-        fclose(artists_file);
     }
 }
 
