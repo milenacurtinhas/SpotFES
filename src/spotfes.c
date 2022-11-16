@@ -248,11 +248,11 @@ void GenerateReport(tSpotfes* spotfes) {
                     }
                 }
             }
-            fclose(tracks_file);
-            fclose(artists_file);
             NORMAL_COLOUR;
             printf("Relatórios gerados com sucesso na pasta 'reports'.\n\n");
         }
+        fclose(tracks_file);
+        fclose(artists_file);
     }
 }
 
