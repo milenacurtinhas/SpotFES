@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "SpotFES",
+            "name": "spotfes",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/SpotFES",
+            "program": "${workspaceFolder}/spotfes",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

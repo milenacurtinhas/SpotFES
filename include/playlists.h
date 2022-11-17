@@ -5,18 +5,18 @@ typedef struct tplaylists tPlaylists;
 
 tPlaylists** AllocatePlaylists(int* playlists_qty, int* playlists_allocs);
 tPlaylists* AllocatePlaylist();
-tPlaylists** ReallocateMorePlaylists(tPlaylists** playlists, int new_size);
-void FreeUpPlaylists(tPlaylists* playlists);
-void NewPlaylist(char* input, tPlaylists** playlists, int playlists_qty);
-void DisplayPlaylists(tPlaylists** playlists, int playlists_qty);
-void SearchPlaylistByIndex(int input, tPlaylists** playlists);
-char* GetPlaylistName(tPlaylists* playlist);
-tPlaylists* LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track);
-void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty);
-void GetAverages(tPlaylists* playlists);
-int GetPlaylistTracksQuantity(tPlaylists* playlist);
-void WriteBinaryPlaylists(tPlaylists** playlists, int quantity);
 tPlaylists** ReadBinaryPlaylists(FILE* playlists_file, int* playlists_qty, int* playlists_allocs);
 void LinkBinaryTracksToPlaylists(tPlaylists** playlists, int playlists_qty, tTracks** tracks);
+void NewPlaylist(char* input, tPlaylists** playlists, int playlists_qty);
+tPlaylists** ReallocateMorePlaylists(tPlaylists** playlists, int new_size);
+void DisplayPlaylists(tPlaylists** playlists, int playlists_qty);
+void SearchPlaylistByIndex(int input, tPlaylists** playlists);
+tPlaylists* LinkTrackToPlaylist(tPlaylists* playlist, tTracks* track);
+char* GetPlaylistName(tPlaylists* playlist);
+int GetPlaylistTracksQuantity(tPlaylists* playlist);
+void ComparePlaylistToTracks(tSpotfes* spotfes, tPlaylists* playlist, int qty);
+void GetAverages(tPlaylists* playlists);
+void WriteBinaryPlaylists(tPlaylists** playlists, int quantity);
+void FreeUpPlaylists(tPlaylists* playlists);
 
 #endif

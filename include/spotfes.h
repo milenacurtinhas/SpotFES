@@ -3,11 +3,11 @@
 
 typedef struct tspotfes tSpotfes;
 
+tSpotfes* ReadSpotfesDataFiles(tSpotfes* spotfes, char** argv);
 tSpotfes* AllocateSpotfes(tSpotfes* spotfes);
-void FreeUpSpotfes(tSpotfes* spotfes);
-tSpotfes* ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv);
+int GetArtistsQuantity(tSpotfes* spotfes);
+int GetTracksQuantity(tSpotfes* spotfes);
 int SetUpMainMenu();
-void QuitProgram(tSpotfes* spotfes);
 void SearchTracks(tSpotfes* spotfes);
 void DetailTrack(tSpotfes* spotfes);
 void CreatePlaylist(tSpotfes* spotfes);
@@ -15,13 +15,12 @@ void ListPlaylists(tSpotfes* spotfes);
 void DetailPlaylist(tSpotfes* spotfes);
 void AddTrackToPlaylist(tSpotfes* spotfes);
 void RecommendSimilarTrack(tSpotfes* spotfes);
-void GenerateReport(tSpotfes* spotfes);
-int GetArtistsQuantity(tSpotfes* spotfes);
-int GetTracksQuantity(tSpotfes* spotfes);
-int GetPlaylistAddedTracksQuantity(tSpotfes* spotfes, int index);
 float* GetTracksFeatures(tSpotfes* spotfes, int m);
 void RelatesDistanceToTrack(tSpotfes* spotfes, float* euclidean_distance);
 float GetTrackDistance(tSpotfes* spotfes, int index);
 void PrintSimilarTrack(tSpotfes* spotfes, int index);
+void GenerateReport(tSpotfes* spotfes);
+void QuitProgram(tSpotfes* spotfes);
+void FreeUpSpotfes(tSpotfes* spotfes);
 
 #endif
