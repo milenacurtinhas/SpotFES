@@ -1,8 +1,8 @@
 TARGET := SpotFES
 LIBS := -lm
-CFLAGS := -g -O0 -Wall -Wextra
-OBJDIR := objects/
-SRCDIR := source/
+CFLAGS := -g -O3 -Wall -Wextra
+OBJDIR := obj/
+SRCDIR := src/
 INCLUDEDIR := include/
 INCLUDE_PATHS := -Iinclude
 CLI := client/main.c

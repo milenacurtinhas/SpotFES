@@ -4,7 +4,7 @@ int main(int argc, char** argv) {
     CheckDataFilesPath(argc, argv);
 
     tSpotfes* spotfes = NULL;
-    spotfes = ReadSpotfesDataFiles(spotfes, argv);
+    spotfes = ReadSpotifyDataFiles(spotfes, argv);
 
     while (ONLINE) {
         switch (SetUpMainMenu()) {
