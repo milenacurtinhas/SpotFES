@@ -3,7 +3,8 @@
 
 void CheckDataFilesPath(int argc, char** argv);
 void ClearTerminal();
-void PrintMissingFilesErrorAndQuitProgram();
+void PrintDataFilesError();
+void PrintBinaryFilesError();
 int EndOfFile(char character);
 int GetValueQuantity(char* character, int value_size);
 void FreeAndNullPointer(void* pointer);

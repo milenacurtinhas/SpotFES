@@ -20,12 +20,14 @@ struct tspotfes {
 tSpotfes* ReadSpotfesDataFiles(tSpotfes* spotfes, char** argv) {
     FILE* artists_data = fopen(argv[1], "r");
     if (!artists_data) {
-        PrintMissingFilesErrorAndQuitProgram();
+        PrintDataFilesError();
+        exit(1);
     }
 
     FILE* tracks_data = fopen(argv[2], "r");
     if (!tracks_data) {
-        PrintMissingFilesErrorAndQuitProgram();
+        PrintDataFilesError();
+        exit(1);
     }
 
     spotfes = AllocateSpotfes(spotfes);

@@ -6,7 +6,8 @@
 void CheckDataFilesPath(int argc, char** argv) {
     ClearTerminal();
     if (argc == 1 || argc == 2) {
-        PrintMissingFilesErrorAndQuitProgram();
+        PrintDataFilesError();
+        exit(1);
     } else {
         char artists[STRING_BUFFER_SIZE], tracks[STRING_BUFFER_SIZE];
 
@@ -25,14 +26,22 @@ void ClearTerminal() {
 }
 
 /**
- * @brief alerta erro caso os arquivos de dados do spotify não sejam encontrados
+ * @brief alerta erro caso os arquivos de dados do spotify não sejam encontrados ou a pasta 'data' não exista
  */
-void PrintMissingFilesErrorAndQuitProgram() {
+void PrintDataFilesError() {
     RED_COLOUR;
     printf("• ERRO: Os arquivos de dados devem estar contidos na pasta 'data' e o programa deverá ser executado da seguinte forma:\n\n");
     printf("./spotfes nomedoarquivodosartistas.csv nomedoarquivodasmúsicas.csv\n\n");
     NORMAL_COLOUR;
-    exit(1);
+}
+
+/**
+ * @brief alerta erro caso os arquivos binários não sejam encontrados ou a pasta 'binaries' não exista
+ */
+void PrintBinaryFilesError() {
+    RED_COLOUR;
+    printf("• ERRO: Verifique se a pasta 'binaries' existe e se ela está no mesmo diretório do programa.\n\n");
+    NORMAL_COLOUR;
 }
 
 /**

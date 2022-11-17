@@ -264,9 +264,7 @@ void ReadBinaryTracks(tTracks** tracks, int quantity) {
         if (read) {
             fclose(playlists_file);
         } else {
-            RED_COLOUR;
-            printf("• ERRO: Leitura incompleta dos arquivos binários das músicas.\n\n");
-            NORMAL_COLOUR;
+            PrintBinaryFilesError();
             exit(1);
         }
     }
@@ -545,11 +543,16 @@ void PrintTrackName(FILE* tracks_file, tTracks* track) {
 void WriteBinaryTracks(tTracks** tracks, int quantity) {
     FILE* playlists_file = fopen("binaries/tracks.bin", "wb");
 
-    for (int m = 0; m < quantity; m++) {
-        fwrite(tracks[m]->times_added_to_playlist, sizeof(int), 1, playlists_file);
-    }
+    if (playlists_file == NULL) {
+        PrintBinaryFilesError();
+        exit(1);
+    } else {
+        for (int m = 0; m < quantity; m++) {
+            fwrite(tracks[m]->times_added_to_playlist, sizeof(int), 1, playlists_file);
+        }
 
-    fclose(playlists_file);
+        fclose(playlists_file);
+    }
 }
 
 /**

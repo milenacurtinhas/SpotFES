@@ -110,9 +110,7 @@ tPlaylists** ReadBinaryPlaylists(FILE* playlists_file, int* playlists_qty, int* 
         fclose(playlists_file);
         return playlists;
     } else {
-        RED_COLOUR;
-        printf("• ERRO: Leitura incompleta dos arquivos binários das playlists.\n\n");
-        NORMAL_COLOUR;
+        PrintBinaryFilesError();
         exit(1);
     }
 }
@@ -287,19 +285,24 @@ void GetAverages(tPlaylists* playlist) {
 void WriteBinaryPlaylists(tPlaylists** playlists, int quantity) {
     FILE* playlists_file = fopen("binaries/playlists.bin", "wb");
 
-    fwrite(&quantity, sizeof(int), 1, playlists_file);
+    if (playlists_file == NULL) {
+        PrintBinaryFilesError();
+        exit(1);
+    } else {
+        fwrite(&quantity, sizeof(int), 1, playlists_file);
 
-    for (int m = 0; m < quantity; m++) {
-        fwrite(&playlists[m]->index, sizeof(int), 1, playlists_file);
-        fwrite(&playlists[m]->name_size, sizeof(int), 1, playlists_file);
-        fwrite(playlists[m]->playlist_name, sizeof(char), playlists[m]->name_size, playlists_file);
-        fwrite(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
-        fwrite(playlists[m]->tracks_index, sizeof(int), playlists[m]->tracks_qty, playlists_file);
-        fwrite(playlists[m]->averages, sizeof(float), TRACK_STATS_QUANTITY, playlists_file);
-        fwrite(playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
+        for (int m = 0; m < quantity; m++) {
+            fwrite(&playlists[m]->index, sizeof(int), 1, playlists_file);
+            fwrite(&playlists[m]->name_size, sizeof(int), 1, playlists_file);
+            fwrite(playlists[m]->playlist_name, sizeof(char), playlists[m]->name_size, playlists_file);
+            fwrite(&playlists[m]->tracks_qty, sizeof(int), 1, playlists_file);
+            fwrite(playlists[m]->tracks_index, sizeof(int), playlists[m]->tracks_qty, playlists_file);
+            fwrite(playlists[m]->averages, sizeof(float), TRACK_STATS_QUANTITY, playlists_file);
+            fwrite(playlists[m]->tracks_alloc_size, sizeof(int), 1, playlists_file);
+        }
+
+        fclose(playlists_file);
     }
-
-    fclose(playlists_file);
 }
 
 /**
