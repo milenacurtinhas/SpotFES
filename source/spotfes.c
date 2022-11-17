@@ -1,5 +1,8 @@
 #include "libraries.h"
 
+/**
+ * @brief struct usada para agrupar todas as informações do programa
+ */
 struct tspotfes {
     tArtists** artists;
     int* artists_qty;
@@ -10,55 +13,11 @@ struct tspotfes {
     int* playlists_allocs;
 };
 
-tSpotfes* AllocateSpotfes(tSpotfes* spotfes) {
-    spotfes = (tSpotfes*)malloc(sizeof(tSpotfes));
-
-    spotfes->artists = (tArtists**)malloc(sizeof(tArtists*) * STARTER_DATA_SIZE);
-    spotfes->artists_qty = (int*)malloc(sizeof(int));
-    *spotfes->artists_qty = 0;
-
-    spotfes->tracks = (tTracks**)malloc(sizeof(tTracks*) * STARTER_DATA_SIZE);
-    spotfes->tracks_qty = (int*)malloc(sizeof(int));
-    *spotfes->tracks_qty = 0;
-
-    for (int m = 0; m < STARTER_DATA_SIZE; m++) {
-        spotfes->artists[m] = AllocateArtists();
-        spotfes->tracks[m] = AllocateTracks();
-    }
-
-    spotfes->playlists_qty = (int*)malloc(sizeof(int));
-    spotfes->playlists_allocs = (int*)malloc(sizeof(int));
-    *spotfes->playlists_qty = 0;
-    *spotfes->playlists_allocs = STARTER_PLAYLISTS_SIZE;
-    spotfes->playlists = AllocatePlaylists(spotfes->playlists_qty, spotfes->playlists_allocs);
-
-    return spotfes;
-}
-
-void FreeUpSpotfes(tSpotfes* spotfes) {
-    for (int m = 0; m < *spotfes->playlists_allocs; m++) {
-        FreeUpPlaylists(spotfes->playlists[m]);
-    }
-
-    for (int m = 0; m < *spotfes->tracks_qty; m++) {
-        FreeUpTracks(spotfes->tracks[m]);
-    }
-
-    for (int m = 0; m < *spotfes->artists_qty; m++) {
-        FreeUpArtists(spotfes->artists[m]);
-    }
-
-    FreeAndNullPointer(spotfes->playlists_allocs);
-    FreeAndNullPointer(spotfes->playlists_qty);
-    FreeAndNullPointer(spotfes->playlists);
-    FreeAndNullPointer(spotfes->tracks_qty);
-    FreeAndNullPointer(spotfes->tracks);
-    FreeAndNullPointer(spotfes->artists_qty);
-    FreeAndNullPointer(spotfes->artists);
-    FreeAndNullPointer(spotfes);
-}
-
-tSpotfes* ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
+/**
+ * @brief inicializa o SpotFES a partir da leitura dos arquivos .csv e dos arquivos binários
+ * @return uma struct do tipo tSpotfes com todas as informações lidas
+ */
+tSpotfes* ReadSpotfesDataFiles(tSpotfes* spotfes, char** argv) {
     FILE* artists_data = fopen(argv[1], "r");
     if (!artists_data) {
         PrintMissingFilesErrorAndQuitProgram();
@@ -87,8 +46,49 @@ tSpotfes* ReadSpotifyDataFiles(tSpotfes* spotfes, char** argv) {
     return spotfes;
 }
 
+/**
+ * @brief alloca os blocos de memória iniciais do Spotfes
+ * @return ponteiro do tipo Spotfes conténdo as alocações de memória das playlists, músicas e artistas
+ */
+tSpotfes* AllocateSpotfes(tSpotfes* spotfes) {
+    spotfes = (tSpotfes*)malloc(sizeof(tSpotfes));
+
+    spotfes->artists = (tArtists**)malloc(sizeof(tArtists*) * STARTER_DATA_SIZE);
+    spotfes->artists_qty = (int*)malloc(sizeof(int));
+    *spotfes->artists_qty = 0;
+
+    spotfes->tracks = (tTracks**)malloc(sizeof(tTracks*) * STARTER_DATA_SIZE);
+    spotfes->tracks_qty = (int*)malloc(sizeof(int));
+    *spotfes->tracks_qty = 0;
+
+    for (int m = 0; m < STARTER_DATA_SIZE; m++) {
+        spotfes->artists[m] = AllocateArtists();
+        spotfes->tracks[m] = AllocateTracks();
+    }
+
+    spotfes->playlists_qty = (int*)malloc(sizeof(int));
+    spotfes->playlists_allocs = (int*)malloc(sizeof(int));
+    *spotfes->playlists_qty = 0;
+    *spotfes->playlists_allocs = STARTER_PLAYLISTS_SIZE;
+    spotfes->playlists = AllocatePlaylists(spotfes->playlists_qty, spotfes->playlists_allocs);
+
+    return spotfes;
+}
+
+int GetArtistsQuantity(tSpotfes* spotfes) {
+    return *spotfes->artists_qty;
+}
+
+int GetTracksQuantity(tSpotfes* spotfes) {
+    return *spotfes->tracks_qty;
+}
+
+/**
+ * @brief exibe o menu
+ * @return a opção escolhida no menu
+ */
 int SetUpMainMenu() {
-    PrintLogoArt();
+    PrintMenuArt();
     printf("1 • PESQUISAR MÚSICAS\n");
     printf("2 • DETALHAR UMA MÚSICA\n");
     printf("3 • CRIAR UMA PLAYLIST\n");
@@ -108,6 +108,9 @@ int SetUpMainMenu() {
     return input;
 }
 
+/**
+ * @brief pesquisa músicas a partir de uma palavra-chave digitada pelo usuário
+ */
 void SearchTracks(tSpotfes* spotfes) {
     char buffer[STRING_BUFFER_SIZE], input[STRING_BUFFER_SIZE];
 
@@ -122,6 +125,9 @@ void SearchTracks(tSpotfes* spotfes) {
     }
 }
 
+/**
+ * @brief exibe todas as características armazenadas de uma música a partir do índice dela
+ */
 void DetailTrack(tSpotfes* spotfes) {
     printf("♪ Digite o índice da música a ser detalhada: ");
 
@@ -153,10 +159,16 @@ void CreatePlaylist(tSpotfes* spotfes) {
     }
 }
 
+/**
+ * @brief exibe todas as playlists criadas
+ */
 void ListPlaylists(tSpotfes* spotfes) {
     DisplayPlaylists(spotfes->playlists, *spotfes->playlists_qty);
 }
 
+/**
+ * @brief exibe todas as características armazenadas de uma playlist a partir do índice dela
+ */
 void DetailPlaylist(tSpotfes* spotfes) {
     if (!*spotfes->playlists_qty) {
         RED_COLOUR;
@@ -171,6 +183,9 @@ void DetailPlaylist(tSpotfes* spotfes) {
     }
 }
 
+/**
+ * @brief adiciona uma música específica em uma playlist específica a partir do índice de cada uma
+ */
 void AddTrackToPlaylist(tSpotfes* spotfes) {
     if (!*spotfes->playlists_qty) {
         RED_COLOUR;
@@ -195,6 +210,9 @@ void AddTrackToPlaylist(tSpotfes* spotfes) {
     }
 }
 
+/**
+ * @brief recomenda músicas semelhantes às músicas de uma playlist a partir do algoritmo de recomendação
+ */
 void RecommendSimilarTrack(tSpotfes* spotfes) {
     if (!*spotfes->playlists_qty) {
         RED_COLOUR;
@@ -203,8 +221,8 @@ void RecommendSimilarTrack(tSpotfes* spotfes) {
         printf("♪ Digite o índice da playlist alvo: ");
 
         int playlist_index = GetValidIntegerInput(0, *spotfes->playlists_qty - 1);
+        int playlist_tracks_qty = GetPlaylistTracksQuantity(spotfes->playlists[playlist_index]);
 
-        int playlist_tracks_qty = GetPlaylistAddedTracksQuantity(spotfes, playlist_index);
         if (!playlist_tracks_qty) {
             RED_COLOUR;
             printf("\n• ERRO: A playlist está vazia.\n\n");
@@ -217,6 +235,43 @@ void RecommendSimilarTrack(tSpotfes* spotfes) {
     }
 }
 
+/**
+ * @brief retorna o vetor que contém as características da música usadas para calcular a distância euclidiana
+ * @param m índice da música
+ * @return vetor que contém as características da música usadas para calcular a distância euclidiana
+ */
+float* GetTracksFeatures(tSpotfes* spotfes, int m) {
+    return GetFeatures(spotfes->tracks[m]);
+}
+
+/**
+ * @brief salva a distância euclidiana calculada entre a música e uma playlist na struct da música
+ */
+void RelatesDistanceToTrack(tSpotfes* spotfes, float* euclidean_distance) {
+    for (int m = 0; m < *spotfes->tracks_qty; m++) {
+        SaveEuclideanDistanceToTrack(spotfes->tracks[m], euclidean_distance[m]);
+    }
+}
+
+/**
+ * @brief retorna a distância euclidiana calculada da música com uma playlist
+ * @return valor da distância euclidiana
+ */
+float GetTrackDistance(tSpotfes* spotfes, int index) {
+    return GetDistance(spotfes->tracks[index]);
+}
+
+/**
+ * @brief imprime as recomendações de músicas semelhantes
+ */
+void PrintSimilarTrack(tSpotfes* spotfes, int index) {
+    PrintShortTracksDetails(spotfes->tracks[index]);
+    printf("\n");
+}
+
+/**
+ * @brief gera um relatório em forma de dois arquivos .txt, um contendo as músicas salvas nas playlists e outro contendo os artistas cujas músicas foram salvas nas playlists
+ */
 void GenerateReport(tSpotfes* spotfes) {
     if (!*spotfes->playlists_qty) {
         RED_COLOUR;
@@ -233,6 +288,7 @@ void GenerateReport(tSpotfes* spotfes) {
             RED_COLOUR;
             printf("• ERRO: Todas as playlists estão vazias.\n\n");
         } else {
+            // começa a iteração a partir do número correspondente à música com maior número de aparições em playlists, imprimindo as músicas em ordem decrescente de aparições
             for (int m = most_added_tracks; m > 0; m--) {
                 for (int mm = 0; mm < *spotfes->tracks_qty; mm++) {
                     if (GetTracksAddedCounter(spotfes->tracks[mm]) == m) {
@@ -240,7 +296,7 @@ void GenerateReport(tSpotfes* spotfes) {
                     }
                 }
             }
-
+            // começa a iteração a partir do número correspondente ao artista com maior número de aparições em playlists, imprimindo os artistas em ordem decrescente de aparições
             for (int m = most_added_artists; m > 0; m--) {
                 for (int mm = 0; mm < *spotfes->artists_qty; mm++) {
                     if (GetArtistAddedCounter(spotfes->artists[mm]) == m) {
@@ -256,42 +312,40 @@ void GenerateReport(tSpotfes* spotfes) {
     }
 }
 
+/**
+ * @brief salva os dados do programa em arquivos binários, libera a memória utilizada e encerra o programa
+ */
 void QuitProgram(tSpotfes* spotfes) {
     WriteBinaryPlaylists(spotfes->playlists, *spotfes->playlists_qty);
     WriteBinaryArtists(spotfes->artists, *spotfes->artists_qty);
     WriteBinaryTracks(spotfes->tracks, *spotfes->tracks_qty);
     FreeUpSpotfes(spotfes);
-    PrintLogoArt();
+    PrintMenuArt();
     printf("no warnings, no leaks, no errors :)\n\n");
 }
 
-int GetArtistsQuantity(tSpotfes* spotfes) {
-    return *spotfes->artists_qty;
-}
-
-int GetTracksQuantity(tSpotfes* spotfes) {
-    return *spotfes->tracks_qty;
-}
-
-int GetPlaylistAddedTracksQuantity(tSpotfes* spotfes, int index) {
-    return GetPlaylistTracksQuantity(spotfes->playlists[index]);
-}
-
-float* GetTracksFeatures(tSpotfes* spotfes, int m) {
-    return GetFeatures(spotfes->tracks[m]);
-}
-
-void RelatesDistanceToTrack(tSpotfes* spotfes, float* euclidean_distance) {
-    for (int m = 0; m < *spotfes->tracks_qty; m++) {
-        SaveEuclideanDistanceToTrack(spotfes->tracks[m], euclidean_distance[m]);
+/**
+ * @brief libera os blocos de memória alocados para cada struct
+ */
+void FreeUpSpotfes(tSpotfes* spotfes) {
+    for (int m = 0; m < *spotfes->playlists_allocs; m++) {
+        FreeUpPlaylists(spotfes->playlists[m]);
     }
-}
 
-float GetTrackDistance(tSpotfes* spotfes, int index) {
-    return GetDistance(spotfes->tracks[index]);
-}
+    for (int m = 0; m < *spotfes->tracks_qty; m++) {
+        FreeUpTracks(spotfes->tracks[m]);
+    }
 
-void PrintSimilarTrack(tSpotfes* spotfes, int index) {
-    PrintShortTracksDetails(spotfes->tracks[index]);
-    printf("\n");
+    for (int m = 0; m < *spotfes->artists_qty; m++) {
+        FreeUpArtists(spotfes->artists[m]);
+    }
+
+    FreeAndNullPointer(spotfes->playlists_allocs);
+    FreeAndNullPointer(spotfes->playlists_qty);
+    FreeAndNullPointer(spotfes->playlists);
+    FreeAndNullPointer(spotfes->tracks_qty);
+    FreeAndNullPointer(spotfes->tracks);
+    FreeAndNullPointer(spotfes->artists_qty);
+    FreeAndNullPointer(spotfes->artists);
+    FreeAndNullPointer(spotfes);
 }
