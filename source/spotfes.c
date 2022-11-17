@@ -91,6 +91,7 @@ int GetTracksQuantity(tSpotfes* spotfes) {
  */
 int SetUpMainMenu() {
     PrintMenuArt();
+    BLACK_COLOUR;
     printf("1 • PESQUISAR MÚSICAS\n");
     printf("2 • DETALHAR UMA MÚSICA\n");
     printf("3 • CRIAR UMA PLAYLIST\n");
