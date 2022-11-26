@@ -143,14 +143,14 @@ void ReadBinaryArtists(tArtists** artists, int quantity) {
  * @brief imprime detalhes sobre os artistas de uma música específica
  */
 void PrintTrackArtistsDetails(tArtists** artists, int artists_qty) {
-    BLACK_COLOUR;
+    GREEN_COLOUR;
     if (artists_qty == 1) {
         printf("\n• Informações sobre a/o artista:\n\n");
     } else if (artists_qty > 1) {
         printf("\n• Informações sobre as/os artistas:\n\n");
     }
-
     NORMAL_COLOUR;
+
     for (int m = 0; m < artists_qty; m++) {
         // se o ponteiro pra um artista for nulo, significa que ele está em uma música, mas as informações sobre ele não estavam disponíveis no artists.csv
         // dessa forma, o argumento do laço for será incrementado em uma unidade, pois a variável "artists_qty" contabiliza somente artistas disponíveis no artists.csv

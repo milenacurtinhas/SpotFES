@@ -171,6 +171,7 @@ void DisplayPlaylists(tPlaylists** playlists, int playlists_qty) {
         printf("• ERRO: Nenhuma playlist foi criada ainda.\n\n");
         NORMAL_COLOUR;
     } else {
+        GREEN_COLOUR;
         printf("• Informações sobre as playlists:\n\n");
         NORMAL_COLOUR;
         for (int m = 0; m < playlists_qty; m++) {

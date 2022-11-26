@@ -103,7 +103,6 @@ void PrintMenuArt() {
 
     NORMAL_COLOUR;
     printf("Ｍｉｌｅｎａ Ｃｕｒｔｉｎｈａｓ ｜ Ｍｉｓａｅｌ Ｆｌｏｒｅｎｃｉａｎｏ\n\n");
-    BLACK_COLOUR;
 }
 
 /**
@@ -113,7 +112,7 @@ void PrintMenuArt() {
  * @return um número válido ou uma mensagem de erro pedindo o input novamente
  */
 int GetValidIntegerInput(int min_range, int max_range) {
-    while (1) {
+    while (ONLINE) {
         char buffer[STRING_BUFFER_SIZE];
 
         if (fgets(buffer, STRING_BUFFER_SIZE, stdin) != NULL) {
@@ -136,7 +135,7 @@ int GetValidIntegerInput(int min_range, int max_range) {
  * @return verdadeiro caso a resposta seja sim e falso caso a resposta seja não
  */
 char GetValidYesOrNoInput() {
-    while (1) {
+    while (ONLINE) {
         char input[STRING_BUFFER_SIZE];
 
         if (fgets(input, STRING_BUFFER_SIZE, stdin) != NULL) {
@@ -149,7 +148,6 @@ char GetValidYesOrNoInput() {
 
         RED_COLOUR;
         printf("• ERRO: Opção inválida. Tente novamente: ");
-        NORMAL_COLOUR;
     }
 }
 

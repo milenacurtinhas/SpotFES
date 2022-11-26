@@ -26,6 +26,9 @@ $(CLIENT).o: $(CLI)
 $(TARGET): $(OBJECTS)
 	$(CC) $(INCLUDE_PATHS) $(OBJECTS) $(LIBS) -o $@
 
+	@ mkdir -p reports
+	@ mkdir -p binaries
+
 clean:
 	-rm -f -r obj
 	-rm -f *.o

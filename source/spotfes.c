@@ -91,7 +91,6 @@ int GetTracksQuantity(tSpotfes* spotfes) {
  */
 int SetUpMainMenu() {
     PrintMenuArt();
-    BLACK_COLOUR;
     printf("1 • PESQUISAR MÚSICAS\n");
     printf("2 • DETALHAR UMA MÚSICA\n");
     printf("3 • CRIAR UMA PLAYLIST\n");
@@ -101,12 +100,13 @@ int SetUpMainMenu() {
     printf("7 • RECOMENDAR MÚSICAS PARECIDAS COM UMA PLAYLIST \n");
     printf("8 • GERAR RELATÓRIO SOBRE AS PLAYLISTS\n");
     printf("9 • SAIR DO PROGRAMA\n\n");
-    NORMAL_COLOUR;
+
+    GREEN_COLOUR;
     printf("♪ Digite a opção desejada: ");
 
     int input = GetValidIntegerInput(1, 9);
+    NORMAL_COLOUR;
     ClearTerminal();
-    BLACK_COLOUR;
 
     return input;
 }
@@ -117,13 +117,14 @@ int SetUpMainMenu() {
 void SearchTracks(tSpotfes* spotfes) {
     char buffer[STRING_BUFFER_SIZE], input[STRING_BUFFER_SIZE];
 
+    GREEN_COLOUR;
     printf("♪ Digite o título de uma música a ser pesquisada: ");
 
     if (fgets(buffer, STRING_BUFFER_SIZE, stdin) != NULL) {
         strcpy(input, strtok(buffer, "\n"));
         printf("\n");
-
         NORMAL_COLOUR;
+
         SearchTracksByTitle(input, spotfes->tracks, *spotfes->tracks_qty);
     }
 }
@@ -132,11 +133,12 @@ void SearchTracks(tSpotfes* spotfes) {
  * @brief exibe todas as características armazenadas de uma música a partir do índice dela
  */
 void DetailTrack(tSpotfes* spotfes) {
+    GREEN_COLOUR;
     printf("♪ Digite o índice da música a ser detalhada: ");
 
     int input = GetValidIntegerInput(0, *spotfes->tracks_qty - 1);
-
     NORMAL_COLOUR;
+
     SearchTracksByIndex(input, spotfes->tracks);
 }
 
@@ -148,6 +150,7 @@ void CreatePlaylist(tSpotfes* spotfes) {
 
     char buffer[STRING_BUFFER_SIZE], input[STRING_BUFFER_SIZE];
 
+    GREEN_COLOUR;
     printf("♪ Digite o nome da playlist a ser criada: ");
 
     if (fgets(buffer, STRING_BUFFER_SIZE, stdin)) {
@@ -178,6 +181,7 @@ void DetailPlaylist(tSpotfes* spotfes) {
         printf("• ERRO: Nenhuma playlist foi criada ainda.\n\n");
         NORMAL_COLOUR;
     } else {
+        GREEN_COLOUR;
         printf("♪ Digite o índice da playlist a ser listada: ");
         int input = GetValidIntegerInput(0, *spotfes->playlists_qty - 1);
         NORMAL_COLOUR;
@@ -194,9 +198,11 @@ void AddTrackToPlaylist(tSpotfes* spotfes) {
         RED_COLOUR;
         printf("• ERRO: Nenhuma playlist foi criada ainda.\n\n");
     } else {
+        GREEN_COLOUR;
         printf("♪ Digite o índice da música a ser adicionada: ");
         int track_index = GetValidIntegerInput(0, *spotfes->tracks_qty - 1);
 
+        GREEN_COLOUR;
         printf("♪ Digite o índice da playlist alvo: ");
         int playlist_index = GetValidIntegerInput(0, *spotfes->playlists_qty - 1);
 
@@ -221,6 +227,7 @@ void RecommendSimilarTrack(tSpotfes* spotfes) {
         RED_COLOUR;
         printf("• ERRO: Nenhuma playlist foi criada ainda.\n\n");
     } else {
+        GREEN_COLOUR;
         printf("♪ Digite o índice da playlist alvo: ");
 
         int playlist_index = GetValidIntegerInput(0, *spotfes->playlists_qty - 1);
@@ -230,6 +237,7 @@ void RecommendSimilarTrack(tSpotfes* spotfes) {
             RED_COLOUR;
             printf("\n• ERRO: A playlist está vazia.\n\n");
         } else {
+            GREEN_COLOUR;
             printf("♪ Digite o número de músicas semelhantes a serem recomendadas: ");
             int quantity = GetValidIntegerInput(1, *spotfes->tracks_qty);
             NORMAL_COLOUR;

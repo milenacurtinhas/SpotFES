@@ -342,7 +342,7 @@ void PrintTrackArtists(tTracks* track, int quantity) {
  * @param input index da música a ser procurada
  */
 void SearchTracksByIndex(int input, tTracks** tracks) {
-    BLACK_COLOUR;
+    GREEN_COLOUR;
     printf("\n• Informações sobre a música:\n\n");
     NORMAL_COLOUR;
     printf("Título: %s\n", tracks[input]->track_name);
@@ -375,7 +375,7 @@ void OpenTrack(tTracks* track) {
     char url[URL_BUFFER] = "firefox https://open.spotify.com/track/";
     strcat(url, track->id);
 
-    BLACK_COLOUR;
+    GREEN_COLOUR;
     printf("\n♪ Deseja abrir a música no Firefox? (sim/não): ");
 
     if (GetValidYesOrNoInput()) {

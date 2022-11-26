@@ -30,8 +30,6 @@
 
 // retorna a cor do texto para o padrão
 #define NORMAL_COLOUR printf("\033[0m");
-// altera a cor do texto para preto
-#define BLACK_COLOUR printf("\033[1;30m");
 // altera a cor do texto para vermelho
 #define RED_COLOUR printf("\033[1;31m");
 // altera a cor do texto para verde
