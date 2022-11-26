@@ -187,7 +187,9 @@ void PrintTrackArtistsDetails(tArtists** artists, int artists_qty) {
  * @brief adiciona uma unidade toda vez que um determinado artista tiver uma música adicionada à uma playlist
  */
 void ArtistsAddedToPlaylistCounter(tArtists* artist) {
-    *artist->times_added_to_playlist += 1;
+    if (artist != NULL) {
+        *artist->times_added_to_playlist += 1;
+    }
 }
 
 /**
